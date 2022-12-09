@@ -20,16 +20,21 @@ const ComponentList2 = () => {
   const [components, setComponents] = useState([]);
   const [allChecked, setAllChecked] = useState(false); //selectAll
   const [checkedItems, setCheckedItems] = useState([]);
-  const [componentLength, setComponentLength] = useState(7);
+  const [componentLength, setComponentLength] = useState(6);
   const [status, setStatus] = useState("Operational");
   let newChecked = [...components];
   useEffect(() => {
+    console.log("ci",checkedItems)
     setComponents(checkedItems);
   }, [checkedItems]);
+  
   useEffect(() => {
-    if (components.length < 7) {
+  console.log("com",components,components.length)
+    if (components.length < 6) {
       setAllChecked(false);
     }
+    if(components.length===componentLength)
+    setAllChecked(true)
   }, [components]);
   useEffect(() => {
     if (allChecked) {
@@ -40,7 +45,7 @@ const ComponentList2 = () => {
         "Test1",
         "Import",
         "Export",
-        "Test",
+        
       ]); //read all componentsnames
     } else if (!allChecked && componentLength === components.length) {
       setComponents([]); //clear COmponents array if SelectAll is cleared
@@ -60,6 +65,7 @@ const ComponentList2 = () => {
     // }
 
     if (components.indexOf(e) === -1) {
+    
       newChecked.push(e);
     } else {
       newChecked = components.filter((item) => item !== e);

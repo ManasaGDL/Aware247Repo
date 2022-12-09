@@ -3,7 +3,14 @@ import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
+
+
 const CustomDropDown=({value})=>{
+  
+
+  const colorCodingStatus =[{name:"Operational",color:"green"},{name:"Degraded Performance",color:"black"}]
+  const statusColor=colorCodingStatus.filter(item=>value===item.name)
+ console.log("statusColor",statusColor,value)
   const handleDropDownChange=()=>{
     return <></>
   }
@@ -14,7 +21,9 @@ const CustomDropDown=({value})=>{
     <InputLabel id="demo-select-small">
       Status
     </InputLabel>
-    <Select
+    <Select 
+  sx={{color:statusColor[0].color}}
+
       label="status"
       labelId="demo-select-small"
       value={value}

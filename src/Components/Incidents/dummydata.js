@@ -3,7 +3,7 @@ const componentData= [{"component_id":1,"component_name":"Adobe","businessunit_i
 {"component_id":5,"component_name":"Test","businessunit_id":1,"businessunit_name":"ACS","component_status":"Operational","group_no":3,
 "sub_component":
 [{"component_id":7,"component_name":"Test2","businessunit_id":1,
-"businessunit_name":"ACS","component_status":"Operational","group_no":3},
+"businessunit_name":"ACS","component_status":"Degraded performance","group_no":3},
 {"component_id":6,"component_name":"Test1","businessunit_id":1,"businessunit_name":"ACS","component_status":"Operational","group_no":3}]},
 {"component_id":4,"component_name":"Import","businessunit_id":1,"businessunit_name":"ACS","component_status":"Operational","group_no":4,"sub_component":[]},
 {"component_id":3,"component_name":"Export","businessunit_id":1,"businessunit_name":"ACS",
@@ -25,7 +25,7 @@ const componentData2=[
       },
       "component_status_id": {
         "component_status_id": 1,
-        "component_status_name": "Operational",
+        "component_status_name": "Degraded Performance",
         "component_status_description": "This component is fully operational and is experiencing no performance or availability issues."
       },
       "sub_component": []
