@@ -119,7 +119,7 @@ const ComponentList2 = () => {
                   >
                     <ListItemIcon>
                     </ListItemIcon>
-                    <ListItemText disableTypography sx={{fontWeight:"bold",color:"rgb(101, 101, 101)",fontSize:"12px"}}
+                    <ListItemText Typography sx={{fontWeight:"bold",color:"rgb(101, 101, 101)",fontSize:"12px"}}
                       primary={component.component_name}
                     ></ListItemText>
                   </ListItem>

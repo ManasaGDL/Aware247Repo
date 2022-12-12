@@ -7,24 +7,25 @@ import Box from '@mui/material/Box';
 import NavPage from "../Components/NavPage";
 import DashBoard from "../Components/DashBoard/Dashboard";
 import { Route,Routes } from "react-router-dom";
-import Incidents from "../Components/Incidents/Incidents";
-import Sidebar2 from "../Components/TestSidebar/Sidebar2";
+import CreateIncident from "../Components/Incidents/CreateIncident";
+import Sidebar from "../Components/TestSidebar/SidebarComponent";
 import Subscribers from "../Components/Subscribers/Subscribers";
-import Header2 from "../Components/Header2";
+import IncidentPage from "../Components/Incidents/IncidentPage";
 import { ThemeProvider } from '@mui/material/styles'
 import theme from "../theme";
+import SidebarComponent from "../Components/TestSidebar/SidebarComponent";
 // import "./containerStyles
-const Container = ({match}) => {
+const Container = ({user}) => {
     const [collapse,setCollapse]=useState(false)
-    const handleCollapse=(collapse)=>{
-       
-setCollapse(!collapse)
+    const handleCollapse=(collapse)=>{       
+     setCollapse(!collapse)
     }
+    
     return <ThemeProvider theme={theme}>
         <section>
             <div style={{ height: "60px" }}> 
-            <Header></Header>
-             {/* <Header2/> */}
+            <Header user={user}></Header>
+            
              </div>
         </section>
         <section >
@@ -32,13 +33,14 @@ setCollapse(!collapse)
                 <Grid container sx={{height:'100vh'}}>
                     <Grid item md={collapse?1:2}>
                    
-                    <Sidebar2 handleCollapse={handleCollapse}></Sidebar2>
+                    <SidebarComponent handleCollapse={handleCollapse}></SidebarComponent>
                  </Grid>
                     <Grid item md={collapse?11:10}> 
                         <Routes>
                     <Route path="/admin/dashboard" element={<DashBoard/>}/>
-       <Route path="/admin/incidents" element={<Incidents/>}/> 
-     <Route path="/admin/subscribers" element={<Subscribers/>}/> 
+                    <Route path="/admin/create_incident" element={<CreateIncident/>}/>
+              <Route path="/admin/incidents" element={<IncidentPage/>}/> 
+            <Route path="/admin/subscribers" element={<Subscribers/>}/> 
      </Routes>
                     </Grid>
                     </Grid>

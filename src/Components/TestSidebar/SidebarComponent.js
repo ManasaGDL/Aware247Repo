@@ -33,7 +33,7 @@ const Menuitem = styled(MenuItem)`
 //        color: 'lightblue',
 //   },
 // }})
-const Sidebar2=({handleCollapse})=>{
+const SidebarComponent=({handleCollapse})=>{
   // const classes = useStyles()
   const { collapseSidebar,toggleSidebar ,collapsed} = useProSidebar();
   const [toggled,setToggled]=useState(false)
@@ -98,4 +98,4 @@ const Sidebar2=({handleCollapse})=>{
   </Paper>
   </div>
 }
-export default Sidebar2;
+export default SidebarComponent;

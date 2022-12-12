@@ -42,7 +42,9 @@ div.rdw-editor-toolbar.toolbar-class{
   color: #545454;
   
 }
-
+.pages{
+  text-align: left;
+}
 .greenIndicator{
   color:green
 }

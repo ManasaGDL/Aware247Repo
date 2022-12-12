@@ -39,8 +39,14 @@ setEditorState(e)
 
 }
 const convertContentToHTML=()=>{
+  
   if(editorState)
-  {const data=draftToHtml(convertToRaw(editorState.getCurrentContent()))
+  { var selectionState = editorState.getCurrentInlineStyle();
+  //  var anchorKey = selectionState.getAnchorKey();
+    console.log("anchor",draftToHtml(selectionState))
+    const data=draftToHtml(
+    convertToRaw(editorState.getCurrentContent())
+    )
   setConvertedContent(data)
   }
 }

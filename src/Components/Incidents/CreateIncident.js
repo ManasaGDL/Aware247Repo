@@ -15,7 +15,7 @@ import componentData from "./dummydata";
 import ComponentList from "./ComponentList";
 import ComponentList2 from "./ComponentList2";
 
-const Incidents = () => {
+const CreateIncident = () => {
   const [incidentStatus, setIncidentStatus] = useState("Investigating");
   const handleChange = (e) => {
     setIncidentStatus(e.target.value);
@@ -81,4 +81,4 @@ const Incidents = () => {
     </>
   );
 };
-export default Incidents;
+export default CreateIncident;

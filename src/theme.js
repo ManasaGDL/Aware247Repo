@@ -1,5 +1,5 @@
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { cyan, blue } from "@mui/material/colors";
+import { createTheme } from "@mui/material/styles";
+import { cyan } from "@mui/material/colors";
 const theme = createTheme({
   typography: {
     fontSize: 12,
@@ -7,7 +7,7 @@ const theme = createTheme({
   palette: {
     primary: cyan,
     secondary: {
-      main: "#00e5ff",
+      main:'#11cb5f',
       //
     },
 

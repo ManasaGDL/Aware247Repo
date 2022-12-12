@@ -1,21 +1,24 @@
-import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
+import React,{ useState ,useEffect} from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
+
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
+import axios from 'axios';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Paper from "@mui/material/Paper";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { blue ,pink,green, lightBlue,cyan, red} from '@mui/material/colors';
 import companylogo from "../../assets/data_axle.PNG"
+import api from '../../Api';
 import "./login.css"
+import auth from '../../auth';
+import { axiosInstance } from '../../axios';
 const theme = createTheme({
  
   palette: {
@@ -35,14 +38,40 @@ components: {
   }
 }}});
 
-export default function Login() {
-  const handleSubmit = (event) => {
+export default function Login(props) {
+  const initialLoginData = Object.freeze({
+    username:"",
+    password:""
+  })
+  const [loginData , setLoginData] = useState(initialLoginData);
+  let navigate= useNavigate();
+  const handleSubmit = async(event) => {
+    let response;
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+   console.log(data)
+    setLoginData({username: data.get('email').trim(),password:data.get('password').trim()})
+    console.log("!23")
+    if(loginData)
+    {
+   try{
+   response = await api.login({username: data.get('email').trim(),password: data.get('password').trim()})
+ 
+  if(response)
+ {let { access,refresh} = response.data;
+ localStorage.setItem("access_token",access);
+ localStorage.setItem("refresh_token",refresh);
+ axiosInstance.defaults.headers["Authorization"]="Bearer"+localStorage.getItem("access");
+ props.setUser({
+  email:data.get('email').trim()
+ })
+localStorage.setItem("user",data.get('email').trim())
+navigate("/admin");}
+   }catch(e)
+   {console.log(e)
+alert(e.response.data.detail)
+   }
+    }
   };
 
   return (
