@@ -68,7 +68,7 @@ const SidebarComponent=({handleCollapse})=>{
      paddingBottom:"8px",
      fontSize:"15px",'&:hover':{color:'lightblue'}}}>
         
-          {collapsed?<b><AiOutlineArrowRight style={{fontSize:"20px"}} /></b>:<b><AiOutlineArrowLeft style={{fontSize:"20px"}}/></b>}
+          {collapsed?<b><AiOutlineArrowRight style={{fontSize:"20px",}} /></b>:<b><AiOutlineArrowLeft style={{fontSize:"20px"}}/></b>}
        
         </IconButton>
         

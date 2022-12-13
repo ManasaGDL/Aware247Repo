@@ -4,7 +4,7 @@ import List from "@mui/material/List";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import ListItem from "@mui/material/ListItem";
-import {componentData,componentData2} from "./dummydata";
+import { componentData, componentData2 } from "./dummydata";
 import Select from "@mui/material/Select";
 import Checkbox from "@mui/material/Checkbox";
 import Divider from "@mui/material/Divider";
@@ -15,60 +15,95 @@ import { Stack } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
 import CustomDropDown from "./CustomDropDown";
-
+import api from "../../Api";
 const ComponentList2 = () => {
-  const [components, setComponents] = useState([]);
+  const [components, setComponents] = useState([]); // maintains the current selected components
   const [allChecked, setAllChecked] = useState(false); //selectAll
   const [checkedItems, setCheckedItems] = useState([]);
-  const [componentLength, setComponentLength] = useState(6);
+  const [componentLength, setComponentLength] = useState();
+  const [componentsData, setComponentsData] = useState([]); //read the response from api
+  const [listComponents, setListComponents] = useState([]); //find the components(if component having sub components ignore the component and then read the subcomponents)
   const [status, setStatus] = useState("Operational");
   let newChecked = [...components];
   useEffect(() => {
-    console.log("ci",checkedItems)
-    setComponents(checkedItems);
-  }, [checkedItems]);
-  
+    console.log("slec", components);
+  }, [components]);
+  // Here components array maintains the components selected,
   useEffect(() => {
-  console.log("com",components,components.length)
+    if (allChecked) {
+      //if Select All selected, copy all the listComponents into components
+      setComponents([...listComponents]);
+      setComponentLength(listComponents.length);
+    }
+  }, [listComponents, allChecked]);
+  // useEffect(() => {
+  //   let subComponentsArray=[];
+  //   // let componentsArray=componentsData.map(item=>{
+  //   //      if(item.sub_component.length>0)
+  //   //      {
+  //   //        subComponentsArray=  item.sub_component.map(sub=>{ // read subcomponents
+  //   //            return sub.component_name
+  //   //          })
+
+  //   //      }
+  //   //      else{
+  //   //        return item.component_name //reac components if sub component array is empty
+  //   //      }
+  //   //    })
+  //   //  let newComponentsArray = componentsArray.filter(item=>{
+  //   //    return item !== undefined  // filter undefined
+  //   //  })
+  //   //  setListComponents(newComponentsArray.concat(subComponentsArray));
+  // },[componentsData])
+  useEffect(() => {
+    setComponents(checkedItems); // if any checkbox state changes(check or uncheck),
+  }, [checkedItems]);
+  useEffect(() => {
+    async function getComponents() {
+      try {
+        const response = await api.getComponents();
+        console.log(response?.data);
+        setComponentsData(response?.data);
+      } catch (e) {}
+    }
+    getComponents();
+  }, []);
+  useEffect(() => {
     if (components.length < 6) {
       setAllChecked(false);
     }
-    if(components.length===componentLength)
-    setAllChecked(true)
+    if (components.length === componentLength) setAllChecked(true);
   }, [components]);
   useEffect(() => {
     if (allChecked) {
-      setComponents([
-        "Adobe",
-        "API",
-        "Test2",
-        "Test1",
-        "Import",
-        "Export",
-        
-      ]); //read all componentsnames
+      let subComponentsArray = [];
+      let componentsArray = componentsData.map((item) => {
+        if (item.sub_component.length > 0) {
+          subComponentsArray = item.sub_component.map((sub) => {
+            // read subcomponents
+            return sub.component_name;
+          });
+        } else {
+          return item.component_name; //reac components if sub component array is empty
+        }
+      });
+      let newComponentsArray = componentsArray.filter((item) => {
+        return item !== undefined; // filter undefined
+      });
+      setListComponents(newComponentsArray.concat(subComponentsArray)); // concate components+ subcomponents
     } else if (!allChecked && componentLength === components.length) {
       setComponents([]); //clear COmponents array if SelectAll is cleared
     }
   }, [allChecked]);
   const handleAllChecked = (e) => {
     setAllChecked(e.target.checked);
-    // setCheckedItems([]);
   };
   const handleToggle = (e) => {
-    // let newChecked = [...checkedItems];
-
-    // if (checkedItems.indexOf(e) === -1 ) {//if checked item not in the checkedItems array , push into the array
-    //   newChecked.push(e);
-    // } else {
-    //   newChecked = checkedItems.filter((item) => item !== e); // remove item from checkedItems array(unchecking)
-    // }
-
     if (components.indexOf(e) === -1) {
-    
+      //if component toggled is not present the components list--->add to list
       newChecked.push(e);
     } else {
-      newChecked = components.filter((item) => item !== e);
+      newChecked = components.filter((item) => item !== e); //if component toggled is already in component list then remove from the list
     }
     setCheckedItems(newChecked);
     // changing selectAll status if any component is unchecked
@@ -108,7 +143,7 @@ const ComponentList2 = () => {
           borderColor: "#CFD2CF",
         }}
       >
-        {componentData2.map((component) => {
+        {componentsData?.map((component) => {
           return (
             <>
               {component["sub_component"].length > 0 ? (
@@ -117,9 +152,14 @@ const ComponentList2 = () => {
                     sx={{ paddingTop: "2px" }}
                     key={component["component_name"]}
                   >
-                    <ListItemIcon>
-                    </ListItemIcon>
-                    <ListItemText Typography sx={{fontWeight:"bold",color:"rgb(101, 101, 101)",fontSize:"12px"}}
+                    <ListItemIcon></ListItemIcon>
+                    <ListItemText
+                      Typography
+                      sx={{
+                        fontWeight: "bold",
+                        color: "rgb(101, 101, 101)",
+                        fontSize: "12px",
+                      }}
                       primary={component.component_name}
                     ></ListItemText>
                   </ListItem>
@@ -131,37 +171,14 @@ const ComponentList2 = () => {
                           <ListItem
                             sx={{ paddingLeft: "80px", paddingTop: "2px" }}
                             key={item["component_name"]}
-                            secondaryAction={<CustomDropDown value={component.component_status_id.component_status_name}/>
-                              // <FormControl
-                              //   sx={{ m: 1, minWidth: 160 }}
-                              //   size="small"
-                              // >
-                              //   <InputLabel id="demo-select-small">
-                              //     Status
-                              //   </InputLabel>
-                              //   <Select
-                              //     label="status"
-                              //     labelId="demo-select-small"
-                              //     value={status}
-                              //     onChange={handleDropDownChange}
-                              //   >
-                              //     <MenuItem value="Operational">
-                              //       Operational
-                              //     </MenuItem>
-                              //     <MenuItem value="Degraded Performance">
-                              //       Degraded Performance
-                              //     </MenuItem>
-                              //     <MenuItem value="Degraded Performance">
-                              //       Partial Outage
-                              //     </MenuItem>
-                              //     <MenuItem value="Degraded Performance">
-                              //       Major Outage
-                              //     </MenuItem>
-                              //     <MenuItem value="Degraded Performance">
-                              //       Under Maintenance
-                              //     </MenuItem>
-                              //   </Select>
-                              // </FormControl>
+                            secondaryAction={
+                              <CustomDropDown label={item["component_name"]} 
+                            disabled={!components.includes(item.component_name)}
+                                value={
+                                  component.component_status
+                                    .component_status_name
+                                }
+                              />
                             }
                           >
                             <ListItemIcon>
@@ -179,9 +196,15 @@ const ComponentList2 = () => {
                                 }}
                               />
                             </ListItemIcon>
-                            <ListItemText disableTypography
+                            <ListItemText
+                              disableTypography
                               primary={item["component_name"]}
-                              sx={{ pl: 4 ,fontSize:"12px"}}
+                              sx={{
+                                pl: 4,
+                                fontSize: "12px",
+                                fontWeight: "bold",
+                                color: "rgb(101, 101, 101)",
+                              }}
                             ></ListItemText>
                           </ListItem>
 
@@ -197,7 +220,9 @@ const ComponentList2 = () => {
                     sx={{ paddingTop: "2px" }}
                     key={component["component_name"]}
                     secondaryAction={
-                     <CustomDropDown value={component.component_status_id.component_status_name}/>
+                      <CustomDropDown label={component["component_name"]} disabled={!components.includes(component.component_name)}
+                        value={component.component_status.component_status_name}
+                      />
                     }
                   >
                     <ListItemIcon>
@@ -214,7 +239,13 @@ const ComponentList2 = () => {
                         }}
                       />
                     </ListItemIcon>
-                    <ListItemText disableTypography sx={{fontWeight:"bold",color:"rgb(101, 101, 101)",fontSize:"12px"}}
+                    <ListItemText
+                      disableTypography
+                      sx={{
+                        fontWeight: "bold",
+                        color: "rgb(101, 101, 101)",
+                        fontSize: "12px",
+                      }}
                       primary={component.component_name}
                     ></ListItemText>
                   </ListItem>

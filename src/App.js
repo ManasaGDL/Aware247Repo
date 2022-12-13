@@ -9,9 +9,7 @@ import {useNavigate} from "react-router-dom"
 function App(props) {
   const history=useNavigate();
   const [user,setUser] = useState({email:""})
-  useEffect(()=>{
-  console.log("user is",user)
-  },[user])
+
   return (
     <div className="App">
      <Routes history={history}> 

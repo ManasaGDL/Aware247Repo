@@ -41,7 +41,8 @@ components: {
 export default function Login(props) {
   const initialLoginData = Object.freeze({
     username:"",
-    password:""
+    password:"",
+    isAuthenticated:false
   })
   const [loginData , setLoginData] = useState(initialLoginData);
   let navigate= useNavigate();
@@ -51,17 +52,20 @@ export default function Login(props) {
     const data = new FormData(event.currentTarget);
    console.log(data)
     setLoginData({username: data.get('email').trim(),password:data.get('password').trim()})
-    console.log("!23")
+    
     if(loginData)
     {
    try{
    response = await api.login({username: data.get('email').trim(),password: data.get('password').trim()})
+   const res2= await api.getBussinessUnits();
+      const res3= await api.getUserProfile();
  
   if(response)
  {let { access,refresh} = response.data;
  localStorage.setItem("access_token",access);
  localStorage.setItem("refresh_token",refresh);
- axiosInstance.defaults.headers["Authorization"]="Bearer"+localStorage.getItem("access");
+ axiosInstance.defaults.headers["Authorization"]="Bearer "+localStorage.getItem("access_token");
+setLoginData({...loginData,isAuthenticated:true});
  props.setUser({
   email:data.get('email').trim()
  })
@@ -77,8 +81,7 @@ alert(e.response.data.detail)
   return (
     <div className="login">
     <ThemeProvider theme={theme}>
-       
-      <Container component="main" maxWidth="xs" className="login">
+       <Container component="main" maxWidth="xs" className="login">
       <div style={{marginTop:10}}>
    <img src={companylogo} alt="data axle" />
    </div>

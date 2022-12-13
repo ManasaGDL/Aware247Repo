@@ -14,13 +14,18 @@ import IncidentPage from "../Components/Incidents/IncidentPage";
 import { ThemeProvider } from '@mui/material/styles'
 import theme from "../theme";
 import SidebarComponent from "../Components/TestSidebar/SidebarComponent";
+import { axiosInstance } from "../axios";
 // import "./containerStyles
 const Container = ({user}) => {
     const [collapse,setCollapse]=useState(false)
     const handleCollapse=(collapse)=>{       
      setCollapse(!collapse)
     }
-    
+   if(localStorage.getItem("access_token"))
+   {
+    axiosInstance.defaults.headers["businessunit"]="ACS";
+    axiosInstance.defaults.headers["Authorization"]="Bearer "+ localStorage.getItem("access_token")
+   }
     return <ThemeProvider theme={theme}>
         <section>
             <div style={{ height: "60px" }}> 
@@ -32,7 +37,6 @@ const Container = ({user}) => {
           
                 <Grid container sx={{height:'100vh'}}>
                     <Grid item md={collapse?1:2}>
-                   
                     <SidebarComponent handleCollapse={handleCollapse}></SidebarComponent>
                  </Grid>
                     <Grid item md={collapse?11:10}> 

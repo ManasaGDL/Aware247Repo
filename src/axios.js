@@ -21,7 +21,19 @@ axiosInstance.interceptors.response.use((response)=>{
 }, async function (error){
    
     const originalRequest = error.config;
-    if(error.response.status === 403) // to get new access token if 403 error returned
+    if (typeof error.response === "undefined") {
+        console.log("A server/network/CORS error occurred.");
+        return Promise.reject(error);
+      }
+      if (
+        error.response.status === 401 &&
+        originalRequest.url === baseURL + "token/refresh/"
+      ) {
+        window.location.href = "/login/";
+        return Promise.reject(error);
+      }  
+    if( (error.response.data.code === "token_not_valid" || error.response.data.constructor === Blob) &&
+    error.response.status === 401) // to get new access token if 403 error returned
     {
     const refreshToken = localStorage.getItem("refresh_token");
     if(refreshToken)
@@ -29,7 +41,7 @@ axiosInstance.interceptors.response.use((response)=>{
     const now = Math.ceil(Date.now() / 1000);
     if(tokenParts.exp > now)
     {
-        return axiosInstance.post("/auth/token/refresh",{
+        return axiosInstance.post("/auth/token/refresh/",{
             refresh : refreshToken
         }).then(res =>
             {
