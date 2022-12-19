@@ -57,8 +57,8 @@ export default function Login(props) {
     {
    try{
    response = await api.login({username: data.get('email').trim(),password: data.get('password').trim()})
-   const res2= await api.getBussinessUnits();
-      const res3= await api.getUserProfile();
+  //  const res2= await api.getBussinessUnits();
+      // const res3= await api.getUserProfile();
  
   if(response)
  {let { access,refresh} = response.data;

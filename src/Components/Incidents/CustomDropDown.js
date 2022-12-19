@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState , useEffect} from "react"
 import Select from "@mui/material/Select";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
@@ -6,27 +6,29 @@ import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
 
 
-const CustomDropDown=({value,label,disabled})=>{
+const CustomDropDown=({value,label,disabled,dropDownChange,name})=>{
  const [selectedValue,setSelectedValue]= useState(value)
-console.log("slected",value,label,disabled)
+const [dropDownCalled,setDropDownCalled] =useState(false)
   const colorCodingStatus =[{name:"Operational",color:"green"},{name:"Degraded Performance",color:"black"}]
-  const statusColor=colorCodingStatus.filter(item=>value===item.name)
-
+  const statusColor= colorCodingStatus.filter(item=>value===item.name)
+useEffect(()=>{
+if( !disabled && !dropDownCalled)  //send defaultvalue from dropdown if dropdwon in unchanged
+{
+  dropDownChange({"component_id":label,"component_status":value,"name":name})
+}
+},[disabled])
   const handleDropDownChange=(e)=>{
-  console.log([e.target.value,label])
+  setDropDownCalled(true)
   setSelectedValue(e.target.value)
+  dropDownChange({"component_id":label,"component_status":e.target.value||value,"name":name})//name is added to identify component selected in Paraent component
   }
     return  <FormControl    disabled={disabled}
     sx={{ m: 1, minWidth: 200 }}
     size="small"
   >
-    <InputLabel id="demo-select-small">
-      Status
-    </InputLabel>
+   
     <Select 
-  // sx={{color:statusColor[0].color}}
-  
-      label={label}
+
       labelId="demo-select-small"
       value={selectedValue}
       onChange={handleDropDownChange}

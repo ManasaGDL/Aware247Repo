@@ -9,6 +9,8 @@ const api = {
         return axiosInstance.post(`${baseURL}/auth/refresh_token`, body);
       },
       getComponents : () => {
+        axiosInstance.defaults.headers["businessunit"]="ACS";
+        axiosInstance.defaults.headers["Authorization"]="Bearer "+ localStorage.getItem("access_token")
         return axiosInstance.get(`${baseURL}/api/common/components/components_list`)
       },
       getBussinessUnits : () =>{
@@ -16,6 +18,12 @@ const api = {
       },
       getUserProfile: () =>{
         return axiosInstance.get(`${baseURL}/api/account/userprofile`)
+      },
+      createIncident : (body) =>{
+        return axiosInstance.post(`${baseURL}/api/common/incidents/`,body)
+      },
+      viewIncidents : () =>{ // do we need to suuply BU
+        return axiosInstance.get(`${baseURL}/api/common/incidents/`)
       }
 }
 export default api;

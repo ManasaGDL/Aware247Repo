@@ -16,7 +16,8 @@ import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
 import CustomDropDown from "./CustomDropDown";
 import api from "../../Api";
-const ComponentList2 = () => {
+import LoadingPanel from "../common/TabPanel/LoadingPanel";
+const ComponentList2 = ({ handleComponentStatus, readComponents }) => {
   const [components, setComponents] = useState([]); // maintains the current selected components
   const [allChecked, setAllChecked] = useState(false); //selectAll
   const [checkedItems, setCheckedItems] = useState([]);
@@ -24,9 +25,11 @@ const ComponentList2 = () => {
   const [componentsData, setComponentsData] = useState([]); //read the response from api
   const [listComponents, setListComponents] = useState([]); //find the components(if component having sub components ignore the component and then read the subcomponents)
   const [status, setStatus] = useState("Operational");
+  const [loading, setLoading] = useState(false);
+  const [dropDownStatusValues, setDropDownStatusValues] = useState({}); // set data when customdropdown changes
   let newChecked = [...components];
   useEffect(() => {
-    console.log("slec", components);
+    readComponents(components);
   }, [components]);
   // Here components array maintains the components selected,
   useEffect(() => {
@@ -36,34 +39,21 @@ const ComponentList2 = () => {
       setComponentLength(listComponents.length);
     }
   }, [listComponents, allChecked]);
-  // useEffect(() => {
-  //   let subComponentsArray=[];
-  //   // let componentsArray=componentsData.map(item=>{
-  //   //      if(item.sub_component.length>0)
-  //   //      {
-  //   //        subComponentsArray=  item.sub_component.map(sub=>{ // read subcomponents
-  //   //            return sub.component_name
-  //   //          })
 
-  //   //      }
-  //   //      else{
-  //   //        return item.component_name //reac components if sub component array is empty
-  //   //      }
-  //   //    })
-  //   //  let newComponentsArray = componentsArray.filter(item=>{
-  //   //    return item !== undefined  // filter undefined
-  //   //  })
-  //   //  setListComponents(newComponentsArray.concat(subComponentsArray));
-  // },[componentsData])
   useEffect(() => {
     setComponents(checkedItems); // if any checkbox state changes(check or uncheck),
   }, [checkedItems]);
   useEffect(() => {
+    console.log("componentes selected", components);
+  }, [components]);
+  useEffect(() => {
     async function getComponents() {
       try {
+        setLoading(true);
         const response = await api.getComponents();
-        console.log(response?.data);
+        console.log("components data",response?.data)
         setComponentsData(response?.data);
+        setLoading(false);
       } catch (e) {}
     }
     getComponents();
@@ -102,6 +92,7 @@ const ComponentList2 = () => {
     if (components.indexOf(e) === -1) {
       //if component toggled is not present the components list--->add to list
       newChecked.push(e);
+
     } else {
       newChecked = components.filter((item) => item !== e); //if component toggled is already in component list then remove from the list
     }
@@ -111,8 +102,14 @@ const ComponentList2 = () => {
   const handleDropDownChange = (e) => {
     setStatus(e.target.value);
   };
+  const dropDownChange = (val) => {
+    //read values from child CustomDropDown
+    setDropDownStatusValues(val);
+    handleComponentStatus(val);
+  };
   return (
     <>
+      {loading && <LoadingPanel />}
       <Stack
         direction="row"
         justifyContent="space-between"
@@ -172,8 +169,13 @@ const ComponentList2 = () => {
                             sx={{ paddingLeft: "80px", paddingTop: "2px" }}
                             key={item["component_name"]}
                             secondaryAction={
-                              <CustomDropDown label={item["component_name"]} 
-                            disabled={!components.includes(item.component_name)}
+                              <CustomDropDown
+                                label={item["component_id"]}
+                                dropDownChange={dropDownChange}
+                                disabled={
+                                  !components.includes(item.component_name)
+                                }
+                                name={item.component_name}
                                 value={
                                   component.component_status
                                     .component_status_name
@@ -192,7 +194,7 @@ const ComponentList2 = () => {
                                       ) !== -1
                                 }
                                 onChange={() => {
-                                  handleToggle(item["component_name"]);
+                                  handleToggle(item["component_name"],item.component_status.component_status_name);
                                 }}
                               />
                             </ListItemIcon>
@@ -220,8 +222,14 @@ const ComponentList2 = () => {
                     sx={{ paddingTop: "2px" }}
                     key={component["component_name"]}
                     secondaryAction={
-                      <CustomDropDown label={component["component_name"]} disabled={!components.includes(component.component_name)}
+                      <CustomDropDown
+                        label={component["component_id"]}
+                        disabled={
+                          !components.includes(component.component_name)
+                        }
                         value={component.component_status.component_status_name}
+                        dropDownChange={dropDownChange}
+                        name={component.component_name}
                       />
                     }
                   >
@@ -235,7 +243,7 @@ const ComponentList2 = () => {
                               -1
                         }
                         onChange={() => {
-                          handleToggle(component["component_name"]);
+                          handleToggle(component["component_name"],component.component_status.component_status_name);
                         }}
                       />
                     </ListItemIcon>

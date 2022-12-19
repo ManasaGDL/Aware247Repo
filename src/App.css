@@ -42,6 +42,9 @@ div.rdw-editor-toolbar.toolbar-class{
   color: #545454;
   
 }
+.header{
+  font-weight: 800;
+}
 .pages{
   text-align: left;
 }

@@ -5,10 +5,17 @@ import Box from '@mui/material/Box';
 import Paper from "@mui/material/Paper";
 import HeaderTabs from "../common/HeaderTabs";
 import ViewIncidents from "./ViewIncidents";
+import ViewIncidentWithDropDown from "./ViewIncidentWithDropDown";
 import ScheduledMaintenance from "./ScheduledMaintenance";
+import  Stack  from "@mui/material/Stack";
+import { Button } from "@mui/material";
 const tabs= [
-  { title: "Incidents",
-  content:<ViewIncidents/>
+  { title: "View Incidents",
+   content: <ViewIncidentWithDropDown></ViewIncidentWithDropDown>
+   //<ViewIncidentWithDropDown></ViewIncidentWithDropDown>
+   //<ViewIncidents/>
+ 
+  // <ViewIncidentWithDropDown></ViewIncidentWithDropDown>
   },
   { title: "Scheduled Maintenance",
   content:<ScheduledMaintenance/>
@@ -20,23 +27,11 @@ const tabs= [
 const IncidentPage=()=>{
     const [tabValue, setTabValue] = React.useState(0);
     
-    return <div style={{ margin: "20px 0 0 30px" }}>
-       <Paper sx={{ m: 4 }} elevation={3}>
-        <Box sx={{width:"100%"}}>
-          <HeaderTabs tabs={tabs} tabValue={tabValue} setTabValue={setTabValue}/>
-        {/* <Tabs
-        value={value}
-        onChange={handleChange}
-        
-      >
-        <Tab sx={{fontWeight:"bold"}}
-          value="one"
-          label="Incidents"
-         
-        />
-        <Tab value="two" sx={{fontWeight:"bold"}}label="Scheduled Maintenance" />
-        <Tab value="three"  sx={{fontWeight:"bold"}} label="Incident Templates" />
-      </Tabs> */}
+    return <div style={{textAlign:"left" }}>
+       {/* margin: "20px 0 0 30px" */}
+       <Paper sx={{ mr: 4,ml:2 ,mt:4,mb:4,}} elevation={3}>
+        <Box sx={{width:"100%",height:900}}>
+        <HeaderTabs tabs={tabs} tabValue={tabValue} setTabValue={setTabValue}/>
         </Box>
         </Paper>
     </div>

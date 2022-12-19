@@ -8,7 +8,7 @@ import Paper from "@mui/material/Paper";
 const DashBoard=()=>{
     return <>
     <div style={{textAlign:"left"}}>
-      <div style={{margin:"20px 0 0 30px"}}><h4>Dashboard</h4> </div> 
+      {/* <div style={{margin:"20px 0 0 30px"}}><h4>Dashboard</h4> </div>  */}
      <Box sx={{ p: 1,m:2,backgroundColor:"white",position:"absolute"}}>
            <Paper sx={{padding:2,height:500,width:900}} elevation={3}>  
                    {/* <p>Lorem ipsum dolor sit amet. Sed quaerat soluta 
