@@ -1,23 +1,17 @@
 import React, { useState, useEffect } from "react";
 import List from "@mui/material/List";
-
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import ListItem from "@mui/material/ListItem";
-import { componentData, componentData2 } from "./dummydata";
-import Select from "@mui/material/Select";
 import Checkbox from "@mui/material/Checkbox";
 import Divider from "@mui/material/Divider";
-import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import { FormControlLabel } from "@material-ui/core";
 import { Stack } from "@mui/material";
-import MenuItem from "@mui/material/MenuItem";
-import InputLabel from "@mui/material/InputLabel";
 import CustomDropDown from "./CustomDropDown";
 import api from "../../Api";
 import LoadingPanel from "../common/TabPanel/LoadingPanel";
-const ComponentList2 = ({ handleComponentStatus, readComponents }) => {
+const ComponentList2 = ({ handleComponentStatus, readComponents,bu }) => {
   const [components, setComponents] = useState([]); // maintains the current selected components
   const [allChecked, setAllChecked] = useState(false); //selectAll
   const [checkedItems, setCheckedItems] = useState([]);
@@ -51,13 +45,12 @@ const ComponentList2 = ({ handleComponentStatus, readComponents }) => {
       try {
         setLoading(true);
         const response = await api.getComponents();
-        console.log("components data",response?.data)
         setComponentsData(response?.data);
         setLoading(false);
       } catch (e) {}
     }
     getComponents();
-  }, []);
+  }, [bu]);
   useEffect(() => {
     if (components.length < 6) {
       setAllChecked(false);

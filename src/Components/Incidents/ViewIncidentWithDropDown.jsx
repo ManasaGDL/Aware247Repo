@@ -1,48 +1,59 @@
 import React ,{ useState,useEffect} from "react"
-import { DataGrid ,GridColDef, GridValueGetterParams } from '@mui/x-data-grid'
+import { useNavigate } from "react-router-dom";
+import { DataGrid } from '@mui/x-data-grid'
 import Box from "@mui/material/Box";
 import api from "../../Api"
-import { Button } from "@mui/material";
+import { Button, TextField } from "@mui/material";
 import LoadingPanel from "../common/TabPanel/LoadingPanel";
 import dayjs from "dayjs";
-import Stack from "@mui/material/Stack";
-import IconButton from "@mui/material/IconButton";
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
+
 import { GridActionsCellItem } from "@mui/x-data-grid";
-const handleIconClick =(e,val)=>{
-    console.log("icon click",val)
-   
-}
-const columns = [
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle'
+
+
+const ViewIncidentWithDropDown = ({bu}) =>{
+  const [data , setData] = useState([])
+  const [loading , setLoading] = useState(false)
+  const [ selectedRow ,setSelectedRow] = useState({})
+  const [openDialog , setOpenDialog] =useState({flag:false,value:''})
+  const [openDeleteDialog , setOpenDeleteDialog] = useState({flag:false,value:''})
+  const [text,setText] =useState("")
+  const [keyword,setKeyword]=useState('')
+  const navigate = useNavigate();
+  const columns = [
     {
       field:'id',
     headerName:'Incident ID',
     headerClassName:"header",
    
-    flex: 1,
-    minWidth: 150,
-    // ,width:120
+    flex: 0.4,
+    minWidth: 50,
+    // renderCell:(val)=>{
+    //   return <Link href={`/admin/create_incidents`}></Link>
+    // }
     },
     {
       field:'name',headerName:"Name",
       flex:1,
-      // ,width:150
+     renderCell:(val)=>{
+      console.log(val)
+      return <div className="wrap">{val.value}</div>
+     }
     },
-    // { field: 'incident_id', headerName: 'IncidentID', width: 90 },
+  
     {
       field: 'status',
       headerName: 'Status',
-      flex:1,
+      flex:0.3,
       minWidth: 50,
-      // width: 150,
-   
     },
     {
       field:"created_datetime",
       headerName:' Created Date',
-      flex:1,
+      flex:0.4,
       // width:150,
       renderCell:(val)=>{
         return dayjs(val.value).format("YYYY/MM/DD hh:mm:ss A")
@@ -55,58 +66,54 @@ const columns = [
       type:"actions",
      getActions:(params)=>[
         <GridActionsCellItem
-        sx={{'&.MuiMenuItem-root:hover':{
-            backgroundColor:"#00bcd4"
+        // sx={{'&.MuiMenuItem-root:hover':{
+        //     // backgroundColor:"#E0FFFF"
+        //     // #00bcd4"
            
-        }}}
+        // }}}
             // icon={<SecurityIcon />}
             label="PostMortem"
             onClick={(e)=>{handlePostMortem(params.id)}}
             showInMenu
           />,
           <GridActionsCellItem
-          sx={{'&.MuiMenuItem-root:hover':{
-            backgroundColor:"#00bcd4"
+        //   sx={{'&.MuiMenuItem-root:hover':{
+        //     backgroundColor:"#00bcd4"
            
-        }}}
+        // }}}
            
             label="View Incident"
-            // onClick={duplicateUser(params.id)}
+            onClick={()=>handleViewIncident(params.id)}
             showInMenu
           />,
           <GridActionsCellItem
-          sx={{'&.MuiMenuItem-root:hover':{
-            backgroundColor:"#00bcd4"
+        //   sx={{'&.MuiMenuItem-root:hover':{
+        //     backgroundColor:"#00bcd4"
            
-        }}}
+        // }}}
           
           label="Delete"
-          // onClick={duplicateUser(params.id)}
+          onClick={()=>handleDeleteIncident(params.id)}
           showInMenu
         />
     ]
     }
    
   ];
+  const handleViewIncident =(id)=>{
+  navigate(`/admin/create_incident/${id}`)
+  }
+  const handleDeleteIncident =(val)=>{
+   setKeyword('')
+    setOpenDeleteDialog({flag:true,value:val})
+  }
   const handlePostMortem =(val)=>{
-    alert(val)
-   }
-
-const ViewIncidentWithDropDown = () =>{
-  const [data , setData] = useState([])
-  const [loading , setLoading] = useState(false)
-  const [ selectedRow ,setSelectedRow] = useState({})
-
- 
   
-
-//   const handleClick = (event) => {
-//     setAnchorEl(event.currentTarget);
-//   };
-//   const handleClose = () => {
-//     setAnchorEl(null);
-//   };
+    setOpenDialog({flag:true,value:val})
+    }
+   
     useEffect(()=>{
+     
    const getIncidents = async() =>{
  try{
   setLoading(true)
@@ -121,30 +128,39 @@ const ViewIncidentWithDropDown = () =>{
  }
    }   
     getIncidents();
-    },[])
+    },[bu])
    
   const handleRowClick = (e) =>{
    setSelectedRow(e)
   }
   
   const handleDelete =()=>{
-    alert(selectedRow.id)
+    alert(openDeleteDialog.value)
+    setOpenDeleteDialog({flag:false,value:''})
+    setKeyword('')
+  }
+  const handleFormSubmit =(e) =>{
+   
+ console.log(openDialog.value,text)
+
+  }
+  const handleInputChange =(e)=>{
+    const { name,value}=e.target
+    setText(value)
+  }
+  const handleClose=()=>{
+    setOpenDialog({flag:false,value:''})
+    setOpenDeleteDialog({flag:false,value:''})
+  }
+  const handleDeleteConfirmation =(e)=>{
+ setKeyword(e.target.value)
   }
     return <><div className="pages" >
       {loading && <LoadingPanel/>}
       <Box sx={{ height: 200, width: '100%' }}>
-      {/* <Stack sx={{pb:1}}
-      direction="row"
-      justifyContent="flex-end"
-      alignItems="flex-end"
-      spacing={2}
-     >
-    <Button variant="contained" sx={{color:"white"}} onClick={e=>handlePostMortem()}>POSTMORTEM</Button>
-    <Button variant="contained" sx={{color:"white"}} >VIEW INCIDENT</Button>
-    <Button variant="contained" sx={{color:"white"}} onClick={e=>handleDelete()}>DELETE</Button>
-     </Stack> */}
+      
        {data.length>0?<DataGrid rows={data} columns={columns}  autoHeight  pageSize={10}
-        // rowsPerPageOptions={[5]}
+     
         onRowClick={handleRowClick}
         sx={{
           "&.MuiDataGrid-root .MuiDataGrid-cell:focus-within": {
@@ -154,6 +170,43 @@ const ViewIncidentWithDropDown = () =>{
        }}
       />:""}
         </Box>
+        <Dialog open={openDialog.flag} onBackdropClick={handleClose} >
+        <form onSubmit={handleFormSubmit}>   
+     <DialogTitle>Write Postmortem</DialogTitle>
+     <DialogContent style={{height:'300px'}}>
+      <TextField name="postmortem" multiline  sx={{
+        width: 400
+    }}  InputLabelProps={{
+      shrink: true
+    }}
+    value={text}
+    onChange={(e)=>{
+      e.stopPropagation()
+      handleInputChange(e)}}
+    minRows={10}
+   > </TextField>
+     </DialogContent>
+     <DialogActions sx={{ alignItems:"center"}}>
+      <Button variant="contained" type="submit" sx={{ color:"white"}}> Create Postmortem</Button>
+     </DialogActions>
+     </form>
+        </Dialog>
+        <Dialog open={openDeleteDialog.flag} onBackdropClick={handleClose} >
+      <DialogTitle sx={{fontWeight:"700"}}> Do want to Delete Incident with ID: {openDeleteDialog.value} ? </DialogTitle>
+      <DialogContent>
+        WARNING! Deleting a incident cannot be undone. All associated data will be deleted as well. Please be absolutely sure this is what you want.
+      
+      <br/><br/><div style={{alignItems:'center'}}>
+      Type DELETE in the box below for final confirmation, then hit the delete button.
+      </div>
+      <br/>
+      <TextField name="delete" sx={{width: 300}} value={keyword} onChange={handleDeleteConfirmation} placeholder="Write 'DELETE'"></TextField>
+      </DialogContent>
+      <DialogActions>
+        <Button variant="contained"color="error" disabled={keyword!=="DELETE"?true:false}
+        onClick={e=>handleDelete(e)}>PERMANENTLY DELETE INCIDENT</Button>
+      </DialogActions>
+        </Dialog>
     </div>
     </>
 }

@@ -1,5 +1,5 @@
 import React ,{ useState,useEffect} from "react"
-import { DataGrid ,GridColDef, GridValueGetterParams } from '@mui/x-data-grid'
+import { DataGrid } from '@mui/x-data-grid'
 import Box from "@mui/material/Box";
 import api from "../../Api"
 import { Button } from "@mui/material";
@@ -50,6 +50,7 @@ const ViewIncidents = () =>{
    const getIncidents = async() =>{
  try{
   setLoading(true)
+  alert("ViewIncidents")
  const res= await api.viewIncidents();
 
  setData(res?.data?.results)

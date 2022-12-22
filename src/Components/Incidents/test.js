@@ -23,7 +23,7 @@ const ComponentList2= () => {
   const [status,setStatus]= useState('Operational')
   let newChecked = [...components];
 useEffect(()=>{
-console.log("checked",[checkedItems,components])
+
 console.log("com",components)
 },[checkedItems])
 useEffect(()=>{
@@ -33,7 +33,7 @@ useEffect(()=>{
  }
 },[components])
 useEffect(()=>{
-   console.log("123",allChecked,componentLength,components.length)
+  
 if(allChecked)
 {
   setComponents(['Adobe','API','Test2','Test1','Import','Export','Test'])//read all componentsnames 

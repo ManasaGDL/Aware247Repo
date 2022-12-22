@@ -79,6 +79,9 @@ body .login{
   color:#000;
   transition: all 0.5s;
 }
+.evtUrT{
+  position: sticky;
+}
 .link:hover{
   /* //background: lightgray; */
   color:"#000";
@@ -86,6 +89,17 @@ body .login{
 }
 .icon , .icon-text{
 font-size: 15px;
+}
+.wrap{
+  text-overflow:ellipsis;
+    /* width: 250px; */
+    white-space: nowrap;
+    overflow: hidden;
+}
+.wrap:hover{
+  text-overflow:clip;
+  width:auto;
+  white-space: normal;
 }
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {

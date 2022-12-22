@@ -1,20 +1,19 @@
 import React, { useState , useEffect} from "react"
 import Select from "@mui/material/Select";
 import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
 import MenuItem from "@mui/material/MenuItem";
-import InputLabel from "@mui/material/InputLabel";
-
-
 const CustomDropDown=({value,label,disabled,dropDownChange,name})=>{
  const [selectedValue,setSelectedValue]= useState(value)
-const [dropDownCalled,setDropDownCalled] =useState(false)
-  const colorCodingStatus =[{name:"Operational",color:"green"},{name:"Degraded Performance",color:"black"}]
-  const statusColor= colorCodingStatus.filter(item=>value===item.name)
+ const [dropDownCalled,setDropDownCalled] =useState(false)
+ const [arr,setarr]=useState([])
+ const colorCodingStatus =[{name:"Operational",color:"green"},{name:"Degraded Performance",color:"black"}]
+ const statusColor= colorCodingStatus.filter(item=>value===item.name)
+ 
 useEffect(()=>{
 if( !disabled && !dropDownCalled)  //send defaultvalue from dropdown if dropdwon in unchanged
-{
+{ 
   dropDownChange({"component_id":label,"component_status":value,"name":name})
+
 }
 },[disabled])
   const handleDropDownChange=(e)=>{

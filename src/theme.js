@@ -10,7 +10,11 @@ const theme = createTheme({
       main:'#11cb5f',
       //
     },
-
+    action: {
+      selected: "#80daeb",
+      hover: "#80daeb",
+      // disabled: '#9B9B9B'
+  },
     components: {
       MuiToolbar: {
         styleOverrides: {

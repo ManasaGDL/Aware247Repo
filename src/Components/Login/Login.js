@@ -1,19 +1,16 @@
-import React,{ useState ,useEffect} from 'react';
+import React,{ useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import axios from 'axios';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Paper from "@mui/material/Paper";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { blue ,pink,green, lightBlue,cyan, red} from '@mui/material/colors';
+import { cyan} from '@mui/material/colors';
 import companylogo from "../../assets/data_axle.PNG"
 import api from '../../Api';
 import "./login.css"
@@ -58,13 +55,18 @@ export default function Login(props) {
    try{
    response = await api.login({username: data.get('email').trim(),password: data.get('password').trim()})
   //  const res2= await api.getBussinessUnits();
-      // const res3= await api.getUserProfile();
- 
+       const userResponse= await api.getUserProfile();
+       const businessUnit= userResponse?.data?.Profile?.last_businessiunit_name
+localStorage.setItem("Privileges",userResponse?.data?.Privileges)
+localStorage.setItem("Profile",JSON.stringify(userResponse?.data?.Profile))
+localStorage.setItem("BU",businessUnit)
   if(response)
  {let { access,refresh} = response.data;
  localStorage.setItem("access_token",access);
  localStorage.setItem("refresh_token",refresh);
  axiosInstance.defaults.headers["Authorization"]="Bearer "+localStorage.getItem("access_token");
+// api.getBusinessUnits();
+// api.getUserProfile();
 setLoginData({...loginData,isAuthenticated:true});
  props.setUser({
   email:data.get('email').trim()

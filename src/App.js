@@ -13,12 +13,12 @@ function App(props) {
   return (
     <div className="App">
       <SnackbarContextProvider>
-     <Routes history={history}> 
-     <Route path ="/login" element={<Login setUser={setUser} />}/> 
+      <Routes history={history}> 
+      <Route path ="/login" element={<Login setUser={setUser} />}/> 
       <Route path="/" element={<Navigate to="/login"/>}/>
       <Route path="/*" element={<Container user={user}/>}/>
-    </Routes> 
-    </SnackbarContextProvider>
+      </Routes> 
+      </SnackbarContextProvider>
     </div>
   );
 }

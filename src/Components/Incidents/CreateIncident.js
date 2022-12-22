@@ -19,27 +19,31 @@ import Button from "@mui/material/Button";
 import api from "../../Api";
 import { SnackbarContext } from "../../context/SnackbarContext";
 
-const CreateIncident = () => {
+const CreateIncident = ({bu}) => {
   const [incidentStatus, setIncidentStatus] = useState("Investigating");
   const [componentsSelected, setComponentsSelected] = useState([]); // maintains state of components Selected--->receiving from componentlist2 component
   const [callCreateIncidentAPI, setCallCreateIncidentAPI] = useState(false);
   const { setSnackBarConfig} = useContext(SnackbarContext)
   const [filteredComponents,setFilteredComponents] = useState([])
+  const [testComponents,setTestComponents] = useState([])
   const [incidentObject, setIncidentObject] = useState({
     status: "investigating",
     components: [],
   });
   const [error, setError] = useState({ name: "" });
   let filteredArray=[];
+ let arr=[];
   const navigate = useNavigate();
-  // useEffect(()=>{
-  //   console.log("fltedredcom",filteredComponents)
-  //   setIncidentObject({
-  //     ...incidentObject,
-  //     components: filteredComponents,
-  //     // [...incidentObject.components]
-  //   });
-  // },[filteredComponents])
+  useEffect(()=>{
+setFilteredComponents(testComponents)
+  },[testComponents])
+  useEffect(()=>{
+    setIncidentObject({
+      ...incidentObject,
+      components: [...filteredComponents],
+      // [...incidentObject.components]
+    });
+  },[filteredComponents])
   useEffect(() => {
     callCreateIncidentAPI && callCreateIncident();
   }, [incidentObject, callCreateIncidentAPI]);
@@ -60,22 +64,22 @@ const CreateIncident = () => {
   const handleMessage = (msg) => {
     setIncidentObject({ ...incidentObject, message: msg });
   };
-  const handleComponentStatus = (val) => {
-    
+  const handleComponentStatus = (val) => {  
     // read the component status from child ComponentList2
-   filteredArray= incidentObject?.components?.filter(item=>{//to filter the deafult selected Value passed from dropdown component.....if dropdown is changed
+   filteredArray =[...incidentObject?.components].filter(item=>{//to filter the deafult selected Value passed from dropdown component.....if dropdown is changed
       return item.name!==val.name
       
      })
+ 
      filteredArray.push(val)//add new value to array
-     setIncidentObject({
-      ...incidentObject,
-      components: [...filteredArray]
-      //filteredArray,
-      // [...incidentObject.components]
-    });
-    // console.log(filteredArray)
-     setFilteredComponents(filteredArray)
+ setTestComponents(filteredArray)
+  // setIncidentObject({
+  //     ...incidentObject,
+  //     components: [...filteredArray]  
+    
+  //  });
+     console.log(filteredArray)
+    //  setFilteredComponents(filteredArray)
     // setIncidentObject({ //**** */
     //   ...incidentObject,
     //   components: [...incidentObject.components,val]
@@ -183,6 +187,7 @@ const CreateIncident = () => {
             <ComponentList2
               handleComponentStatus={handleComponentStatus}
               readComponents={readComponents}
+              bu={bu}
             />
             <div style={{ textAlign: "center" }}>
               <Button
