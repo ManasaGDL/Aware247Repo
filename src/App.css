@@ -2,7 +2,13 @@
   margin:0;
   padding:0;
   text-decoration: none;
- font-family:  "proxima-nova", "Helvetica Neue", Helvetica, Arial, Sans-Serif;
+  font-family:  "proxima-nova", "Helvetica Neue", "Helvetica", "Arial", "Sans-Serif","Roboto", "Arial",
+ "Georgia",
+ "Impact",
+ "Tahoma",
+ "Times New Roman",
+ "Verdana",
+;
  font-size: 12;
 }
 .App {
@@ -10,6 +16,9 @@
   height:100%;
   
 }
+/* body{
+  font-family: 'Tahoma';
+} */
 #root{
   height:100%;
 }
@@ -18,16 +27,23 @@
   border: 1px solid #ccc;
  
 }
+.custom-link:hover {
+  color: white;
+  text-decoration-color: white;
+  font-weight: 700;
+  font-size:medium;
+}
 .editor-class {
   background-color:white;
   padding: 1rem;
   border: 1px solid #ccc;
-   overflow-y: auto;
-   overflow-x: auto;
-   height: 400px;
+   /* overflow-y: auto;
+   overflow-x: auto; */
+   /* height: 600px; */
 }
 div.editor-class.rdw-editor-main{
-  height:100px;
+  height:200px; 
+  max-height: 200px;
 }
 .toolbar-class {
   border: 1px solid #ccc;

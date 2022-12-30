@@ -9,10 +9,6 @@ const IncidentPage=({bu})=>{
     const tabs= [
       { title: "View Incidents",
        content: <ViewIncidentWithDropDown bu={bu}></ViewIncidentWithDropDown>
-       //<ViewIncidentWithDropDown></ViewIncidentWithDropDown>
-       //<ViewIncidents/>
-     
-      // <ViewIncidentWithDropDown></ViewIncidentWithDropDown>
       },
       { title: "Scheduled Maintenance",
       content:<ScheduledMaintenance/>
@@ -22,9 +18,8 @@ const IncidentPage=({bu})=>{
       }
     ]
     return <div style={{textAlign:"left" }}>
-       {/* margin: "20px 0 0 30px" */}
        <Paper sx={{ mr: 4,ml:2 ,mt:4,mb:4,}} elevation={3}>
-        <Box sx={{width:"100%",height:900}}>
+        <Box sx={{width:"100%",height:"100%"}}>
         <HeaderTabs tabs={tabs} tabValue={tabValue} setTabValue={setTabValue}/>
         </Box>
         </Paper>

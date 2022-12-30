@@ -3,13 +3,13 @@ import React, { useState, useEffect } from "react"
 import { Grid } from "@mui/material";
 import DashBoard from "../Components/DashBoard/Dashboard";
 import { Route, Routes } from "react-router-dom";
-import CreateIncident from "../Components/Incidents/CreateIncident";
 import Subscribers from "../Components/Subscribers/Subscribers";
 import IncidentPage from "../Components/Incidents/IncidentPage";
 import { ThemeProvider } from '@mui/material/styles'
 import theme from "../theme";
 import SidebarComponent from "../Components/TestSidebar/SidebarComponent";
 import { axiosInstance } from "../axios";
+import EditIncident from "../Components/Incidents/EditIncident";
 // import "./containerStyles
 const Container = ({ user }) => {
     const [collapse, setCollapse] = useState(false)
@@ -40,8 +40,8 @@ const Container = ({ user }) => {
                 <Grid item md={collapse ? 11 : 10}>
                     <Routes>
                         <Route path="/admin/dashboard" element={<DashBoard />} />
-                        <Route path="/admin/create_incident" element={<CreateIncident bu={businessUnit} />} />
-                        <Route path="/admin/create_incident/:id" element={<CreateIncident bu={businessUnit}/>}/>
+                        <Route path="/admin/create_incident" element={<EditIncident bu={businessUnit} />} />
+                        <Route path="/admin/create_incident/:action/:id" element={<EditIncident bu={businessUnit}/>}/>
                         <Route path="/admin/incidents" element={<IncidentPage bu={businessUnit} />} />
                         <Route path="/admin/subscribers" element={<Subscribers />} />
                     </Routes>

@@ -10,7 +10,8 @@ const DashBoard=()=>{
     <div style={{textAlign:"left"}}>
       {/* <div style={{margin:"20px 0 0 30px"}}><h4>Dashboard</h4> </div>  */}
      <Box sx={{ p: 1,m:2,backgroundColor:"white",position:"absolute"}}>
-           <Paper sx={{padding:2,height:500,width:900}} elevation={3}>  
+           <Paper sx={{padding:2,height:600,width:900,display:'flex', justifyContent: 'center', mr: 4, ml: 2, mt: 4, mb: 4  ,
+    alignItems: 'center'}} elevation={3} >  
                    {/* <p>Lorem ipsum dolor sit amet. Sed quaerat soluta 
                     sit dolorem aspernatur quo corrupti labore et Quis atque est recusandae omnis ut odit
                      praesentium est ipsa doloremque. Aut sunt porro ea galisum quia ut quaerat explicabo.
@@ -37,7 +38,10 @@ const DashBoard=()=>{
                         ipsa eos beatae minus. Quo sint vitae non sunt quia ut rerum cupiditate.
                          Eos impedit rerum aut autem praesentium aut quia cumque quo dolore blanditiis sed 
                          beatae eius ex expedita amet qui dolores delectus. </p>  */}
-<h3 style={{textAlign:"center",left:"50%",top:"50%" }}>Page under construction</h3>
+                         
+{/* <h3 style={{textAlign:"center"}}>Page under construction</h3> */}
+<img src={process.env.PUBLIC_URL + "/images/underconstruction2.webp"} height={600} width={900}/>
+
       </Paper> 
                     </Box>        
         </div>

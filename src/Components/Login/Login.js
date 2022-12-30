@@ -55,16 +55,17 @@ export default function Login(props) {
    try{
    response = await api.login({username: data.get('email').trim(),password: data.get('password').trim()})
   //  const res2= await api.getBussinessUnits();
-       const userResponse= await api.getUserProfile();
-       const businessUnit= userResponse?.data?.Profile?.last_businessiunit_name
-localStorage.setItem("Privileges",userResponse?.data?.Privileges)
-localStorage.setItem("Profile",JSON.stringify(userResponse?.data?.Profile))
-localStorage.setItem("BU",businessUnit)
+       
   if(response)
  {let { access,refresh} = response.data;
  localStorage.setItem("access_token",access);
  localStorage.setItem("refresh_token",refresh);
  axiosInstance.defaults.headers["Authorization"]="Bearer "+localStorage.getItem("access_token");
+ const userResponse= await api.getUserProfile();
+       const businessUnit= userResponse?.data?.Profile?.last_businessiunit_name
+localStorage.setItem("Privileges",userResponse?.data?.Privileges)
+localStorage.setItem("Profile",JSON.stringify(userResponse?.data?.Profile))
+localStorage.setItem("BU",businessUnit)
 // api.getBusinessUnits();
 // api.getUserProfile();
 setLoginData({...loginData,isAuthenticated:true});

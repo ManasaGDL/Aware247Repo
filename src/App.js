@@ -9,7 +9,9 @@ import {SnackbarContextProvider} from "./context/SnackbarContext"
 function App(props) {
   const history=useNavigate();
   const [user,setUser] = useState({email:""})
-
+ useEffect(()=>{
+document.title = "Status App"
+ },[])
   return (
     <div className="App">
       <SnackbarContextProvider>

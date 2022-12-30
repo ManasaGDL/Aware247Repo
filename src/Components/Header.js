@@ -20,7 +20,7 @@ const useStyles = makeStyles( theme =>({
  
     header: {
       backgroundImage : `url(${bgLogo})`,
-      height:"70px"
+      height:"65px"
     //   backgroundRepeat:"repeat-x"
 
     },
@@ -119,7 +119,7 @@ const [businessUnit,setBusinessUnit]=useState(localStorage.getItem("BU"))
             return <MenuItem key={bu} value={bu} onClick={handleClose}>{bu}</MenuItem>
           })}
         </Menu>
-       <Typography><FormLabel sx={{color:"white",mr:2}} disableTypography>{localStorage.getItem('user')}</FormLabel></Typography>
+       <Typography><FormLabel sx={{color:"white",mr:2}} disableTypography='true'>{localStorage.getItem('user')}</FormLabel></Typography>
         <div><Button variant="contained" sx={{color:"white",mr:3}} onClick={()=>navigate("/admin/create_incident")}>Create Incident</Button></div>
        
        </Toolbar >

@@ -52,10 +52,10 @@ const SidebarComponent = ({ handleCollapse, dynamicSideBarData }) => {
             {collapsed ? <b><AiOutlineArrowRight style={{ fontSize: "20px", }} /></b> : <b><AiOutlineArrowLeft style={{ fontSize: "20px" }} /></b>}
 
         </IconButton>
-        <Menu iconShape="square">
+        <Menu >
           {sidebardata.map(item => {
             if (dynamicSideBarData.includes(item.title))
-              return <Menuitem
+              return <Menuitem key={item.title}
                 bg={`${item.path === location.pathname ? "active" : ""}`}
                  icon={item.icon} routerLink={<NavLink to={item.path} />}
               >
