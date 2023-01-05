@@ -41,6 +41,9 @@ const api = {
      },
      deleteIncident : ( id ) =>{
       return axiosInstance.delete(`${baseURL}/api/common/incidents/${id}/delete_incident`)
+     },
+     updateIncident : ( id ,body) =>{
+      return axiosInstance.put(`${baseURL}/api/common/incidents/${id}/update_incident/`, body)
      }
 }
 export default api;

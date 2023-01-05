@@ -39,7 +39,8 @@ const ViewIncidentWithDropDown = ({ bu }) => {
       }
     },
     {
-      field: 'name', headerName: "Name",
+      field: 'name', 
+      headerName: "Summary",
       flex: 1,
       renderCell: (val) => {
         return <div className="wrap">{val.value}</div>
@@ -51,6 +52,9 @@ const ViewIncidentWithDropDown = ({ bu }) => {
       headerName: 'Status',
       flex: 0.3,
       minWidth: 50,
+      renderCell : (val) =>{
+        return <>{(val.value).charAt(0).toUpperCase()+(val.value).slice(1)}</>
+      }
     },
     {
       field: "created_datetime",
@@ -70,7 +74,7 @@ const ViewIncidentWithDropDown = ({ bu }) => {
       getActions: (params) => [
 
         <GridActionsCellItem
-          label="Comments"
+          label="Postmortem"
           onClick={(e) => { handleComments(params.id, params.row.incident_postmortem) }}
           showInMenu
         />,
@@ -186,7 +190,7 @@ const ViewIncidentWithDropDown = ({ bu }) => {
     </Box>
     <Dialog open={openDialog.flag} onBackdropClick={handleClose} >
       <form onSubmit={handleFormSubmit}>
-        <DialogTitle>Write Comments</DialogTitle>
+        <DialogTitle>Write Postmortem</DialogTitle>
         <DialogContent style={{ height: '300px' }}>
           <TextField name="comments" multiline sx={{
             width: 400
@@ -202,7 +206,7 @@ const ViewIncidentWithDropDown = ({ bu }) => {
           > </TextField>
         </DialogContent>
         <DialogActions sx={{ alignItems: "center" }}>
-          <Button variant="contained" type="submit" sx={{ color: "white" }} onClick={e => insertComments()}> Write Comments</Button>
+          <Button variant="contained" type="submit" sx={{ color: "white" }} onClick={e => insertComments()}> Write Postmortem</Button>
         </DialogActions>
       </form>
     </Dialog>

@@ -60,22 +60,7 @@ const EditIncident = ({ bu }) => {
     const [trackStatus,setTrackStatus] = useState(initialObj?.status)
     const [ finalObjToUpdate,setFinalObjToUpdate] = useState({}) ////reads status from api response of getIncident and bears current change of status
     const [editorState, setEditorState] = useState(getInitialState(initialObj.message));
-//     useState(() => {
-//         const contentBlock = htmlToDraft(initialObj.message || '');
-// const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks,contentBlock.entityMap);
-// const editorState = EditorState.createWithContent(contentState);
-//        // EditorState.createEmpty() convertFromHTML(
-//         //     const blocksFromHTML = convertFromHTML('<p><span style="font-size:96px">hjymy</span></p>'
-//         //         // initialObj.message || ''
-//         //         )
-//         //     const contentState = ContentState.createFromBlockArray(
-//         //     blocksFromHTML.contentBlocks,
-//         //     blocksFromHTML.entityMap
-//         //     //blocksFromHTML
-//         // )
-//         // return EditorState.createWithContent(contentState)
-//         return editorState
-//     })
+
     let statusArray = []
     const { id} = useParams();
    const navigate = useNavigate()
@@ -110,14 +95,20 @@ const EditIncident = ({ bu }) => {
         const cleanHtml = DOMPurify.sanitize(htmlOutput);
         onChange && onChange(cleanHtml);
       };
+      useEffect(()=>{ //track unchecked
+        if(action==="edit")
+       { const results = initialObj?.components?.filter(({ 'component_id': id1 }) =>  !(componentStatusList.some(({'component_id': id2 }) => id2 === id1)));
+        setUncheckedComponents(results)
+      }
+      },[initialObj,componentStatusList])
     useEffect(() => {
        
         setEditorState(() => {
             
             const contentBlock = htmlToDraft(initialObj?.message||'');
-const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
-const editorState = EditorState.createWithContent(contentState);
-return editorState;
+            const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+            const editorState = EditorState.createWithContent(contentState);
+            return editorState;
             
         })
         setTrackStatus(initialObj.status)
@@ -127,16 +118,23 @@ return editorState;
         if(initialObj.hasOwnProperty('components'))
         {
             setComponentStatusList(initialObj.components.map(obj=>{
-                return {'component_id':obj.component_id,'component_status':obj.component_status}
+                if(obj.sub_component?.length>0)
+                {
+                    return {'component_id':obj.sub_component.component_id,'component_status':obj.sub_component.component_status}
+                }
+               else return {'component_id':obj.component_id,'component_status':obj.component_status}
             }))
         }
     }, [initialObj])
+
     useEffect(()=>{
   if(action==="edit")
   {
-    setIncidentObject({...incidentObject,"components":componentStatusList,"unchecked_components":uncheckedComponents})
-  }
-    },[uncheckedComponents])
+    setIncidentObject({...incidentObject,"components":componentStatusList,"uncheck_component":uncheckedComponents})
+    setFinalObjToUpdate({...finalObjToUpdate,"components":componentStatusList,"uncheck_component":uncheckedComponents})
+   
+}
+    },[uncheckedComponents,componentStatusList])
     useEffect(() => {
         if(typeof id !== 'undefined')
         setIncidentStatus(incidentObject?.status)  /// reading status from response
@@ -150,7 +148,7 @@ return editorState;
     // const newRawState = { ...data, blocks }
     // const _html = draftToHtml(newRawState)
         setIncidentObject({ ...incidentObject, "message":data })
-    
+        setFinalObjToUpdate({...finalObjToUpdate,"message":data})
     }, [editorState])
     useEffect(() => {
 
@@ -173,12 +171,13 @@ if(callCreate)
 {
     callCreateIncidentApi()
 }
-if(callUpdate)
-{ if((incidentObject.message).localeCompare(initialObj.message))
-    {
-    setFinalObjToUpdate({...finalObjToUpdate,'message':incidentObject.message,'components':componentStatusList,'unchecked_components':uncheckedComponents})
-    }
-   else  setFinalObjToUpdate({...finalObjToUpdate,'components':componentStatusList,'unchecked_components':uncheckedComponents})
+if(callUpdate){
+// { if((incidentObject.message).localeCompare(initialObj.message))
+//     {
+//     setFinalObjToUpdate(prev=>
+//          ({...prev,'message':incidentObject.message,'components':componentStatusList,'uncheck_component':uncheckedComponents})
+// )}
+//    else  setFinalObjToUpdate(prev =>({...prev,'components':componentStatusList,'uncheck_component':uncheckedComponents}))
     callUpdateIncidentApi();
 }
 },[callCreate,incidentObject,callUpdate])
@@ -192,10 +191,12 @@ if(callUpdate)
     // setComponentStatusList([])
   }
     },[selectAllchecked])
+    
     useEffect(()=>{
         if(changeStatus)
         {
             setIncidentObject({ ...incidentObject, "status": trackStatus })
+            setFinalObjToUpdate({...finalObjToUpdate,"status":trackStatus})
             setIncidentStatus(trackStatus)  
         }
     },[changeStatus])
@@ -235,7 +236,7 @@ if(callUpdate)
     }
     const handleStatusChange = (e) => {
         setTrackStatus(e.target.value) // maintain changed status
-        if(incidentObject.status === "resolved" && e.target.value !== "resolved") // if incident is already reso;ved and want edit the incdent status,show pop up for confirmation
+        if(initialObj.status === "resolved" && e.target.value !== "resolved") // if incident is already reso;ved and want edit the incdent status,show pop up for confirmation
         {
          setOpenCustomDialog({open:true,message:'Incident is already Resolved . Do you still want to update the incident ?',title:'Confirmation'})
         
@@ -243,7 +244,7 @@ if(callUpdate)
         else {
              setIncidentObject({ ...incidentObject, [e.target.name]: e.target.value })
              setIncidentStatus(e.target.value)
-             setFinalObjToUpdate({...finalObjToUpdate,[e.target.name]: e.target.value })
+             setFinalObjToUpdate(prev=>({...prev,[e.target.name]: e.target.value }))
     }
     
     }
@@ -277,22 +278,28 @@ if(callUpdate)
     }
     if(action === "edit")
     {
+    // const results = initialObj.components.filter(({ 'component_id': id1 }) =>  !(componentStatusList.some(({'component_id': id2 }) => id2 === id1)));
+    // setUncheckedComponents(results)
     if(initialStatus==="resolved")//status check when orginal incident is reolved and changing the components
     {
      setOpenCustomDialog({open:true,message:'Incident is already Resolved . Do you still want to update the incident ?',title:'Confirmation'})
     }
-    const results = initialObj.components.filter(({ 'component_id': id1 }) =>  !(componentStatusList.some(({'component_id': id2 }) => id2 === id1)));
-    setUncheckedComponents(results)
-    setCallUpdate(true)
+   setCallUpdate(true)
+    
     }
     }
     const callUpdateIncidentApi= async() =>{
         try{
-          
-         console.log("update API",finalObjToUpdate)
+        const res = await api.updateIncident(incident_id.current , finalObjToUpdate)
+         navigate("/admin/incidents")
+         setSnackBarConfig({open:true,message:'Incident updated successfully',severity:"success"})
+         setCallUpdate(false)
+         setAction(null)
         }catch(e)
         {
 
+        }finally{
+            setAction('')
         }
     }
     const callCreateIncidentApi =async () =>{
