@@ -46,10 +46,8 @@ export default function Login(props) {
   const handleSubmit = async(event) => {
     let response;
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-   console.log(data)
-    setLoginData({username: data.get('email').trim(),password:data.get('password').trim()})
-    
+    const data = new FormData(event.currentTarget);  
+    setLoginData({username: data.get('email').trim(),password:data.get('password').trim()})    
     if(loginData)
     {
    try{

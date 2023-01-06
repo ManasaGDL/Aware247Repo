@@ -21,7 +21,7 @@ const Menuitem = styled(MenuItem)`
 const SidebarComponent = ({ handleCollapse, dynamicSideBarData }) => {
   
   const { collapseSidebar, toggleSidebar, collapsed } = useProSidebar();
-  const [ loading ,setLoading] =  useState(false)
+ 
   // const [toggled, setToggled] = useState(false)
   const location = useLocation();
   const styles = {
@@ -42,6 +42,7 @@ const SidebarComponent = ({ handleCollapse, dynamicSideBarData }) => {
     collapseSidebar()
     handleCollapse(collapsed)
   }
+
   return <div style={{ display: 'flex', height: '100%', textAlign: "left" ,position:'fixed'}}>
     <Paper elevation={3}>
        <Sidebar width="210px" >

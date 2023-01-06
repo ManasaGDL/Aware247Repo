@@ -10,10 +10,12 @@ import theme from "../theme";
 import SidebarComponent from "../Components/TestSidebar/SidebarComponent";
 import { axiosInstance } from "../axios";
 import EditIncident from "../Components/Incidents/EditIncident";
+import LoadingPanel from "../Components/common/TabPanel/LoadingPanel";
 // import "./containerStyles
 const Container = ({ user }) => {
     const [collapse, setCollapse] = useState(false)
     const [dynamicSideBarData, setDynamicSideBarData] = useState([])
+    const [loading,setLoading] = useState(false)
     const [businessUnit, setBusinessUnit] = useState(localStorage.getItem("BU"))//passing BU to components 
     const handleCollapse = (collapse) => {
         setCollapse(!collapse)
@@ -25,18 +27,19 @@ const Container = ({ user }) => {
     }
 
     return <ThemeProvider theme={theme}>
+         
         <section>
             <div style={{ height: "60px" }}>
                 {/* pass sidebar data from Header to container to SidebarComponent  */}
                 <Header user={user} setDynamicSideBarData={setDynamicSideBarData} businessunit={setBusinessUnit}></Header>
-
+              
             </div>
         </section>
         <section >
-
-            <Grid container sx={{ height: '100vh' }}>
+        
+           { <Grid container sx={{ height: '100vh' }}>
                 <Grid item md={collapse ? 1 : 2}>
-                    <SidebarComponent handleCollapse={handleCollapse} dynamicSideBarData={dynamicSideBarData}></SidebarComponent>
+                    <SidebarComponent handleCollapse={handleCollapse} setLoading={setLoading} dynamicSideBarData={dynamicSideBarData}></SidebarComponent>
                 </Grid>
                 <Grid item md={collapse ? 11 : 10}>
                     <Routes>
@@ -48,7 +51,7 @@ const Container = ({ user }) => {
                         <Route path="/admin/subscribers" element={<Subscribers />} />
                     </Routes>
                 </Grid>
-            </Grid>
+            </Grid>}
             <div>
             </div>
 
