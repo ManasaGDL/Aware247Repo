@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState  , useEffect} from "react";
 import { IconButton } from "@mui/material";
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai";
 import { NavLink, useLocation } from 'react-router-dom';
 import { Sidebar, Menu, MenuItem, useProSidebar } from 'react-pro-sidebar';
 import { sidebardata } from "../sidebar/sidebardata";
+
 import Paper from "@mui/material/Paper";
 import "../../App.css"
 import styled from "styled-components";
@@ -20,6 +21,7 @@ const Menuitem = styled(MenuItem)`
 const SidebarComponent = ({ handleCollapse, dynamicSideBarData }) => {
   
   const { collapseSidebar, toggleSidebar, collapsed } = useProSidebar();
+  const [ loading ,setLoading] =  useState(false)
   // const [toggled, setToggled] = useState(false)
   const location = useLocation();
   const styles = {
@@ -35,6 +37,7 @@ const SidebarComponent = ({ handleCollapse, dynamicSideBarData }) => {
       //   }
     },
   };
+
   const handleClick = () => {
     collapseSidebar()
     handleCollapse(collapsed)
@@ -52,6 +55,7 @@ const SidebarComponent = ({ handleCollapse, dynamicSideBarData }) => {
             {collapsed ? <b><AiOutlineArrowRight style={{ fontSize: "20px", }} /></b> : <b><AiOutlineArrowLeft style={{ fontSize: "20px" }} /></b>}
 
         </IconButton>
+      
         <Menu >
           {sidebardata.map(item => {
             if (dynamicSideBarData.includes(item.title))

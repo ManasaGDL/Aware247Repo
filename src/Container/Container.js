@@ -2,7 +2,7 @@ import Header from "../Components/Header";
 import React, { useState, useEffect } from "react"
 import { Grid } from "@mui/material";
 import DashBoard from "../Components/DashBoard/Dashboard";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes ,Navigate} from "react-router-dom";
 import Subscribers from "../Components/Subscribers/Subscribers";
 import IncidentPage from "../Components/Incidents/IncidentPage";
 import { ThemeProvider } from '@mui/material/styles'
@@ -18,6 +18,7 @@ const Container = ({ user }) => {
     const handleCollapse = (collapse) => {
         setCollapse(!collapse)
     }
+  
     if (localStorage.getItem("access_token")) {
         axiosInstance.defaults.headers["businessunit"] = localStorage.getItem("BU");
         axiosInstance.defaults.headers["Authorization"] = "Bearer " + localStorage.getItem("access_token")
@@ -39,7 +40,7 @@ const Container = ({ user }) => {
                 </Grid>
                 <Grid item md={collapse ? 11 : 10}>
                     <Routes>
-                        <Route path="/admin" element={<DashBoard/>}/>
+                        <Route path="/admin" element={<Navigate to="/admin/dashboard"/>}/>
                         <Route path="/admin/dashboard" element={<DashBoard />} />
                         <Route path="/admin/create_incident" element={<EditIncident bu={businessUnit} />} />
                         <Route path="/admin/create_incident/:action/:id" element={<EditIncident bu={businessUnit}/>}/>
