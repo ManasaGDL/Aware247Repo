@@ -54,6 +54,7 @@ const EditIncident = ({ bu }) => {
     const [selectAllchecked,setSelectAllChecked] = useState(false)
     const [error, setError] = useState({ name: "" });
     const [action , setAction] =useState('')
+    const [finalConfirmationStatus,setFinalConfirmationStatus] = useState(false)
     const [changeStatus,setChangeStatus] = useState(false)
     const [initialStatus,setInitialStatus] =useState(initialObj?.status)//reads status from api response of getIncident
     const [openCustomDialog , setOpenCustomDialog] = useState({open:false})
@@ -66,9 +67,6 @@ const EditIncident = ({ bu }) => {
    const navigate = useNavigate()
     const incident_id =  useRef(id);
     const prevbusinessunit = useRef(bu)
-// useEffect(()=>{
-// console.log("Final",finalObjToUpdate)
-// },[finalObjToUpdate])
  useEffect(()=>{
    if(typeof id==="undefined")
    {setAction('create')
@@ -82,6 +80,7 @@ const EditIncident = ({ bu }) => {
  
    }
     },[id])
+
    useEffect(()=>{
  if(prevbusinessunit.current!==bu)
  {
@@ -115,7 +114,7 @@ const EditIncident = ({ bu }) => {
         })
         setTrackStatus(initialObj.status)
         setInitialStatus(initialObj.status)
-       
+      
         setIncidentObject({ ...initialObj })
         if(initialObj.hasOwnProperty('components'))
         {
@@ -230,7 +229,7 @@ if(callUpdate){
     }
     const handleNameChange = (e) => {
         setIncidentObject({ ...incidentObject, [e.target.name]: e.target.value })
-        setFinalObjToUpdate({[e.target.name]: e.target.value})
+        setFinalObjToUpdate({...finalObjToUpdate,[e.target.name]: e.target.value})
         if(e.target.value.length>0)
         {
             setError({ name: [] });
@@ -245,8 +244,9 @@ if(callUpdate){
         }
         else {
              setIncidentObject({ ...incidentObject, [e.target.name]: e.target.value })
+             setFinalObjToUpdate({...finalObjToUpdate,[e.target.name]: e.target.value })
              setIncidentStatus(e.target.value)
-             setFinalObjToUpdate(prev=>({...prev,[e.target.name]: e.target.value }))
+            
     }
     
     }
@@ -282,15 +282,17 @@ if(callUpdate){
     // setUncheckedComponents(results)
     if(initialStatus==="resolved")//status check when orginal incident is reolved and changing the components
     {
+        setFinalConfirmationStatus(true)
      setOpenCustomDialog({open:true,message:'Incident is already Resolved . Do you still want to update the incident ?',title:'Confirmation'})
+    //  !openCustomDialog.open && setCallUpdate(true)
     }
-   setCallUpdate(true)
+   else setCallUpdate(true)
     
     }
     }
     const callUpdateIncidentApi= async() =>{
-        try{
-        const res = await api.updateIncident(incident_id.current , finalObjToUpdate)
+        try{           
+        const res = await api.updateIncident(incident_id.current , finalObjToUpdate)       
          navigate("/admin/incidents")
          setSnackBarConfig({open:true,message:'Incident updated successfully',severity:"success"})
          setCallUpdate(false)
@@ -319,8 +321,11 @@ if(callUpdate){
     const handleConfirmation =() =>{ // when status is "resolved " and want to go ahead with incident update handleConfirmation is used(passed to custom dialogs)
   
    setChangeStatus(true)
-   setInitialStatus(trackStatus)  // if user is Okay to change the status from reolved , then assign initialStatus with trackStatus
+   setInitialStatus(trackStatus)
+    // if user is Okay to change the status from reolved , then assign initialStatus with trackStatus
    setOpenCustomDialog({open:false})
+ finalConfirmationStatus &&  setCallUpdate(true)   // finalConfrimationStatus is used to as a condition to make api call, if no finalConfirmationStatus variable is used
+ //api call straightly called on click of "Yes" of STATUS change as same Dialog component is reused for alert on change of sttaus and update incident on checkbox changes
     }
     const handleSelectAll = (e) =>{
  
@@ -367,8 +372,7 @@ if(callUpdate){
                 {<RadioGroup
                     row
                     aria-labelledby="status"
-                    name="status"
-                    
+                    name="status" 
                     value={incidentstatus}
                     onChange={handleStatusChange}
                 >
@@ -616,6 +620,7 @@ if(callUpdate){
                 sx={{ ml: 2, mt: 6, color: "white" }}
                 size="large"
                 onClick={() => handleUpdateIncident()}
+                // disabled={disableUpdateButton}
               >
                 {id?'Update Incident':' Create Incident'}
               </Button>

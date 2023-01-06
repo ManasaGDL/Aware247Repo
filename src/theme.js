@@ -5,14 +5,16 @@ const theme = createTheme({
     fontSize: 12,
   },
   palette: {
-    primary: cyan,
+    primary: cyan
+    // {main:'#80daeb'}
+    ,
     secondary: {
       main:'#11cb5f',
       //
     },
     action: {
       selected: "#80daeb",
-      hover: "#80daeb",
+       hover: "#80daeb",
       // disabled: '#9B9B9B'
   },
     components: {

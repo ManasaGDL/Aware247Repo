@@ -53,7 +53,9 @@ const ViewIncidentWithDropDown = ({ bu }) => {
       flex: 0.3,
       minWidth: 50,
       renderCell : (val) =>{
-        return <>{(val.value).charAt(0).toUpperCase()+(val.value).slice(1)}</>
+        return <>{
+           val.value?(val?.value).charAt(0).toUpperCase()+(val.value).slice(1):
+          val.value}</>
       }
     },
     {
@@ -111,7 +113,6 @@ const ViewIncidentWithDropDown = ({ bu }) => {
       try {
         setLoading(true)
         const res = await api.viewIncidents();
-
         setData(res?.data?.results)
         setLoading(false)
       }
@@ -131,8 +132,12 @@ const ViewIncidentWithDropDown = ({ bu }) => {
     try {
       const res = await api.deleteIncident(openDeleteDialog.value)
       setOpenDeleteDialog({ flag: false, value: '' })
-      window.location.reload() && loading && <LoadingPanel />
+      // window.location.reload() && loading && <LoadingPanel />
       setSnackBarConfig({ open: "true", message: "Incident Deleted Successfully", severity: "success" })
+      setLoading(true)
+     let res2 = await api.viewIncidents();
+     setData(res2?.data?.results)
+     res2 && setLoading(false)
     } catch (e) {
       console.log(e)
     } finally {
@@ -158,7 +163,9 @@ const ViewIncidentWithDropDown = ({ bu }) => {
       const res = await api.addComments(openDialog.value, {
         "incident_postmortem": text
       })
-      window.location.reload() && loading && <LoadingPanel />
+      let res2 = await api.viewIncidents();
+      setData(res2?.data?.results)
+      res2 && setLoading(false)
       setSnackBarConfig({ open: "true", message: "Comments updated successfully", severity: "success" })
       setOpenDialog({ flag: false, value: '' })
       setText('')
@@ -169,9 +176,10 @@ const ViewIncidentWithDropDown = ({ bu }) => {
   }
 
   return <><div className="pages" >
+   <div >
     {loading && <LoadingPanel />}
-    <Box sx={{ height: 700, width: '100%' }}>
-
+    </div>
+    <Box sx={{ height: 700, width: '100%' }}>    
       {data.length > 0 ? <DataGrid rows={data} columns={columns} pageSize={15}
         rowHeight={45}
         onRowClick={handleRowClick}
@@ -188,6 +196,7 @@ const ViewIncidentWithDropDown = ({ bu }) => {
         }}
       /> : ""}
     </Box>
+    
     <Dialog open={openDialog.flag} onBackdropClick={handleClose} >
       <form onSubmit={handleFormSubmit}>
         <DialogTitle>Write Postmortem</DialogTitle>
