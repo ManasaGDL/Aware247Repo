@@ -9,7 +9,7 @@ import Paper from "@mui/material/Paper";
 import "../../App.css"
 import styled from "styled-components";
 const Menuitem = styled(MenuItem)`
- background-color:${props => props.bg === "active" ? "#80daeb" : ""}
+ background-color:${props => props.bg === "active" ? "" : ""}
 `;
 
 const SidebarComponent = ({ handleCollapse, dynamicSideBarData }) => {

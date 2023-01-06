@@ -53,7 +53,9 @@ const ViewIncidentWithDropDown = ({ bu }) => {
       flex: 0.3,
       minWidth: 50,
       renderCell : (val) =>{
-        return <>{(val.value).charAt(0).toUpperCase()+(val.value).slice(1)}</>
+        return <>{
+           val.value?(val?.value).charAt(0).toUpperCase()+(val.value).slice(1):
+          val.value}</>
       }
     },
     {
