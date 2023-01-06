@@ -134,7 +134,6 @@ const ViewIncidentWithDropDown = ({ bu }) => {
       setSnackBarConfig({ open: "true", message: "Incident Deleted Successfully", severity: "success" })
       setLoading(true)
      let res2 = await api.viewIncidents();
-
      setData(res2?.data?.results)
      res2 && setLoading(false)
     } catch (e) {
@@ -175,9 +174,10 @@ const ViewIncidentWithDropDown = ({ bu }) => {
   }
 
   return <><div className="pages" >
-   
-    <Box sx={{ height: 700, width: '100%' }}>
-
+   <div >
+    {loading && <LoadingPanel />}
+    </div>
+    <Box sx={{ height: 700, width: '100%' }}>    
       {data.length > 0 ? <DataGrid rows={data} columns={columns} pageSize={15}
         rowHeight={45}
         onRowClick={handleRowClick}
@@ -194,9 +194,7 @@ const ViewIncidentWithDropDown = ({ bu }) => {
         }}
       /> : ""}
     </Box>
-    <div style={{ padding: 30 }}>
-    {loading && <LoadingPanel />}
-    </div>
+    
     <Dialog open={openDialog.flag} onBackdropClick={handleClose} >
       <form onSubmit={handleFormSubmit}>
         <DialogTitle>Write Postmortem</DialogTitle>
