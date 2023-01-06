@@ -9,13 +9,7 @@ import Paper from "@mui/material/Paper";
 import "../../App.css"
 import styled from "styled-components";
 const Menuitem = styled(MenuItem)`
- &: hover {
-    background-color: red;
-    // cursor: pointer;
-  //  padding:5px,
-  //   border-radius: 10px;
-  }
- background-color:${props => props.bg === "active" ? "lightblue" : ""}
+ background-color:${props => props.bg === "active" ? "#80daeb" : ""}
 `;
 
 const SidebarComponent = ({ handleCollapse, dynamicSideBarData }) => {
@@ -23,21 +17,8 @@ const SidebarComponent = ({ handleCollapse, dynamicSideBarData }) => {
   const { collapseSidebar, toggleSidebar, collapsed } = useProSidebar();
  
   // const [toggled, setToggled] = useState(false)
-  const location = useLocation();
-  const styles = {
-    sideBarHeight: {
-      height: "145vh"
-    },
-    menuIcon: {
-      float: "right",
-      margin: "10px",
-      fontSize: "15px",
-      //   '&:hover':{
-      //  backgroundColor:"lightblue"
-      //   }
-    },
-  };
-
+  const location = useLocation();  
+  
   const handleClick = () => {
     collapseSidebar()
     handleCollapse(collapsed)
@@ -56,12 +37,18 @@ const SidebarComponent = ({ handleCollapse, dynamicSideBarData }) => {
             {collapsed ? <b><AiOutlineArrowRight style={{ fontSize: "20px", }} /></b> : <b><AiOutlineArrowLeft style={{ fontSize: "20px" }} /></b>}
 
         </IconButton>
-      
-        <Menu >
+        <Menu  renderMenuItemStyles={() => ({
+      '.menu-anchor': {
+            // backgroundColor: 'red',
+            '&:hover': {
+              backgroundColor: `lightblue`,
+            },
+        },
+      })}>
           {sidebardata.map(item => {
             if (dynamicSideBarData.includes(item.title))
-              return <Menuitem key={item.title}
-                bg={`${item.path === location.pathname ? "active" : ""}`}
+              return <Menuitem key={item.title} 
+                 bg={`${item.path === location.pathname ? "active" : ""}`}
                  icon={item.icon} routerLink={<NavLink to={item.path} />}
               >
                 <b style={{ fontSize: "14px" }}> {item.title}</b>
