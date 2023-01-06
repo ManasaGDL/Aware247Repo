@@ -66,7 +66,9 @@ const EditIncident = ({ bu }) => {
    const navigate = useNavigate()
     const incident_id =  useRef(id);
     const prevbusinessunit = useRef(bu)
-
+// useEffect(()=>{
+// console.log("Final",finalObjToUpdate)
+// },[finalObjToUpdate])
  useEffect(()=>{
    if(typeof id==="undefined")
    {setAction('create')
@@ -269,8 +271,6 @@ if(callUpdate){
       setComponentStatusList(componentStatusList.map(com=>com.component_id === id ? {...com,'component_status':e.target.value}:com))
     }
     const handleUpdateIncident=()=>{   
-    console.log("Update button",[incidentObject,componentStatusList])
-
     if(action === 'create')
     {
     setIncidentObject({...incidentObject,'components':componentStatusList})

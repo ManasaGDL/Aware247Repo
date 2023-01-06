@@ -39,6 +39,7 @@ const Container = ({ user }) => {
                 </Grid>
                 <Grid item md={collapse ? 11 : 10}>
                     <Routes>
+                        <Route path="/admin" element={<DashBoard/>}/>
                         <Route path="/admin/dashboard" element={<DashBoard />} />
                         <Route path="/admin/create_incident" element={<EditIncident bu={businessUnit} />} />
                         <Route path="/admin/create_incident/:action/:id" element={<EditIncident bu={businessUnit}/>}/>
