@@ -58,6 +58,10 @@ div.rdw-editor-toolbar.toolbar-class{
   color: #545454;
   
 }
+.disable-pointer-events{
+  pointer-events: none;
+  opacity: 0.6;
+}
 .header{
   font-weight: 800;
 }

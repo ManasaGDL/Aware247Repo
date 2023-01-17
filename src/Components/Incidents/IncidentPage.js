@@ -18,11 +18,11 @@ const IncidentPage=({bu})=>{
       }
     ]
     return <div style={{textAlign:"left" }}>
-       <Paper sx={{ mr: 4,ml:2 ,mt:4,mb:4,}} elevation={3}>
-        <Box sx={{width:"100%",height:"100%"}}>
+       {/* <Paper sx={{ mr: 4,ml:2 ,mt:4,mb:4,}} elevation={3}>
+        <Box sx={{width:"100%",height:"100%"}}> */}
         <HeaderTabs tabs={tabs} tabValue={tabValue} setTabValue={setTabValue}/>
-        </Box>
-        </Paper>
+        {/* </Box>
+        </Paper> */}
     </div>
 }
 export default IncidentPage;

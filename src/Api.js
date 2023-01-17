@@ -23,7 +23,7 @@ const api = {
         return axiosInstance.post(`${baseURL}/api/common/incidents/`,body)
       },
       viewIncidents : () =>{ // do we need to suuply BU
-        return axiosInstance.get(`${baseURL}/api/common/incidents/?limit=400`)
+        return axiosInstance.get(`${baseURL}/api/common/incidents/?limit=600`)
       },
       getSideBarData : () =>{
         axiosInstance.defaults.headers["businessunit"]=localStorage.getItem("BU");
@@ -44,6 +44,9 @@ const api = {
      },
      updateIncident : ( id ,body) =>{
       return axiosInstance.put(`${baseURL}/api/common/incidents/${id}/update_incident/`, body)
+     },
+     getActivityLog : (body) =>{
+      return axiosInstance.put(`${baseURL}/api/common/incident_activity_log/incident_activity/`,body)
      }
 }
 export default api;

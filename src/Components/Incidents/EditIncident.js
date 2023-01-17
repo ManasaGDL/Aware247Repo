@@ -2,7 +2,9 @@ import React, { useEffect, useState, useRef ,useContext} from "react"
 import { useParams ,useNavigate} from "react-router-dom";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box"
-import { FormControl } from "@mui/material";
+import Grid from "@mui/material/Grid";
+import Backdrop from '@mui/material/Backdrop';
+import { FormControl, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel"
@@ -21,13 +23,18 @@ import ListItem from "@mui/material/ListItem";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import DOMPurify from "dompurify";
+import Tooltip from '@mui/material/Tooltip';
 import CustomDialogs from "../common/Dialogs/CustomDialogs";
 import { EditorState, convertToRaw, ContentState} from "draft-js";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import useStatus from "../DashBoard/useStatus";
 
 import htmlToDraft from 'html-to-draftjs';
 import api from "../../Api";
 import { SnackbarContext } from "../../context/SnackbarContext";
+import LinearProgress from "@mui/material/LinearProgress";
+import statuses from "../DashBoard/statuses";
+import LoadingPanel from "../common/TabPanel/LoadingPanel";
 
 const getInitialState = (defaultValue) => {
     if (defaultValue) {
@@ -68,6 +75,7 @@ const EditIncident = ({ bu }) => {
     const incident_id =  useRef(id);
     const prevbusinessunit = useRef(bu)
  useEffect(()=>{
+    setLoading(true)
    if(typeof id==="undefined")
    {setAction('create')
     setInitialObj({status:'investigating'})
@@ -172,16 +180,12 @@ if(callCreate)
 {
     callCreateIncidentApi()
 }
-if(callUpdate){
-// { if((incidentObject.message).localeCompare(initialObj.message))
-//     {
-//     setFinalObjToUpdate(prev=>
-//          ({...prev,'message':incidentObject.message,'components':componentStatusList,'uncheck_component':uncheckedComponents})
-// )}
-//    else  setFinalObjToUpdate(prev =>({...prev,'components':componentStatusList,'uncheck_component':uncheckedComponents}))
+if(callUpdate)
+{
+
     callUpdateIncidentApi();
 }
-},[callCreate,incidentObject,callUpdate])
+},[callCreate,callUpdate])
     useEffect(()=>{
   if(selectAllchecked)
   {
@@ -201,12 +205,15 @@ if(callUpdate){
             setIncidentStatus(trackStatus)  
         }
     },[changeStatus])
+    useEffect(()=>{
+console.log("dd",dropdownStatus)
+    },[dropdownStatus])
     useEffect(() => {
 
         componentsData.length > 0 && componentsData.forEach((item) => {
             if (item.sub_component.length > 0) {
                 item.sub_component.map(subcomponent => {
-                    statusArray.push({ 'component_id': subcomponent.component_id, 'component_status': subcomponent.component_status.component_status_name })
+                    statusArray.push({ 'component_id': subcomponent.component_id, 'component_status': subcomponent.component_status.component_status_name,'component_last_status':subcomponent.com })
                 })
 
             } else {
@@ -221,6 +228,7 @@ if(callUpdate){
     const callGetIncident = async () => { //get detailts w rt specific incident
         try {
             const res = await api.getIncident(incident_id.current)
+            setLoading(false)
             setInitialObj(res?.data)
         }
         catch (e) {
@@ -283,7 +291,7 @@ if(callUpdate){
     if(initialStatus==="resolved")//status check when orginal incident is reolved and changing the components
     {
         setFinalConfirmationStatus(true)
-     setOpenCustomDialog({open:true,message:'Incident is already Resolved . Do you still want to update the incident ?',title:'Confirmation'})
+       setOpenCustomDialog({open:true,message:'Incident is already Resolved . Do you still want to update the incident ?',title:'Confirmation'})
     //  !openCustomDialog.open && setCallUpdate(true)
     }
    else setCallUpdate(true)
@@ -292,16 +300,18 @@ if(callUpdate){
     }
     const callUpdateIncidentApi= async() =>{
         try{           
-        const res = await api.updateIncident(incident_id.current , finalObjToUpdate)       
+        const res = await api.updateIncident(incident_id.current , finalObjToUpdate) 
+        setCallUpdate(false)      
          navigate("/admin/incidents")
          setSnackBarConfig({open:true,message:'Incident updated successfully',severity:"success"})
-         setCallUpdate(false)
+         
          setAction(null)
         }catch(e)
         {
 
         }finally{
             setAction('')
+            setCallUpdate(false) 
         }
     }
     const callCreateIncidentApi =async () =>{
@@ -337,14 +347,19 @@ if(callUpdate){
         setIncidentObject({...incidentObject,message:val})
        
     }
+   
     return <div style={{ textAlign: "left" }}>
-        <Paper sx={{ mr: 4, ml: 2, mt: 4, mb: 4 }} elevation={3}>
-            <h5 style={{ paddingTop: 20 , marginLeft:20 }}>{id ? `Update Incident` :' Create Incident'}</h5>
-            <Box sx={{ pl: 3, pr: 3, mt: 2, backgroundColor: "white" }}>
-                <CustomDialogs open ={openCustomDialog.open} message={openCustomDialog.message}
+        {/* <Paper sx={{ mr: 4, ml: 2, mt: 4, mb: 4 }} elevation={3}> */}
+            <h4 style={{ paddingTop: 20 , marginLeft:20 }}>{id ? `` :' Create Incident'}</h4>           
+            { <Box sx={{ pl: 3,pt:2, pr: 3, mt: 0, backgroundColor: "white" }}>
+                <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={loading}>
+                    <LoadingPanel></LoadingPanel>
+                </Backdrop>
+             <CustomDialogs open ={openCustomDialog.open} message={openCustomDialog.message}
                 title={openCustomDialog.title} setOpenCustomDialog={setOpenCustomDialog} 
                 handleConfirmation={handleConfirmation}
                 />
+               
                 <FormControl fullWidth>
                     <Box>
                         <TextField
@@ -397,6 +412,7 @@ if(callUpdate){
                         label="Resolved"
                     />
                 </RadioGroup>}
+              
                 <FormLabel sx={{ fontWeight: "bold" }}>Message</FormLabel>
                 <br />
               
@@ -415,6 +431,7 @@ if(callUpdate){
                 ) : (
                   ""
                 )}
+                <div className={initialObj.status ==="resolved"?'disable-pointer-events':''}>
                 <Stack
                     direction="row"
                     justifyContent="space-between"
@@ -451,7 +468,7 @@ if(callUpdate){
                             <>
                                 {component["sub_component"].length > 0 ? (
                                     <>
-                                        <ListItem
+                                        <ListItem   // category
                                             sx={{ paddingTop: "2px" }}
                                             key={component.component_id}
                                         >
@@ -463,10 +480,13 @@ if(callUpdate){
                                                     color: "rgb(101, 101, 101)",
                                                     fontSize: "12px",
                                                 }}
-                                                primary={component.component_name}
-                                            ></ListItemText>
+                                                primary={<>{component.component_name }
+                                            </>}></ListItemText>
+                                                
+       
                                         </ListItem>
                                         <Divider />
+                                      
                                         <List component="div">
                                             {component["sub_component"].map((item, index) => {
 
@@ -527,7 +547,18 @@ if(callUpdate){
                                                             </ListItemIcon>
                                                             <ListItemText
                                                                 disableTypography='true'
-                                                                primary={item["component_name"]}
+                                                                primary={
+                                                                <Grid container spacing={4} display="flex" justifyContent={'center'}>
+                                                                    <Grid item md={3}>{item["component_name"]} </Grid>
+                                                                <Grid item md={7} >{initialObj.status==="resolved" ?(((componentStatusList.findIndex((item1 )=>{
+                                                                        return item1.component_id === item.component_id
+                                                                }))!==-1)?
+                                                               <Tooltip title="Previous Status"><label style={{color:'#FF8E9E'}}> {(initialObj.components.map(item2=>{
+                                                                   if(item2.component_id === item.component_id)
+                                                                   return item2?.last_component_status
+                                                                }))}</label></Tooltip>
+                                                               :'')
+                                                                :''}</Grid></Grid>}
                                                                 sx={{
                                                                     pl: 4,
                                                                     fontSize: "12px",
@@ -604,7 +635,18 @@ if(callUpdate){
                                                     color: "rgb(101, 101, 101)",
                                                     fontSize: "12px",
                                                 }}
-                                                primary={component.component_name}
+                                                primary={<Grid container spacing={11} display='flex' justifyContent='center'>
+                                                    <Grid item md={4}>{component.component_name} </Grid>
+                                                    <Grid item md={7} >{initialObj.status==="resolved" ?
+                                                    (((componentStatusList.findIndex((item )=>{
+                                                        return item.component_id === component.component_id
+                                                }))!==-1)?
+                                               <Tooltip title="Previous Status"><label style={{color:'#FF8E9E'}}>{(initialObj.components.map(item=>{
+                                                   if(item.component_id === component.component_id)
+                                                   return item?.last_component_status
+                                                }))}</label></Tooltip>
+                                               :'')
+                                                :''}</Grid></Grid>}
                                             ></ListItemText>
                                         </ListItem>
                                         <Divider />
@@ -624,10 +666,11 @@ if(callUpdate){
               >
                 {id?'Update Incident':' Create Incident'}
               </Button>
+              </div>
             </div>
-            </Box>
+            </Box>}
             <br/>
-        </Paper>
+        {/* </Paper> */}
     </div>
 }
 export default EditIncident;

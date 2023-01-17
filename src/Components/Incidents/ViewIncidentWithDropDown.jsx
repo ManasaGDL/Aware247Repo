@@ -13,7 +13,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle'
 import { SnackbarContext } from "../../context/SnackbarContext";
-
+import Backdrop from "@mui/material/Backdrop";
 
 const ViewIncidentWithDropDown = ({ bu }) => {
   const [data, setData] = useState([])
@@ -177,7 +177,9 @@ const ViewIncidentWithDropDown = ({ bu }) => {
 
   return <><div className="pages" >
    <div >
-    {loading && <LoadingPanel />}
+   <Backdrop  sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={loading}>
+    <LoadingPanel></LoadingPanel>
+   </Backdrop>
     </div>
     <Box sx={{ height: 700, width: '100%' }}>    
       {data.length > 0 ? <DataGrid rows={data} columns={columns} pageSize={15}
