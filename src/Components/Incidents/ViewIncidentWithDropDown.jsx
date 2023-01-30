@@ -178,8 +178,8 @@ const ViewIncidentWithDropDown = ({ bu }) => {
   return <><div className="pages" >
    <div >
    <Backdrop  sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={loading}>
-    <LoadingPanel></LoadingPanel>
-   </Backdrop>
+    <LoadingPanel ></LoadingPanel>
+    </Backdrop>
     </div>
     <Box sx={{ height: 700, width: '100%' }}>    
       {data.length > 0 ? <DataGrid rows={data} columns={columns} pageSize={15}

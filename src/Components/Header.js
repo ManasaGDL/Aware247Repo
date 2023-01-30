@@ -6,14 +6,10 @@ import bgLogo from "../assets/body_bg.png"
 import Button from "@mui/material/Button";
 import FormLabel from "@mui/material/FormLabel";
 import { useNavigate } from "react-router-dom"
-
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import IconButton from "@mui/material/IconButton";
 import api from "../Api";
-import ListAltIcon from '@mui/icons-material/ListAlt';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 
 const useStyles = makeStyles( theme =>({
@@ -59,14 +55,7 @@ const [businessUnit,setBusinessUnit]=useState(localStorage.getItem("BU"))
     }
     callBusinessUnits();
   },[])
-  // useEffect(()=>{
-  //   alert("in")
-  //   setBusinessUnit(localStorage.getItem("BU"))
-  // window.addEventListener('storage',onStorageUpdate)
-  // return ()=>{
-  //   window.removeEventListener("storage",onStorageUpdate)
-  // }
-  // },[])
+  
   useEffect(()=>{
  
    const callSideBarAPI = async()=>{
@@ -104,7 +93,6 @@ const [businessUnit,setBusinessUnit]=useState(localStorage.getItem("BU"))
     return <>
     <AppBar className={classes.header}> 
        <Toolbar  sx={{ pl: 3 }}>
-      
        <Typography variant="h2" component="div" sx={{ flex:"1",width:"300", display: { xs: 'none', sm: 'block' } }}>
         <img src={companylogo} align="left" alt="data axle" height="50px" style={{paddingTop:10}}/>
         <FormLabel sx={{ color: "white",fontSize:30,marginLeft:35}}>{localStorage.getItem("BU")}</FormLabel>
@@ -123,11 +111,6 @@ const [businessUnit,setBusinessUnit]=useState(localStorage.getItem("BU"))
         <div><Button variant="contained" sx={{color:"white",mr:3}} onClick={()=>navigate("/admin/create_incident")}>Create Incident</Button></div>
        
        </Toolbar >
-            
-        {/* <Typography>we</Typography> */}
-          {/* <img src={bgLogo} width="1800px" height="100px" alt="data-axle" position="relative"></img> */}
-            
-      
          </AppBar> 
 
         </>

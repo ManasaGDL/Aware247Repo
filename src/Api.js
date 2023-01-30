@@ -1,4 +1,5 @@
 
+import axios from "axios";
 import {baseURL, axiosInstance} from "./axios";
 
 const api = {
@@ -47,6 +48,9 @@ const api = {
      },
      getActivityLog : (body) =>{
       return axiosInstance.put(`${baseURL}/api/common/incident_activity_log/incident_activity/`,body)
+     },
+     getIncidentStatusDashBoard : () =>{
+      return axiosInstance.get(`${baseURL}/api/common/dashboard_incident`)
      }
 }
 export default api;

@@ -17,12 +17,8 @@ const IncidentPage=({bu})=>{
       content:<></>
       }
     ]
-    return <div style={{textAlign:"left" }}>
-       {/* <Paper sx={{ mr: 4,ml:2 ,mt:4,mb:4,}} elevation={3}>
-        <Box sx={{width:"100%",height:"100%"}}> */}
-        <HeaderTabs tabs={tabs} tabValue={tabValue} setTabValue={setTabValue}/>
-        {/* </Box>
-        </Paper> */}
+    return <div style={{textAlign:"left" }}>      
+        <HeaderTabs tabs={tabs} tabValue={tabValue} setTabValue={setTabValue}/>        
     </div>
 }
 export default IncidentPage;

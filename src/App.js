@@ -6,6 +6,11 @@ import Login from './Components/Login/Login';
 import Container from './Container/Container';
 import {useNavigate} from "react-router-dom"
 import {SnackbarContextProvider} from "./context/SnackbarContext"
+import StatusPage from './Components/Client/StatusPage';
+import { ThemeProvider } from '@mui/material/styles'
+import AddStatus from './Components/Client/AddStatus';
+import theme from './theme';
+import SubscribePage from './Components/Client/SubscribePage';
 function App(props) {
   const history=useNavigate();
   const [user,setUser] = useState({email:""})
@@ -14,13 +19,17 @@ document.title = "Status App"
  },[])
   return (
     <div className="App">
+      <ThemeProvider theme = {theme}>
       <SnackbarContextProvider>
       <Routes history={history}> 
-      <Route path ="/login" element={<Login setUser={setUser} />}/> 
-      <Route path="/" element={<Navigate to="/login"/>}/>
-      <Route path="/*" element={<Container user={user}/>}/>
+      <Route path ="status" element ={<StatusPage/>}/>
+      <Route path ="Status/add" element ={<SubscribePage />}/>
+      <Route path ="login" element={<Login setUser={setUser} />}/> 
+      <Route path="/" element={<Navigate to="login"/>}/>
+      <Route path="*" element={<Container user={user}/>}/>
       </Routes> 
       </SnackbarContextProvider>
+      </ThemeProvider>
     </div>
   );
 }

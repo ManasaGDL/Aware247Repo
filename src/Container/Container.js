@@ -30,8 +30,7 @@ const Container = ({ user }) => {
         axiosInstance.defaults.headers["Authorization"] = "Bearer " + localStorage.getItem("access_token")
     }
 
-    return <ThemeProvider theme={theme}>
-         
+    return <>         
         <section>
             <div style={{ height: "60px" }}>
                 {/* pass sidebar data from Header to container to SidebarComponent  */}
@@ -49,12 +48,13 @@ const Container = ({ user }) => {
                 <Paper sx={{ mr: 4,ml:2 ,mt:4,mb:4,}} elevation={3}>
      <Box sx={{width:"100%",height:"100%"}}>
                     <Routes>
-                        <Route path="/admin" element={<Navigate to="/admin/dashboard"/>}/>
-                        <Route path="/admin/dashboard" element={<DashBoard/>} />
-                        <Route path="/admin/create_incident" element={<MainActionPage bu={businessUnit} />} />
-                        <Route path="/admin/create_incident/:action/:id" element={<MainActionPage bu={businessUnit}/>}/>
-                        <Route path="/admin/incidents" element={<IncidentPage bu={businessUnit} />} />
-                        <Route path="/admin/subscribers" element={<Subscribers />} />
+                        <Route path="admin" element={<Navigate to="dashboard"/>}/>
+                        <Route path="admin/dashboard" element={<DashBoard bu={businessUnit}/>} />
+                        <Route path="admin/create_incident" element={<MainActionPage bu={businessUnit} />} />
+                        <Route path="admin/create_incident/:action/:id" element={<MainActionPage bu={businessUnit}/>}/>
+                        <Route path="admin/incidents" element={<IncidentPage bu={businessUnit} />} />
+                        <Route path="admin/subscribers" element={<Subscribers />} />
+                      
                     </Routes>
                     </Box>
                     </Paper>
@@ -62,10 +62,7 @@ const Container = ({ user }) => {
             </Grid>}
             <div>
             </div>
-
         </section>
-
-
-    </ThemeProvider>
+    </>
 }
 export default Container;

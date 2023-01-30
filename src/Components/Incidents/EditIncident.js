@@ -205,9 +205,7 @@ if(callUpdate)
             setIncidentStatus(trackStatus)  
         }
     },[changeStatus])
-    useEffect(()=>{
-console.log("dd",dropdownStatus)
-    },[dropdownStatus])
+   
     useEffect(() => {
 
         componentsData.length > 0 && componentsData.forEach((item) => {
@@ -355,11 +353,11 @@ console.log("dd",dropdownStatus)
                 <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={loading}>
                     <LoadingPanel></LoadingPanel>
                 </Backdrop>
-             <CustomDialogs open ={openCustomDialog.open} message={openCustomDialog.message}
+             {/* <CustomDialogs open ={openCustomDialog.open} message={openCustomDialog.message}
                 title={openCustomDialog.title} setOpenCustomDialog={setOpenCustomDialog} 
                 handleConfirmation={handleConfirmation}
                 />
-               
+                */}
                 <FormControl fullWidth>
                     <Box>
                         <TextField
@@ -495,7 +493,7 @@ console.log("dd",dropdownStatus)
                                                         <ListItem
                                                             sx={{ paddingLeft: "80px", paddingTop: "2px" }}
                                                             key={item.component_id}
-                                                            secondaryAction={
+                                                            secondaryAction={!(initialObj.status==="resolved")&&
                                                                 dropdownStatus.map(com => {
                                                                     if (com?.component_id === item.component_id) {
                                                                         return <FormControl
@@ -579,7 +577,7 @@ console.log("dd",dropdownStatus)
                                         <ListItem
                                             sx={{ paddingTop: "2px" }}
                                             key={index}
-                                            secondaryAction={
+                                            secondaryAction={!(initialObj.status==="resolved")&&
                                                 dropdownStatus.map(com => {
                                                     if (com?.component_id === component.component_id)
                                                         return <FormControl
@@ -649,7 +647,7 @@ console.log("dd",dropdownStatus)
                                                 :''}</Grid></Grid>}
                                             ></ListItemText>
                                         </ListItem>
-                                        <Divider />
+                                        <Divider  sx = {{":last-child":{'borderBottom':0}}}/>
                                     </>
                                 )}
                             </>
