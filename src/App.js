@@ -22,9 +22,12 @@ document.title = "Status App"
       <ThemeProvider theme = {theme}>
       <SnackbarContextProvider>
       <Routes history={history}> 
-      <Route path ="status" element ={<StatusPage/>}/>
-      <Route path ="Status/add" element ={<SubscribePage />}/>
-      <Route path ="login" element={<Login setUser={setUser} />}/> 
+      <Route path ="Status" >
+        <Route path = ":businessunit" element ={<StatusPage/>}/>
+        <Route path ="add/:businessunit" element ={<SubscribePage />}/>
+        <Route path="*" element= {<div>No Page</div>}/>
+      </Route> 
+      <Route path ="login" element={<Login setUser={setUser} />}/>
       <Route path="/" element={<Navigate to="login"/>}/>
       <Route path="*" element={<Container user={user}/>}/>
       </Routes> 

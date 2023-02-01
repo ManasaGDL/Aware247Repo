@@ -11,13 +11,13 @@ const ActivityHistory = ({ id ,bu}) => {
     }
   }, [id])
   const columns = [
-    {
-      field: 'incidents_activity_id',
-      headerName: 'Activity ID',
-      headerClassName: "header",
-      minWidth: 150,
-      flex:0.5
-    }, 
+    // {
+    //   field: 'incidents_activity_id',
+    //   headerName: 'Activity ID',
+    //   headerClassName: "header",
+    //   minWidth: 150,
+    //   flex:0.5
+    // }, 
     {
       field: "component_name",
       headerName: "Component Name",

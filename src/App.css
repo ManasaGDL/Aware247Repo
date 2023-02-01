@@ -63,7 +63,7 @@ div.rdw-editor-toolbar.toolbar-class{
 }
 .disable-pointer-events{
   pointer-events: none;
-  opacity: 0.6;
+  opacity: 0.4;
 }
 .header{
   font-weight: 800;
@@ -136,12 +136,15 @@ font-size: 15px;
   text-overflow:ellipsis;
     /* width: 250px; */
     white-space: nowrap;
+
     overflow: hidden;
 }
 .wrap:hover{
   text-overflow:clip;
   width:auto;
   white-space: normal;
+ 
+  word-break: break-all;
 }
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {

@@ -14,8 +14,11 @@ import Divider from "@mui/material/Divider";
 import Status from "../DashBoard/Status";
 import HeaderTabs from "../common/HeaderTabs";
 import ViewAllIncidents from "./ViewAllIncidents";
-import Backdrop from "@mui/material/Backdrop";
+import Backdrop from '@mui/material/Backdrop';
+
 import LoadingPanel from "../common/TabPanel/LoadingPanel";
+import { useParams } from "react-router-dom";
+import clientApi from "../../api/clientApi";
 const useStyles = makeStyles((theme) => ({
   header: {
     backgroundImage: `url(${bgLogo})`,
@@ -36,20 +39,27 @@ const useStyles = makeStyles((theme) => ({
 const tabs = [ {title:"Incidents",content:<ViewAllIncidents/>},{title:"Scheduled Maintenance",content:<></>}]
 const StatusPage = () => {
   const classes = useStyles();
-  const [tabValue , setTabValue] = useState('')
+  const [tabValue , setTabValue] = useState(0)
   const [ loading ,setLoading ] = useState(false)
   const [componentList, setComponentList] = useState([]);
   const navigate = useNavigate();
+  const { businessunit } = useParams();
   useEffect(() => {
     getComponentsList();
   }, []);
   const getComponentsList = async () => {
     try {
         setLoading(true)
-      const response = await api.getComponents();
+      const response = await clientApi.getComponentStatus(businessunit);
       console.log("result", response.data);
       setComponentList(response?.data);
-    } catch (e) {} finally{
+      if(response.data.length === 0)
+      {
+        alert("check whether Businessunit is valid or not!")
+      }
+    } catch (e) {
+      
+    } finally{
         setLoading(false)
     }
   };
@@ -78,7 +88,7 @@ const StatusPage = () => {
             <Button
               variant="contained"
               sx={{ color: "white", mr: 3 }}
-               onClick={()=>navigate("/Status/add")}
+               onClick={()=>navigate(`/Status/add/${businessunit}`)}
             >
               Subscribe To Updates
             </Button>
@@ -88,7 +98,7 @@ const StatusPage = () => {
       <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={loading}>
             <LoadingPanel></LoadingPanel>
         </Backdrop>
-     {!loading && <Box style={{  width: "1000px", margin: '0 auto' , marginTop:"160px"}}>
+     {!loading && <Box sx={{  width: "1000px", margin: '0 auto' , marginTop:"160px"}}>
       
         <List sx={{ border: 1, borderRadius: "5px", borderColor: "#CFD2CF" }}>
           {componentList.map((item, index) => {
