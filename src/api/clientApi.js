@@ -1,3 +1,4 @@
+import axios from "axios";
 import { axiosInstance , baseURL} from "../axios"
 
 const clientApi = {
@@ -7,6 +8,12 @@ const clientApi = {
     },
     getIncidents:() =>{
         return axiosInstance.get(`${baseURL}/api/common/status_page_incidents`)
+    },
+    getNetworks:() =>{
+        return axiosInstance.get(`${baseURL}/api/common/networks`)
+    },
+    createSubscriber : (data) => {
+        return axiosInstance.post(`${baseURL}/api/common/subscribers/create_subscriber/`, data)
     }
 }
 export default clientApi;

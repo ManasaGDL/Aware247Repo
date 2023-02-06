@@ -46,6 +46,8 @@ const StatusPage = () => {
   const { businessunit } = useParams();
   useEffect(() => {
     getComponentsList();
+    localStorage.removeItem("refresh_token")
+    localStorage.removeItem("access_token")
   }, []);
   const getComponentsList = async () => {
     try {
@@ -161,7 +163,9 @@ const StatusPage = () => {
                         }}primary={item.component_name}></ListItemText>
                   </ListItem>
                 )}
-                  <Divider sx={{":last-child":{'borderBottom':0}}}/>
+                  <Divider 
+                  sx={{":last-child":{'borderBottom':0}}}
+                  />
               </>
             );
           })}

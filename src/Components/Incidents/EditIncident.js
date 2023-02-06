@@ -647,7 +647,9 @@ if(callUpdate)
                                                 :''}</Grid></Grid>}
                                             ></ListItemText>
                                         </ListItem>
-                                        <Divider  sx = {{":last-child":{'borderBottom':0}}}/>
+                                        <Divider  
+                                        sx = {{":last-child":{'borderBottom':0}}}
+                                        />
                                     </>
                                 )}
                             </>

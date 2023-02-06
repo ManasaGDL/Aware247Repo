@@ -6,7 +6,7 @@ import DialogTitle from '@mui/material/DialogTitle'
 import  Button  from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
 
-const CustomDialogs =({open=false,message,title,setOpenCustomDialog,handleConfirmation}) =>{
+const CustomDialogs =({open=false,message,title,setOpenCustomDialog,handleConfirmation,hideButton=false}) =>{
     const navigate = useNavigate();
     return <Dialog open={open}>
         <DialogTitle>
@@ -16,7 +16,7 @@ const CustomDialogs =({open=false,message,title,setOpenCustomDialog,handleConfir
            {message}
         </DialogContent>
         <DialogActions>
-        <Button variant="contained" color="error" 
+      {hideButton?<Button variant = "contained" color="error" onClick={handleConfirmation}>OK</Button>:<><Button variant="contained" color="error" 
          onClick={e=>handleConfirmation()}
         >Yes</Button>
          <Button variant="contained" color="success" 
@@ -24,7 +24,7 @@ const CustomDialogs =({open=false,message,title,setOpenCustomDialog,handleConfir
             setOpenCustomDialog({flag:false,message:'',title:''})
             navigate("/admin/incidents/")
          }}
-        >No</Button>
+        >No</Button></>}
         </DialogActions>
     </Dialog>
 }
