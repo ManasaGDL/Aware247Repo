@@ -140,11 +140,11 @@ font-size: 15px;
     overflow: hidden;
 }
 .wrap:hover{
-  text-overflow:clip;
-  width:auto;
-  white-space: normal;
+  /* /* text-overflow:clip; */
+   width:auto; 
+  /* white-space: normal; */
  
-  word-break: break-all;
+  /* word-break: break-all; */
 }
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {

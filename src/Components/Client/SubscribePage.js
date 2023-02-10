@@ -59,7 +59,7 @@ const SubscribePage = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [data, setData] = useState([]);
-  const [error, setError] = useState({ firstName: false, lastName: false });
+  const [error, setError] = useState({});
   const [loading, setLoading] = useState(false);
   const [componentsList, setComponentsList] = useState([]);// captures all the components from api response
   const [ maintainChecked , setMaintainChecked ] =useState([])
@@ -69,46 +69,61 @@ const SubscribePage = () => {
   const [networkSelected , setNetworkSelected] = useState("")
   const [ phoneNumber , setPhoneNumber ] = useState('')
   const [openCustomDialog , setOpenCustomDialog] = useState({open:false})
-  const [ callSubscribeCreateApi , setCallSubscribeCreateApi] =  useState(true)
+  const [ callSubscribeCreateApi , setCallSubscribeCreateApi] =  useState(false)
   const { setSnackBarConfig} = useContext(SnackbarContext)
   
  let componentsArray=[]
  let subCategoryArray = []
+let regex_phno= /^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/;
+let regex_email=/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+let arr_Error =[]
  const navigate = useNavigate();
   const handleChange = (e) => {
     setSubscriptionType(e.target.value);
   };
+  const validatePh_no = (phoneNumber)=>{ // vlidate phonenumber Any: (123)-456-7890, 123-456-7890, or 123456-7890.
+    return regex_phno.test(phoneNumber)
+  }
   useEffect(() => {
     if (firstName.length > 0) {
-      setCallSubscribeCreateApi(true)
       setError((prev) => {
         return { ...prev, firstName: false };
       });
     }
-   if (lastName.length > 0) {
-      setCallSubscribeCreateApi(true)
+   if (lastName.length > 0 ) {
+  
       setError((prev) => {
         return { ...prev, lastName: false };
       });
     }
-    if(phoneNumber.length>0)
-    {
-      setCallSubscribeCreateApi(true)
-      setCallSubscribeCreateApi(true)
-      setError((prev) => {
-        return { ...prev, "phno": false };
-      });
-    }
+    // if(validatePh_no(phoneNumber) && phoneNumber.length >0)
+    // {
+    //   setError((prev) => {
+    //     return { ...prev, "phno": false };
+    //   });
+    // }
+    // if(phoneNumber.length>0)
+    // {
+    //   setError((prev) => {
+    //     return { ...prev, "phno": false };
+    //   });
+    // }
     if(subscriptionType!=="Select Subscription Type")
-    {
-      setCallSubscribeCreateApi(true)
+    { 
       setError((prev) => {
         return { ...prev, "sub_type": false };
       });
     }
-    else setCallSubscribeCreateApi(false)
-  }, [firstName, lastName, error.firstName,error.lastName,error.sub_type,subscriptionType,error.phno]);
-
+  
+  }, [firstName, lastName, subscriptionType]);
+ 
+useEffect(()=>{
+  console.log(error,Object.values(error).includes(true))
+if(Object.keys(error).length>0 && !(Object.values(error).includes(true)))
+{
+  setCallSubscribeCreateApi(true)
+}else setCallSubscribeCreateApi(false)
+},[error])
   useEffect(() => {
     getComponentsList();
     getNetworks();
@@ -184,38 +199,70 @@ console.log("sub",subCategoryList)
  else
  setMaintainChecked([])
   },[checkAllChecked])
-
+useEffect(()=>{
+console.log("Error",error)
+},[error])
   const handleUpdateSubscribe = () => {
     if (firstName.length === 0) {
-      setCallSubscribeCreateApi(false)
+  arr_Error.push("firstName")
       setError((prev) => {
         return { ...prev, firstName: true };
       });
     }
     if (lastName.length === 0) {
-      setCallSubscribeCreateApi(false)
+      arr_Error.push("lastName")
       setError((prev) => {
         return { ...prev, lastName: true };
       });
     }
     if(subscriptionType === "Select Subscription Type")
-    {setCallSubscribeCreateApi(false)
+    { let err ={"sub_type":true}
+    arr_Error.push("sub_type")
       setError(prev=>{
-        return {...prev,"sub_type":true}})
+        return {...prev,...err}})
     }
-    if(phoneNumber.length === 0)
-    { setCallSubscribeCreateApi(false)
+    if(subscriptionType === "sms" )
+    { 
+      if(error.hasOwnProperty("email"))
+    delete error.email
+      if(!regex_phno.test(phoneNumber))
+     {arr_Error.push("phno") 
       setError(prev=>{
         return {...prev,"phno":true}
       })
     }
+      else setError(prev=>{
+        return {...prev,"phno":false}
+    }
+    )
+    }
+    if(subscriptionType === "email") 
+   { 
+    if(error.hasOwnProperty("phno"))
+    delete error.phno
+    
+    if( !regex_email.test(email) )
+      {arr_Error.push("email")
+        setError(prev=>{
+        return {...prev,"email":true}
+      })}else setError(prev=>{
+        return {...prev,"email":false}
+    }
+    )
+  }
+      
     const components = maintainChecked.map(item=>{
       return item.component_id
     })
+//     if(Object.values(error).includes(true))
+// {
+//   setCallSubscribeCreateApi(false)
+// }
+// else setCallSubscribeCreateApi(true)
     const payload=subscriptionType === "email"?
     {"first_name":firstName,"last_name":lastName,"email":email, "email_delivery": 1,"components":components}
     :{"first_name":firstName,"last_name":lastName,"phone_number":phoneNumber, "sms_delivery": 1,"components":components,"network":networkSelected}
-    // callSubscribeCreateApi && callCreateSubscriber(payload);
+  callSubscribeCreateApi&& callCreateSubscriber(payload);
   };
   const callCreateSubscriber = async(payload) =>{
     try{
@@ -235,7 +282,7 @@ console.log("sub",subCategoryList)
        
         //setOpenCustomDialog({open:true,message})
       }finally{
-        // setCallSubscribeCreateApi(false)
+         setCallSubscribeCreateApi(false)
       }
     }
   
@@ -367,12 +414,19 @@ console.log("sub",subCategoryList)
                   <FormControl>
                     <TextField
                       required
+                      error = {error.email}
                       type="email"
                       value={email || ""}
                       name="email"
-                      label=" Email Addess"
+                      label=" Email Address"
                       onChange={(e) => {
                         setEmail(e.target.value);
+                        if(!regex_email.test(e.target.value))
+                        {
+                          setError(prev=>{
+                            return {...prev,"email":true}})
+                        }
+                        else setError(prev =>{return {...prev,"email":false}})
                       }}
                     ></TextField>
                     <label style={{ fontSize: 10, color: "grey" }}>
@@ -384,7 +438,12 @@ console.log("sub",subCategoryList)
                 <br />
                 {subscriptionType === "sms" && (
                   <FormControl>
-                    <TextField label="Phone" required onChange = {e=>setPhoneNumber(e.target.value)}
+                    <TextField label="Phone" required onChange = {e=>{setPhoneNumber(e.target.value)
+                    if(!validatePh_no(e.target.value))
+                    {
+                       setError(prev =>{return {...prev,"phno":true}})
+                    }else setError(prev=>{return {...prev,"phno":false}})
+                    }}
                     error={error.phno}/>
                     <br />
                     <FormControl />

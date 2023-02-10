@@ -1,15 +1,27 @@
 import React , { useState , useEffect } from "react";
 import clientApi from "../../api/clientApi";
+import Tooltip,{ TooltipProps, tooltipClasses } from "@mui/material/Tooltip";
 import { List,ListItem ,ListItemText,Typography,Box} from "@mui/material";
 import Backdrop from "@mui/material/Backdrop";
 import LoadingPanel from "../common/TabPanel/LoadingPanel";
 import dayjs from "dayjs";
+import { styled } from '@mui/material/styles';
 import { DataGrid } from '@mui/x-data-grid'
 const  ViewAllIncidents = () =>{
     const [ data , setData ] = useState([])
     const [ loading , setLoading ] = useState(false)
     const regex = /(<([^>]+)>)/ig;
-    
+    const CustomWidthTooltip = styled(({ className, ...props }) => (
+      <Tooltip {...props} classes={{ popper: className }} placement = "right-end"/>
+    ))({
+      [`& .${tooltipClasses.tooltip}`]: {
+        maxWidth: 300,
+        lineHeight:2,
+        fontSize:11,
+      fontWeight:600,
+        backgroundColor:"#808080"
+      },
+    });
     const columns =[ 
     {
    field:"status",
@@ -31,7 +43,10 @@ const  ViewAllIncidents = () =>{
   headerName:"Message",
   flex:1,
   renderCell:(val)=>{
- return <div className="wrap">{val?.value?.replace(regex,'')}</div>
+  return <CustomWidthTooltip  title={val?.value?.replace(regex,'')} >
+    <span className="wrap">{val?.value?.replace(regex,'')}</span>
+    {/* {val?.value?.replace(regex,'')} */}
+    </CustomWidthTooltip >
   }
     }
     ,

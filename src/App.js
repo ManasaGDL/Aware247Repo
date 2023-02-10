@@ -11,6 +11,7 @@ import { ThemeProvider } from '@mui/material/styles'
 import AddStatus from './Components/Client/AddStatus';
 import theme from './theme';
 import SubscribePage from './Components/Client/SubscribePage';
+import Subscribe from './Components/Client/Subscribe';
 function App(props) {
   const history=useNavigate();
   const [user,setUser] = useState({email:""})
@@ -24,7 +25,7 @@ document.title = "Status App"
       <Routes history={history}> 
       <Route path ="Status" >
         <Route path = ":businessunit" element ={<StatusPage/>}/>
-        <Route path ="add/:businessunit" element ={<SubscribePage />}/>
+        <Route path ="add/:businessunit" element ={<Subscribe />}/>
         <Route path="*" element= {<div>No Page</div>}/>
       </Route> 
       <Route path ="login" element={<Login setUser={setUser} />}/>
