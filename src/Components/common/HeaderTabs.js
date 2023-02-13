@@ -6,7 +6,6 @@ import TabPanel from "./TabPanel/TabPanel";
 
 const HeaderTabs = ({ tabs, tabValue, setTabValue }) => {
   const handleChange = (tabIndex) => {
-    console.log("handlechange")
     setTabValue(tabIndex);
   };
   return (

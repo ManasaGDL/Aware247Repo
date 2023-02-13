@@ -53,7 +53,6 @@ const StatusPage = () => {
     try {
         setLoading(true)
       const response = await clientApi.getComponentStatus(businessunit);
-      console.log("result", response.data);
       setComponentList(response?.data);
       if(response.data.length === 0)
       {

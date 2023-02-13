@@ -8,9 +8,7 @@ import {useNavigate} from "react-router-dom"
 import {SnackbarContextProvider} from "./context/SnackbarContext"
 import StatusPage from './Components/Client/StatusPage';
 import { ThemeProvider } from '@mui/material/styles'
-import AddStatus from './Components/Client/AddStatus';
 import theme from './theme';
-import SubscribePage from './Components/Client/SubscribePage';
 import Subscribe from './Components/Client/Subscribe';
 function App(props) {
   const history=useNavigate();

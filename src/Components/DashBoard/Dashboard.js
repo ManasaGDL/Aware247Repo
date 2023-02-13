@@ -49,7 +49,6 @@ const DashBoard = ({ bu }) => {
     try {
       setComponentsLoading(true);
       const data = await api.getComponents();
-      console.log(data);
       setData(data?.data);
       setComponentsLoading(false);
     } catch (e) {
