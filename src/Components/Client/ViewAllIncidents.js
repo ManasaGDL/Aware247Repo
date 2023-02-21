@@ -19,7 +19,10 @@ const  ViewAllIncidents = () =>{
         lineHeight:2,
         fontSize:11,
       fontWeight:600,
+     transparent:0.4,
+      border:2,
         backgroundColor:"#808080"
+        // "#808080"
       },
     });
     const columns =[ 

@@ -17,7 +17,7 @@ export const sidebardata = [
   },
   {
     title: "Components",
-    path: "/admin/componets",
+    path: "/admin/components",
     icon: <FaListUl style={{ color: "#656565" }} />
   },
   {

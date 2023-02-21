@@ -108,7 +108,7 @@ const [businessUnit,setBusinessUnit]=useState(localStorage.getItem("BU"))
           })}
         </Menu>
        <Typography><FormLabel sx={{color:"white",mr:2}} disableTypography='true'>{localStorage.getItem('user')}</FormLabel></Typography>
-        <div><Button variant="contained" sx={{color:"white",mr:3}} onClick={()=>navigate("/admin/create_incident")}>Create Incident</Button></div>
+        <div><Button variant="contained" sx={{color:"white",mr:3,fontWeight:"bold"}} onClick={()=>navigate("/admin/create_incident")}>Create Incident</Button></div>
        
        </Toolbar >
          </AppBar> 

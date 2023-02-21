@@ -51,6 +51,22 @@ const api = {
      },
      getIncidentStatusDashBoard : () =>{
       return axiosInstance.get(`${baseURL}/api/common/dashboard_incident`)
+     },
+    //  Cmponents API
+     deleteComponent : (id) =>{
+      return axiosInstance.delete(`${baseURL}/api/common/components/${id}/delete_component/`)
+     },
+     addComponent : (payload) =>{
+      return axiosInstance.post(`${baseURL}/api/common/components/create_component/`,payload)
+     },
+     getGroupComponents : () =>{
+      return axiosInstance.get(`${baseURL}/api/common/components/group_components/`)
+     },
+     getComponent : (id) =>{
+      return axiosInstance.get(`${baseURL}/api/common/components/${id}`)
+     },
+     editComponent : (id , payload) =>{
+      return axiosInstance.patch(`${baseURL}/api/common/components/${id}/update_component/`,payload)
      }
 }
 export default api;

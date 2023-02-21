@@ -10,7 +10,7 @@ const Component = styled.div`
   align-items: left;
   display: flex;
   font-weight:600;
-  height: 40px;
+  height: 30px;
   :not(:last-child) {
     margin-bottom: 8px;
   }

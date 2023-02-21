@@ -659,7 +659,7 @@ if(callUpdate)
                 <div style={{ textAlign: "center" }}>
               <Button
                 variant="contained"
-                sx={{ ml: 2, mt: 6, color: "white" }}
+                sx={{ ml: 2, mt: 6, color: "white" ,fontWeight:"bold"}}
                 size="large"
                 onClick={() => handleUpdateIncident()}
                 // disabled={disableUpdateButton}

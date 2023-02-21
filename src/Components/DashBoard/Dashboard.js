@@ -8,20 +8,7 @@ import DisplayComponents from "./DisplayComponents";
 import styled from "styled-components";
 import { Backdrop } from "@mui/material";
 import LoadingPanel from "../common/TabPanel/LoadingPanel";
-const BorderLinearProgress = withStyles((theme) => ({
-  root: {
-    height: 10,
-    borderRadius: 5,
-  },
-  colorPrimary: {
-    backgroundColor:
-      theme.palette.grey[theme.palette.type === "light" ? 200 : 700],
-  },
-  bar: {
-    borderRadius: 5,
-    backgroundColor: "#80daeb",
-  },
-}))(LinearProgress);
+
 const useStyles = makeStyles({
   root: {
     flexGrow: 1,

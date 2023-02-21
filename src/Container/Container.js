@@ -15,6 +15,9 @@ import DashBoard_new from "../Components/DashBoard/Dashboard_new";
 import MainActionPage from "../Components/Incidents/MainActionPage";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
+import Component from "../Components/ComponentPage/Component";
+import businessUnitContext from "../context/businessUnitContext";
+import { useContext } from "react";
 // import "./containerStyles
 const Container = ({ user }) => {
     const [collapse, setCollapse] = useState(false)
@@ -39,13 +42,13 @@ const Container = ({ user }) => {
             </div>
         </section>
         <section >
-        
+        <businessUnitContext.Provider value={localStorage.getItem('BU')}>
            { <Grid container sx={{ height: '100vh' }} spacing={2}>
                 <Grid item md={collapse ? 1 : 2} xs={12}>
                     <SidebarComponent handleCollapse={handleCollapse} setLoading={setLoading} dynamicSideBarData={dynamicSideBarData}></SidebarComponent>
                 </Grid>
                 <Grid item md={collapse ? 11 : 10} xs={12}>
-                <Paper sx={{ mr: 4,ml:2 ,mt:4,mb:4,}} elevation={3}>
+                <Paper sx={{ mr: 4,ml:2 ,mt:4,mb:4,height:'auto'}} elevation={3}>
      <Box sx={{width:"100%",height:"100%"}}>
                     <Routes>
                         <Route path="admin" element={<Navigate to="dashboard"/>}/>
@@ -54,7 +57,7 @@ const Container = ({ user }) => {
                         <Route path="admin/create_incident/:action/:id" element={<MainActionPage bu={businessUnit}/>}/>
                         <Route path="admin/incidents" element={<IncidentPage bu={businessUnit} />} />
                         <Route path="admin/subscribers" element={<Subscribers />} />
-                      
+                        <Route path ="admin/components" element ={<Component/>}/>
                     </Routes>
                     </Box>
                     </Paper>
@@ -62,6 +65,7 @@ const Container = ({ user }) => {
             </Grid>}
             <div>
             </div>
+            </businessUnitContext.Provider>
         </section>
     </>
 }
