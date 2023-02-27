@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import { Controller } from "react-hook-form";
+import { StyledButton } from "../../CustomStyles/StyledComponents";
 import * as yup from "yup";
 import {
   AppBar,
@@ -31,23 +32,8 @@ import clientApi from "../../api/clientApi";
 import Backdrop from "@mui/material/Backdrop";
 import LoadingPanel from "../common/TabPanel/LoadingPanel";
 import CustomDialogs from "../common/Dialogs/CustomDialogs";
-const useStyles = makeStyles((theme) => ({
-  header: {
-    backgroundImage: `url(${bgLogo})`,
-    height: "80px",
-    //   backgroundRepeat:"repeat-x"
-  },
+import businessUnitContext from "../../context/businessUnitContext";
 
-  select: {
-    color: "white",
-    "&:after": {
-      borderBottomColor: "darkred",
-    },
-    "& .MuiSvgIcon-root": {
-      color: "cyan",
-    },
-  },
-}));
 export let schema = yup.object().shape({
   first_name: yup.string().required("First Name is required"),
   last_name: yup.string().required("Last Name is required"),
@@ -116,7 +102,7 @@ export let schema = yup.object().shape({
       return value !== "Select Subscription Type";
     }),
 });
-const Subscribe = () => {
+const AddSubscriber = () => {
   const { handleSubmit, watch, formState, control } = useForm({
     mode: "all",
     resolver: yupResolver(schema),
@@ -125,7 +111,7 @@ const Subscribe = () => {
       network: "Select Network---",
     },
   });
-  const classes = useStyles();
+  
   const [subscriptionValue, setSubscriptionValue] = useState("");
   const [networkData, setNetworkData] = useState([]);
   const [checkAllChecked, setCheckAllChecked] = useState(false);
@@ -134,14 +120,15 @@ const Subscribe = () => {
   const [subCategoryList, setSubCategoryList] = useState([]);
   const [maintainChecked, setMaintainChecked] = useState([]);
   const [componentsList, setComponentsList] = useState([]); // captures all the components from api response
-  const { businessunit ,type } = useParams();
+const [ error , setError ] = useState(false)
   const { setSnackBarConfig } = useContext(SnackbarContext);
   const [openCustomDialog, setOpenCustomDialog] = useState({ open: false });
   const subscriptionArray = ["Select Subscription Type", "SMS", "Email"];
   let subCategoryArray = [];
   let componentsArray = [];
+const bu = useContext(businessUnitContext)
   const navigate = useNavigate();
-  console.log("type",type)
+ 
   useEffect(() => {
     if (checkAllChecked) setMaintainChecked([...componentsList]);
     else setMaintainChecked([]);
@@ -153,13 +140,14 @@ const Subscribe = () => {
     }
   }, [watch("subscriptionType")]);
   useEffect(() => {
+    setError(false)
     getNetworks();
     getComponentsList();
-  }, []);
+  }, [bu]);
   const getComponentsList = async () => {
     try {
       setLoading(true);
-      const response = await clientApi.getComponentStatus(businessunit);   
+      const response = await clientApi.getComponentStatus(bu);   
       setData(response?.data);
       response?.data?.map((item) => {
         subCategoryArray = [];
@@ -191,7 +179,8 @@ const Subscribe = () => {
       });
       setComponentsList(componentsArray);
       if (response.data.length === 0) {
-        alert("check whether Businessunit is valid or not!");
+        // alert("check whether Businessunit is valid or not!");
+        setError(true)
       }
     } catch (e) {
     } finally {
@@ -228,19 +217,26 @@ const Subscribe = () => {
     const components = maintainChecked.map((item) => {
       return item.component_id;
     });
+    if (data.network === "Select Network---") {
+        data = { ...data, network: "" };
+      }
     if (data.subscriptionType === "Email") {
-      if (data.hasOwnProperty("phone_number")) delete data.phone_number;
+      if (data.hasOwnProperty("phone_number")) 
+      {delete data.phone_number;
+        delete data.network;
+      }
       // delete data.subscriptionType
       data = { ...data, email_delivery: 1 };
     }
     if (data.subscriptionType === "SMS") {
-      if (data.hasOwnProperty("email")) delete data.email;
+      if (data.hasOwnProperty("email")) 
+      {delete data.email;
+        
+      }
       // delete data.subscriptionType
       data = { ...data, sms_delivery: 1 };
     }
-    if (data.network === "Select Network---") {
-      data = { ...data, network: "" };
-    }
+  
     data = { ...data, components: components };
    
     callCreateSubscriber(data);
@@ -257,7 +253,7 @@ const Subscribe = () => {
     try {
       let response;
       response = await clientApi.createSubscriber(payload);
-      navigate(`/Status/${businessunit}`);
+       navigate(`/admin/subscribers`);
       setSnackBarConfig({
         open: true,
         message:
@@ -272,40 +268,28 @@ const Subscribe = () => {
         setOpenCustomDialog({ open: true, message: errordata, title: "Error" });
       }
     } finally {
+        setError(false)
     }
   };
   
   return (
-    <div className="status">
-      <AppBar className={classes.header}>
-        <Toolbar sx={{ pl: 3 }}>        
-          <Typography
-            variant="h2"
-            component="div"
-            sx={{
-              flex: "1",
-              width: "300",
-              display: { xs: "none", sm: "block" },
-            }}
-          >
-            <img
-              src={companylogo}
-              align="left"
-              alt="data axle"
-              height="60px"
-              style={{ paddingTop: 10 }}
-            />
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <Backdrop
+    <>
+    <div style={{ textAlign: "left" }}>
+       
+    <h5 style={{ paddingTop: 20, marginLeft: 20 }}>{"Add a Subscriber"}</h5>
+    <div style={{ textAlign:"center"}}>
+     { (
+        <Container sx={{ paddingBottom:2}} >
+            <div>
+                <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={loading}
       >
+        
         <LoadingPanel></LoadingPanel>
       </Backdrop>
-      {data.length > 0 && (
-        <Container sx={{ marginTop: "120px" }}>
+      { error && <h4 > No components to load</h4>}
+      </div>
           <CustomDialogs
             open={openCustomDialog.open}
             message={openCustomDialog.message}
@@ -314,7 +298,7 @@ const Subscribe = () => {
             hideButton={true}
             handleConfirmation={stayOnSamePage}
           />
-          <form onSubmit={handleSubmit(onSubmit)}>
+         {data.length > 0 && <form onSubmit={handleSubmit(onSubmit)}>
             <Grid container spacing={2}>
               <Grid item md={12}>
                 <Controller
@@ -506,16 +490,18 @@ const Subscribe = () => {
                       );
                     }}
                   ></Controller>
-                  <div style={{ margin:"0 auto" }}>
+                  <div style={{margin:'0 auto'}}>
                     <label
                       style={{
                         color: "#d32f2f",
                         fontweight: "400",
                         fontSize: "0.75rem",
+                       
                       }}
                     >
                       {formState?.errors?.network?.message}
                     </label>
+                    <br/>
                   </div>
                 </Grid>
               )}
@@ -549,6 +535,7 @@ const Subscribe = () => {
                 </Grid>
               </Grid>
             </Grid>
+        
             <Grid container justify="flex-start">
               <Grid item md={12}>
                 <Box sx={{ width: "1000px", margin: "0 auto" }}>
@@ -651,18 +638,20 @@ const Subscribe = () => {
               </Grid>
             </Grid>
 
-            <Button
+            <StyledButton
               variant="contained"
               sx={{ ml: 2, mt: 6, color: "white" }}
               size="large"
               type="submit"
             >
               Subscribe
-            </Button>
-          </form>
+            </StyledButton>
+          </form>}
         </Container>
       )}
     </div>
+    </div>
+    </>
   );
 };
-export default Subscribe;
+export default AddSubscriber;

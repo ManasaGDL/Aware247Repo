@@ -67,6 +67,12 @@ const api = {
      },
      editComponent : (id , payload) =>{
       return axiosInstance.patch(`${baseURL}/api/common/components/${id}/update_component/`,payload)
+     },
+     getSubscribersCount : () =>{
+      return axiosInstance.get(`${baseURL}/api/common/subscribers/subsciberscount`)
+     },
+     getSubscribersList : (payload) =>{
+      return axiosInstance.put(`${baseURL}/api/common/subscribers/subscriberslist/`,payload);
      }
 }
 export default api;

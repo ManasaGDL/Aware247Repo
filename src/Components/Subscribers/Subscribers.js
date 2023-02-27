@@ -1,41 +1,68 @@
-import { Grid } from "@mui/material";
-import Box from '@mui/material/Box';
+import React, { useEffect, useState , useContext} from "react";
+import { Container, Backdrop, Stack } from "@mui/material";
+import LoadingPanel from "../common/TabPanel/LoadingPanel";
+import SubscribersCount from "./SubscribersCount";
+import SubscribersDetails from "./SubscribersDetails";
+import { StyledButton } from "../../CustomStyles/StyledComponents";
+import { useNavigate } from "react-router-dom";
+import businessUnitContext from "../../context/businessUnitContext";
 
-import Paper from "@mui/material/Paper";
-const Subscribers=()=>{
-    return <div style={{textAlign:"left"}}>
-    <div style={{margin:"20px 0 0 30px"}}><h4>Subscribers</h4> </div> 
-   <Box sx={{ p: 1,m:1,backgroundColor:"white" }}>
-         <Paper sx={{padding:2}} elevation={3}>  
-                 <p>Lorem ipsum dolor sit amet. Sed quaerat soluta 
-                  sit dolorem aspernatur quo corrupti labore et Quis atque est recusandae omnis ut odit
-                   praesentium est ipsa doloremque. Aut sunt porro ea galisum quia ut quaerat explicabo.
-                    Et dolorem ipsum est laboriosam assumenda et galisum galisum qui quis necessitatibus 
-                    At libero dolorum vel sequi galisum ut molestiae doloribus. Ex labore iure qui magni 
-                    dolores aut facilis magni qui porro facere? Et repellat consectetur ut cumque voluptatum
-                     33 voluptatibus obcaecati quo officiis sapiente. Ut dolores eveniet sit galisum vero et
-                      fuga voluptatum. Aut rerum maiores et beatae eligendi quo consequuntur tempore vel sint
-                       dolore. Et placeat officiis et ipsa iure aut numquam omnis ut consequatur 
-                          doloremque. Sit odit quas qui enim magni aut facere temporibus nam quas ipsa 
-                          eos beatae minus. Quo sint vitae non sunt quia ut rerum cupiditate. Eos impedit 
-                          rerum aut autem praesentium aut quia cumque quo dolore blanditiis sed beatae eius 
-                          ex expedita amet qui dolores delectus. 
-                  Lorem ipsum dolor sit amet. Sed quaerat soluta 
-                  sit dolorem aspernatur quo corrupti labore et Quis atque est recusandae omnis ut 
-                  odit praesentium est ipsa doloremque. Aut sunt porro ea galisum quia ut quaerat explicabo. 
-                  Et dolorem ipsum est laboriosam assumenda et galisum galisum qui quis necessitatibus 
-                  At libero dolorum vel sequi galisum ut molestiae doloribus. Ex labore iure qui magni
-                   dolores aut facilis magni qui porro facere? Et repellat consectetur ut cumque
-                    voluptatum 33 voluptatibus obcaecati quo officiis sapiente. Ut dolores eveniet sit 
-                    galisum vero et fuga voluptatum. Aut rerum maiores et beatae eligendi quo consequuntur 
-                    tempore vel sint dolore. Et placeat officiis et ipsa iure aut numquam omnis ut 
-                      consequatur doloremque. Sit odit quas qui enim magni aut facere temporibus nam quas 
-                      ipsa eos beatae minus. Quo sint vitae non sunt quia ut rerum cupiditate.
-                       Eos impedit rerum aut autem praesentium aut quia cumque quo dolore blanditiis sed 
-                       beatae eius ex expedita amet qui dolores delectus. </p> 
-
-    </Paper> 
-                  </Box>        
+import api from "../../Api";
+const Subscribers = () => {
+  let navigate = useNavigate();
+  const bu = useContext(businessUnitContext)
+  const [subscribersCount, setSubscribersCount] = useState({
+    email_subscibers: "",
+    sms_subscibers: "",
+  });
+  const [loading ,setLoading] = useState(false)
+  useEffect(() => {
+    setLoading(true)
+    getSubscribersCount(); // api to get subscribers count
+  }, [bu]);
+  const getSubscribersCount = async () => {
+    try {
+      const response = await  api.getSubscribersCount();
+      setSubscribersCount(response?.data[0])
+      setLoading(false)
+    } catch (e) {}
+  };
+  return (
+    <>
+      <div style={{ textAlign: "left" }}>
+        <h5 style={{ paddingTop: 20, marginLeft: 20 }}>{"Subscribers"}</h5>
+        <Stack
+          sx={{
+            display: "flex",
+            direction: "row",
+            alignItems: "flex-end",
+            justifyContent: "center",
+            marginRight: 3,
+          }}
+        >
+          <StyledButton
+            variant="contained"
+            onClick={() => navigate("/admin/subscribers/addSubscriber")}
+          >
+            {" "}
+            + Add A Subscriber
+          </StyledButton>{" "}
+        </Stack>
+        <Container sx={{ paddingBottom: 5, paddingLeft: 5 }}>
+          <div>
+            <Backdrop open={loading}
+              sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+            >
+              <LoadingPanel></LoadingPanel>
+            </Backdrop>
+          </div>
+          <div>
+            <SubscribersCount  subscribersCount ={subscribersCount}/>
+            <SubscribersDetails />
+          </div>
+        </Container>
       </div>
-}
+    </>
+  );
+};
 export default Subscribers;

@@ -217,6 +217,8 @@ const Component = () => {
   };
   return (
     <div style={{ textAlign: "left" }}>
+        {error && <h4>Error</h4>}
+        <h5 style={{ paddingTop: 20, marginLeft: 20 }}>Components</h5>
       {loading && (
         <Backdrop
           sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -243,8 +245,7 @@ const Component = () => {
           height: "auto",
         }}
       >
-        {error && <h4>Error</h4>}
-        <h4 style={{ paddingTop: 20, marginLeft: 20 }}>Components</h4>
+      
         <Stack
           sx={{
             display: "flex",
@@ -265,7 +266,8 @@ const Component = () => {
           </StyledButton>{" "}
         </Stack>
         <br />
-
+          
+          {data.length === 0 && <div style={{  alignItems:"center" , display:"flex"}}><h5>No Components</h5></div>}
         {data.length > 0 && (
           <List
             sx={{

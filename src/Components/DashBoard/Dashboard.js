@@ -69,7 +69,7 @@ const DashBoard = ({ bu }) => {
             incidentCauseData={incidentCauseData}
           />
         </Container>
-        <Outlet />
+        {/* <Outlet /> */}
       </div>
     </>
   );

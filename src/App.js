@@ -29,6 +29,7 @@ document.title = "Status App"
       <Route path ="login" element={<Login setUser={setUser} />}/>
       <Route path="/" element={<Navigate to="login"/>}/>
       <Route path="*" element={<Container user={user}/>}/>
+      
       </Routes> 
       </SnackbarContextProvider>
       </ThemeProvider>

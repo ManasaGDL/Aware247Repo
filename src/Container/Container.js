@@ -9,14 +9,13 @@ import { ThemeProvider } from '@mui/material/styles'
 import theme from "../theme";
 import SidebarComponent from "../Components/TestSidebar/SidebarComponent";
 import { axiosInstance } from "../axios";
-import EditIncident from "../Components/Incidents/EditIncident";
-import LoadingPanel from "../Components/common/TabPanel/LoadingPanel";
-import DashBoard_new from "../Components/DashBoard/Dashboard_new";
+import AddSubscriber from "../Components/Subscribers/AddSubscriber";
 import MainActionPage from "../Components/Incidents/MainActionPage";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Component from "../Components/ComponentPage/Component";
 import businessUnitContext from "../context/businessUnitContext";
+import Subscribe from "../Components/Client/Subscribe"
 import { useContext } from "react";
 // import "./containerStyles
 const Container = ({ user }) => {
@@ -53,11 +52,14 @@ const Container = ({ user }) => {
                     <Routes>
                         <Route path="admin" element={<Navigate to="dashboard"/>}/>
                         <Route path="admin/dashboard" element={<DashBoard bu={businessUnit}/>} />
-                        <Route path="admin/create_incident" element={<MainActionPage bu={businessUnit} />} />
+                        <Route path="create_incident" element={<MainActionPage bu={businessUnit} />} />
                         <Route path="admin/create_incident/:action/:id" element={<MainActionPage bu={businessUnit}/>}/>
                         <Route path="admin/incidents" element={<IncidentPage bu={businessUnit} />} />
+                        <Route path="admin/subscribers/addSubscriber" element={<AddSubscriber/>}/>
                         <Route path="admin/subscribers" element={<Subscribers />} />
-                        <Route path ="admin/components" element ={<Component/>}/>
+                        <Route path="admin/components" element ={<Component/>}/>
+                        <Route path="*" element={<Navigate to="wrongurl"  />} />
+                        <Route path="wrongurl" element={<h3>URL does not exists.</h3>}/>
                     </Routes>
                     </Box>
                     </Paper>

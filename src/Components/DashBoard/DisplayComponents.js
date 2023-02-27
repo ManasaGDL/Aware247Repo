@@ -4,6 +4,7 @@ const DisplayComponents = ({ data , bu , incidentCauseData }) => {
 
   return (
     <>
+    { data.length === 0 && <h5>No Components</h5>}
       {data?.map((comp) => {
         return (
           <>
