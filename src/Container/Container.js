@@ -44,15 +44,15 @@ const Container = ({ user }) => {
         <businessUnitContext.Provider value={localStorage.getItem('BU')}>
            { <Grid container sx={{ height: '100vh' }} spacing={2}>
                 <Grid item md={collapse ? 1 : 2} xs={12}>
-                    <SidebarComponent handleCollapse={handleCollapse} setLoading={setLoading} dynamicSideBarData={dynamicSideBarData}></SidebarComponent>
+                    <SidebarComponent width={window.innerWidth} handleCollapse={handleCollapse} setLoading={setLoading} dynamicSideBarData={dynamicSideBarData}></SidebarComponent>
                 </Grid>
                 <Grid item md={collapse ? 11 : 10} xs={12}>
-                <Paper sx={{ mr: 4,ml:2 ,mt:4,mb:4,height:'auto'}} elevation={3}>
+                <Paper sx={{mr: 4,ml:2 ,mt:4,mb:4, height:'auto'}} elevation={3}>
      <Box sx={{width:"100%",height:"100%"}}>
                     <Routes>
                         <Route path="admin" element={<Navigate to="dashboard"/>}/>
                         <Route path="admin/dashboard" element={<DashBoard bu={businessUnit}/>} />
-                        <Route path="create_incident" element={<MainActionPage bu={businessUnit} />} />
+                        <Route path="admin/create_incident" element={<MainActionPage bu={businessUnit} />} />
                         <Route path="admin/create_incident/:action/:id" element={<MainActionPage bu={businessUnit}/>}/>
                         <Route path="admin/incidents" element={<IncidentPage bu={businessUnit} />} />
                         <Route path="admin/subscribers/addSubscriber" element={<AddSubscriber/>}/>

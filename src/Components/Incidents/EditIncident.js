@@ -470,20 +470,23 @@ if(callUpdate)
                                             sx={{ paddingTop: "2px" }}
                                             key={component.component_id}
                                         >
-                                            <ListItemIcon></ListItemIcon>
+                                           
                                             <ListItemText
                                                 Typography
                                                 sx={{
-                                                    fontWeight: "bold",
+                                                    fontWeight: "600",
                                                     color: "rgb(101, 101, 101)",
                                                     fontSize: "12px",
                                                 }}
-                                                primary={<>{component.component_name }
-                                            </>}></ListItemText>
+                                                primary={<b>{component.component_name }
+                                            </b>}
+                                            >
+                                                
+                                            </ListItemText>
                                                 
        
                                         </ListItem>
-                                        <Divider />
+                                        {/* <Divider /> */}
                                       
                                         <List component="div">
                                             {component["sub_component"].map((item, index) => {
@@ -491,7 +494,7 @@ if(callUpdate)
                                                 return (
                                                     <>
                                                         <ListItem
-                                                            sx={{ paddingLeft: "80px", paddingTop: "2px" }}
+                                                            sx={{ paddingTop: "2px" }}
                                                             key={item.component_id}
                                                             secondaryAction={!(initialObj.status==="resolved")&&
                                                                 dropdownStatus.map(com => {
@@ -546,8 +549,10 @@ if(callUpdate)
                                                             <ListItemText
                                                                 disableTypography='true'
                                                                 primary={
-                                                                <Grid container spacing={4} display="flex" justifyContent={'center'}>
-                                                                    <Grid item md={3}>{item["component_name"]} </Grid>
+                                                                <Grid container spacing={4} display="flex" 
+                                                                // justifyContent={'center'}
+                                                                >
+                                                                    <Grid item md={3} sx={{display:{md:"flex"}}} justifyContent="flex-start">{item["component_name"]} </Grid>
                                                                 <Grid item md={7} >{initialObj.status==="resolved" ?(((componentStatusList.findIndex((item1 )=>{
                                                                         return item1.component_id === item.component_id
                                                                 }))!==-1)?
@@ -565,10 +570,11 @@ if(callUpdate)
                                                                 }}
                                                             ></ListItemText>
                                                         </ListItem>
-                                                        <Divider />
+                                                        {/* <Divider /> */}
                                                     </>
                                                 );
                                             })}
+                                            <Divider />
                                         </List>
                                     </>
                                 ) : (

@@ -13,20 +13,44 @@ const Menuitem = styled(MenuItem)`
 `;
 
 const SidebarComponent = ({ handleCollapse, dynamicSideBarData }) => {
-  
+  const [innerWidth,setInnerWidth] = useState({width:window.innerWidth})
+  const [ position ,setPosition] = useState('fixed')
   const { collapseSidebar, toggleSidebar, collapsed } = useProSidebar();
  
   // const [toggled, setToggled] = useState(false)
+
   const location = useLocation();  
-  
+  const setWidth =()=>{
+    setInnerWidth({width:window.innerWidth})
+    
+  }
+
+useEffect(()=>{
+window.addEventListener('resize',setWidth)
+if(innerWidth.width<1150)
+{
+  setPosition('static')
+}
+else setPosition('fixed')
+return(() => {
+  window.removeEventListener('resize', setWidth);
+})
+},[innerWidth])
   const handleClick = () => {
     collapseSidebar()
     handleCollapse(collapsed)
   }
 
-  return <div style={{ display: 'flex', height: '100%', textAlign: "left" ,position:'fixed'}}>
+  return <div 
+  //  style={{ display: 'flex', textAlign: "left" ,position:'fixed'}}
+  style={({ height: "100vh"}
+  ,
+   { display: "flex", flexDirection: "row" ,position:position,textAlign:"left"}
+  )
+  }
+  >
     <Paper elevation={3}>
-       <Sidebar width="210px" >
+       <Sidebar width="210px" style={{ height:"100vh"}}>
          <IconButton onClick={() => { handleClick() }
     } sx={{
           float: "right",

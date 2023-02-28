@@ -1,5 +1,5 @@
 import React, { useState , useEffect,useRef} from "react";
-import { AppBar,Toolbar,Typography } from "@mui/material"
+import { AppBar,Toolbar,Typography ,Grid} from "@mui/material"
 import { makeStyles } from "@material-ui/core/styles";
 import companylogo from "../assets/data_axle.PNG"
 import bgLogo from "../assets/body_bg.png"
@@ -11,6 +11,8 @@ import Menu from "@mui/material/Menu";
 import IconButton from "@mui/material/IconButton";
 import api from "../Api";
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
+import { display } from "@mui/system";
+
 
 const useStyles = makeStyles( theme =>({
  
@@ -93,11 +95,15 @@ const [businessUnit,setBusinessUnit]=useState(localStorage.getItem("BU"))
     return <>
     <AppBar className={classes.header}> 
        <Toolbar  sx={{ pl: 3 }}>
-       <Typography variant="h2" component="div" sx={{ flex:"1",width:"300", display: { xs: 'none', sm: 'block' } }}>
-        <img src={companylogo} align="left" alt="data axle" height="50px" style={{paddingTop:10}}/>
-        <FormLabel sx={{ color: "white",fontSize:30,marginLeft:35}}>{localStorage.getItem("BU")}</FormLabel>
-        </Typography>
-        
+       <Typography variant="h2" component="div" sx={{ flex:"1",width:"300", display: {flexDirection:'column' } }}>
+        <Grid container display={'flex'}>
+          <Grid item md={2} xs={2} sx={{ display: { xs:"none", md: "flex" }}} >
+          <img src={companylogo} align="left" alt="data axle" height="50px" style={{paddingTop:10}}/>
+          </Grid>
+       <Grid item md={8} xs={2} justifyContent="center" >
+        <FormLabel sx={{ color: "white",fontSize:30,marginLeft:25}}>{localStorage.getItem("BU")}</FormLabel>
+        </Grid>
+        <Grid item md={2} xs={2} justifyContent="right" sx={{ display:{md:"flex"}}}>
         <IconButton onClick={ handleChange}>
         <MenuOpenIcon sx={{color:"white"}} fontSize="large"/>
         </IconButton>
@@ -107,10 +113,23 @@ const [businessUnit,setBusinessUnit]=useState(localStorage.getItem("BU"))
             return <MenuItem key={bu} value={bu} onClick={handleClose}>{bu}</MenuItem>
           })}
         </Menu>
-       <Typography><FormLabel sx={{color:"white",mr:2}} disableTypography='true'>{localStorage.getItem('user')}</FormLabel></Typography>
+        </Grid>
+        </Grid>
+        </Typography>
+        
+        {/* <IconButton onClick={ handleChange}>
+        <MenuOpenIcon sx={{color:"white"}} fontSize="large"/>
+        </IconButton>
+        <Menu open={open} anchorEl={anchor} onClose={handleClose} onChange={e=>{console.log(e,"Mnu")}}>
+
+          {businessunitdata?.map(bu=>{
+            return <MenuItem key={bu} value={bu} onClick={handleClose}>{bu}</MenuItem>
+          })}
+        </Menu> */}
+        <Typography><FormLabel sx={{color:"white",mr:2}} disableTypography='true'>{localStorage.getItem('user')}</FormLabel></Typography>
         <div><Button variant="contained" sx={{color:"white",mr:3,fontWeight:"bold"}} onClick={()=>navigate("/admin/create_incident")}>Create Incident</Button></div>
        
-       </Toolbar >
+       </Toolbar > 
          </AppBar> 
 
         </>
