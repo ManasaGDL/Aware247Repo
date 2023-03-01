@@ -24,6 +24,7 @@ const Container = ({ user }) => {
     const [loading,setLoading] = useState(false)
     const [businessUnit, setBusinessUnit] = useState(localStorage.getItem("BU"))//passing BU to components 
     const handleCollapse = (collapse) => {
+       
         setCollapse(!collapse)
     }
   

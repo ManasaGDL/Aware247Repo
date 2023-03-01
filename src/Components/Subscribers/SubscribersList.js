@@ -8,16 +8,18 @@ import UpdateIcon from '@mui/icons-material/Update';
 import businessUnitContext from "../../context/businessUnitContext";
 const SubscribersList =({name})=>{
     const [ data , setData ] = useState([])
+    const [ pageSize , setPageSize ] = useState(15)
     const bu =  useContext(businessUnitContext)
 
     const columns = [
         {
-           field:"",
+           field:"first_name",
            headerName:"Name",
+           type:"string",
            flex:1,
-           sortable: false,
-           filterable:false,
-           disableColumnMenu:false,
+          //  sortable: false,
+          //  filterable:false,
+          //  disableColumnMenu:false,
            valueGetter:(params)=>{
            return params.row["first_name"]+" "+params.row["last_name"]
            }
@@ -75,8 +77,12 @@ setData(response?.data?.results)
     }
     return <div className="pages">
     <Box sx={{ height:"auto" }}>
-        <DataGrid autoHeight={true} columns={columns} rows={data} getRowId={(row)=>row.subscriber_id} pageSize='15'
-        sx={{
+        <DataGrid autoHeight={true} columns={columns} rows={data} getRowId={(row)=>row.subscriber_id} 
+        pageSize={pageSize}
+        rowsPerPageOptions={[5, 10,15, 20,50]}
+        pagination
+        onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+       sx={{
             "&.MuiDataGrid-root .MuiDataGrid-cell:focus-within": {
               outline: "none !important",
             },

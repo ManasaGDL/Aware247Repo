@@ -27,17 +27,20 @@ const SidebarComponent = ({ handleCollapse, dynamicSideBarData }) => {
 
 useEffect(()=>{
 window.addEventListener('resize',setWidth)
+
 if(innerWidth.width<1150)
 {
   setPosition('static')
+handleCollapse(true)
 }
 else setPosition('fixed')
 return(() => {
   window.removeEventListener('resize', setWidth);
 })
-},[innerWidth])
-  const handleClick = () => {
-    collapseSidebar()
+},[innerWidth.width])
+const handleClick = () => {
+ 
+     collapseSidebar()
     handleCollapse(collapsed)
   }
 

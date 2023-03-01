@@ -5,6 +5,7 @@ import { Box } from "@mui/material";
 import dayjs from "dayjs";
 const ActivityHistory = ({ id ,bu}) => {
   const [data, setData] = useState({})
+  const [ pageSize , setPageSize ] = useState(5)
   useEffect(() => {
     if (id) {
       getActivityLog(id)
@@ -61,7 +62,11 @@ const ActivityHistory = ({ id ,bu}) => {
           '.MuiDataGrid-columnHeaderTitle': {
             fontWeight: 600
           }
-        }} pageSize='15'/>
+        }} 
+        pageSize={pageSize}
+        rowsPerPageOptions={[5, 10,15, 20,50]}
+        pagination
+        onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}/>
     </Box>
   </div>
 }

@@ -22,6 +22,7 @@ const ViewIncidentWithDropDown = ({ bu }) => {
   const [openDialog, setOpenDialog] = useState({ flag: false, value: '' })
   const [openDeleteDialog, setOpenDeleteDialog] = useState({ flag: false, value: '' })
   const [text, setText] = useState("")
+  const [ pageSize , setPageSize] = useState(15)
   const { setSnackBarConfig } = useContext(SnackbarContext)
 
   const navigate = useNavigate();
@@ -182,8 +183,12 @@ const ViewIncidentWithDropDown = ({ bu }) => {
     </Backdrop>
     </div>
     <Box sx={{ height: 700, width: '100%' }}>    
-      {data.length > 0 ? <DataGrid rows={data} columns={columns} pageSize={15}
+      {data.length > 0 ? <DataGrid rows={data} columns={columns} 
         rowHeight={45}
+        pageSize={pageSize}
+        rowsPerPageOptions={[5, 10,15, 20,50]}
+        pagination
+        onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
         onRowClick={handleRowClick}
         sx={{
           "&.MuiDataGrid-root .MuiDataGrid-cell:focus-within": {

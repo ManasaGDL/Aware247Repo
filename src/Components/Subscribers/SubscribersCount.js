@@ -10,12 +10,12 @@ const SubscribersCount = ({subscribersCount}) =>{
     return   <Grid
     container
     spacing={5}
-    sx={{ marginTop:1,textAlign:"center",justifyContent:"center"}} 
+    sx={{ paddingTop:1,textAlign:"center",justifyContent:"center"}} 
    
   >
     <Grid item md={6} xs={12}>
-      <Box sx={{ minwidth: 100}}>
-        <Card variant="outlined"  >
+      <Box >
+        <Card variant="outlined"  sx={{ maxWidth: 400 ,marginLeft:2}}>
           <CardContent>
             <Typography variant="h6" component="div">
               Email Subscribers
@@ -28,8 +28,8 @@ const SubscribersCount = ({subscribersCount}) =>{
       </Box>
     </Grid>
     <Grid item md={6} xs={12}>
-      <Box sx={{ minWidth: 100}}>
-        <Card variant="outlined"> <CardContent>
+      <Box>
+        <Card variant="outlined" sx={{ maxWidth: 400 ,marginLeft:2 }}> <CardContent>
             <Typography variant="h6" component="div">
              SMS Subscribers
             </Typography>

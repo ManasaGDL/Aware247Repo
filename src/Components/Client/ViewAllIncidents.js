@@ -10,6 +10,7 @@ import { DataGrid } from '@mui/x-data-grid'
 const  ViewAllIncidents = () =>{
     const [ data , setData ] = useState([])
     const [ loading , setLoading ] = useState(false)
+    const [ pageSize, setPageSize ] = useState(20)
     const regex = /(<([^>]+)>)/ig;
     const CustomWidthTooltip = styled(({ className, ...props }) => (
       <Tooltip {...props} classes={{ popper: className }} placement = "right-end"/>
@@ -96,24 +97,12 @@ const getIncidentsStatusPage = async() =>{
           '.MuiDataGrid-columnHeaderTitle': {
             fontWeight: 600
           }
-        }} pageSize='30' rowHeight={80}/>
-           {/* { data.length>0 && <List sx={{  border: 1, borderRadius: "5px", borderColor: "#CFD2CF"}}>
-                {data.map( item =>{
-                    return <ListItem>
-                        <ListItemText primary={<><b>{item?.status?.charAt(0).toUpperCase()+item?.status?.slice(1)}</b> --{item.name}</>}
-                        secondary = {<>
-                        <div>
-                        {item?.message?.replace(regex,'')}
-                        </div>
-                        &nbsp;
-                        <div>
-                           Last Modified : {dayjs(item.modify_datetime).format("YYYY/MM/DD hh:mm:ss A")}
-                        </div>
-                        </>}>
-                        </ListItemText>
-                    </ListItem>
-                })}
-            </List>} */}
+        }}  rowHeight={80}
+        pageSize={pageSize}
+        rowsPerPageOptions={[5, 10,15, 20,50]}
+        pagination
+        onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}/>
+           
         </Box>
     </div>
 }

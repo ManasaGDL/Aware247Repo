@@ -30,17 +30,24 @@ const Subscribers = () => {
   return (
     <>
       <div style={{ textAlign: "left" }}>
-        <h5 style={{ paddingTop: 20, marginLeft: 20 }}>{"Subscribers"}</h5>
-        <Stack
-          sx={{
-            display: "flex",
-            direction: "row",
-            alignItems: "flex-end",
-            justifyContent: "center",
-            marginRight: 3,
-          }}
+      
+        <Stack direction="row"
+  justifyContent="space-between"
+  alignItems="center"
+  spacing={12} 
+  sx={{ height:50,marginRight:2}}
+        //   sx={{
+        //     // display: "flex",
+        //     direction: "row",
+        //  justifyContent:"space-evenly",
+        //     // alignItems: "flex-end",
+        //     // justifyContent: "center",
+        //     marginRight: 3,
+            
+        //   }}
         >
-          <StyledButton
+            <h5 style={{ paddingTop: 20, marginLeft: 20 }}>{"Subscribers"}</h5>
+          <StyledButton 
             variant="contained"
             onClick={() => navigate("/admin/subscribers/addSubscriber")}
           >
