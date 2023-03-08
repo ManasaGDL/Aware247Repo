@@ -219,14 +219,7 @@ const Component = () => {
     <div style={{ textAlign: "left" }}>
         {error && <h4>Error</h4>}
         <h5 style={{ paddingTop: 20, marginLeft: 20 }}>Components</h5>
-      {loading && (
-        <Backdrop
-          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-          open={loading}
-        >
-          <LoadingPanel></LoadingPanel>
-        </Backdrop>
-      )}
+     
       <CustomDialogs
         open={openCustomDialogs.open}
         message={openCustomDialogs.message}
@@ -265,6 +258,14 @@ const Component = () => {
             + Add A Component
           </StyledButton>{" "}
         </Stack>
+         {loading && (
+        <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={loading}
+        >
+          <LoadingPanel></LoadingPanel>
+        </Backdrop>
+      )}
         <br />
           
           {data.length === 0 && <div style={{  alignItems:"center" , display:"flex"}}><h5>No Components</h5></div>}

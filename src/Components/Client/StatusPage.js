@@ -88,7 +88,7 @@ const StatusPage = () => {
           <div>
             <Button
               variant="contained"
-              sx={{ color: "white", mr: 3 }}
+              sx={{ color: "white", mr: 3 , fontWeight:700 }}
                onClick={()=>navigate(`/Status/add/${businessunit}`)}
             >
               Subscribe To Updates

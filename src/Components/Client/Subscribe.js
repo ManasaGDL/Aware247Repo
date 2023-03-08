@@ -653,7 +653,7 @@ const Subscribe = () => {
 
             <Button
               variant="contained"
-              sx={{ ml: 2, mt: 6, color: "white" }}
+              sx={{ ml: 2, mt: 6, color: "white",fontWeight:700 }}
               size="large"
               type="submit"
             >

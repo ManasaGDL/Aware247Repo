@@ -10,6 +10,7 @@ import StatusPage from './Components/Client/StatusPage';
 import { ThemeProvider } from '@mui/material/styles'
 import theme from './theme';
 import Subscribe from './Components/Client/Subscribe';
+
 function App(props) {
   const history=useNavigate();
   const [user,setUser] = useState({email:""})
@@ -20,6 +21,7 @@ document.title = "Status App"
     <div className="App">
       <ThemeProvider theme = {theme}>
       <SnackbarContextProvider>
+     
       <Routes history={history}> 
       <Route path ="Status" >
         <Route path = ":businessunit" element ={<StatusPage/>}/>

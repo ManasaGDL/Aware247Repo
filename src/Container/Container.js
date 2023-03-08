@@ -17,6 +17,7 @@ import Component from "../Components/ComponentPage/Component";
 import businessUnitContext from "../context/businessUnitContext";
 import Subscribe from "../Components/Client/Subscribe"
 import { useContext } from "react";
+import { ProSidebarProvider } from "react-pro-sidebar";
 // import "./containerStyles
 const Container = ({ user }) => {
     const [collapse, setCollapse] = useState(false)
@@ -33,8 +34,10 @@ const Container = ({ user }) => {
         axiosInstance.defaults.headers["Authorization"] = "Bearer " + localStorage.getItem("access_token")
     }
 
-    return <>         
+    return <>   
+     <ProSidebarProvider>      
         <section>
+           
             <div style={{ height: "60px" }}>
                 {/* pass sidebar data from Header to container to SidebarComponent  */}
                 <Header user={user} setDynamicSideBarData={setDynamicSideBarData} businessunit={setBusinessUnit}></Header>
@@ -69,7 +72,9 @@ const Container = ({ user }) => {
             <div>
             </div>
             </businessUnitContext.Provider>
+          
         </section>
+        </ProSidebarProvider>
     </>
 }
 export default Container;
