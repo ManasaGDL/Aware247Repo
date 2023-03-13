@@ -18,6 +18,7 @@ import businessUnitContext from "../context/businessUnitContext";
 import Subscribe from "../Components/Client/Subscribe"
 import { useContext } from "react";
 import { ProSidebarProvider } from "react-pro-sidebar";
+import UpdateSubscriber from "../Components/Subscribers/UpdateSubscriber";
 // import "./containerStyles
 const Container = ({ user }) => {
     const [collapse, setCollapse] = useState(false)
@@ -59,6 +60,7 @@ const Container = ({ user }) => {
                         <Route path="admin/create_incident" element={<MainActionPage bu={businessUnit} />} />
                         <Route path="admin/create_incident/:action/:id" element={<MainActionPage bu={businessUnit}/>}/>
                         <Route path="admin/incidents" element={<IncidentPage bu={businessUnit} />} />
+                        <Route path="admin/subscribers/manage/:id" element={<UpdateSubscriber/>}/>
                         <Route path="admin/subscribers/addSubscriber" element={<AddSubscriber/>}/>
                         <Route path="admin/subscribers" element={<Subscribers />} />
                         <Route path="admin/components" element ={<Component/>}/>

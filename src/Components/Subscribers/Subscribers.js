@@ -20,6 +20,9 @@ const Subscribers = () => {
     setLoading(true)
     getSubscribersCount(); // api to get subscribers count
   }, [bu]);
+  const handleRefresh=()=>{
+    getSubscribersCount();// refresh the grid page when subscribers are deleted or managed
+  }
   const getSubscribersCount = async () => {
     try {
       const response = await  api.getSubscribersCount();
@@ -65,7 +68,7 @@ const Subscribers = () => {
           </div>
           <div>
             <SubscribersCount  subscribersCount ={subscribersCount}/>
-            <SubscribersDetails />
+            <SubscribersDetails handleRefresh={handleRefresh}/>
           </div>
         </Container>
       </div>

@@ -73,6 +73,13 @@ const api = {
      },
      getSubscribersList : (payload) =>{
       return axiosInstance.put(`${baseURL}/api/common/subscribers/subscriberslist/`,payload);
+     },
+     deleteSubscriber:(id)=>{
+      return axiosInstance.delete(`${baseURL}/api/common/subscribers/${id}/unsubscribe/`)
+     },
+     updateSubscriber:( id ,payload)=>{
+      return axiosInstance.patch(`${baseURL}/api/common/subscribers/${id}/update_subscribers/`,payload)
+
      }
 }
 export default api;
