@@ -154,11 +154,20 @@ const Component = () => {
             new_group_name: componentDetails.newGroup,
           };
          else
+         {if(componentDetails.component_id!==-2)
           payload = {
             component_name: componentDetails.component_name,
             description: componentDetails.description,
             component_group: componentDetails.component_id,
           };
+          else{
+            payload = {
+              component_name: componentDetails.component_name,
+              description: componentDetails.description,
+             
+            };
+          }
+        }
         const res = await api.editComponent(componentDetails.id, payload);
         const message = `${componentDetails.component_name} ${componentDetails.type} succesfully updated`;
         setSnackBarConfig({
