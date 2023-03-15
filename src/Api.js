@@ -79,7 +79,9 @@ const api = {
      },
      updateSubscriber:( id ,payload)=>{
       return axiosInstance.patch(`${baseURL}/api/common/subscribers/${id}/update_subscribers/`,payload)
-
+     },
+     getTeamMembers:()=>{
+      return axiosInstance.get(`${baseURL}/api/account/profile/`)
      }
 }
 export default api;

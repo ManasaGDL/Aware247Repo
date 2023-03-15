@@ -19,6 +19,7 @@ import Subscribe from "../Components/Client/Subscribe"
 import { useContext } from "react";
 import { ProSidebarProvider } from "react-pro-sidebar";
 import UpdateSubscriber from "../Components/Subscribers/UpdateSubscriber";
+import TeamMembers from "../Components/TeamMembers/TeamMembers";
 // import "./containerStyles
 const Container = ({ user }) => {
     const [collapse, setCollapse] = useState(false)
@@ -57,6 +58,7 @@ const Container = ({ user }) => {
                     <Routes>
                         <Route path="admin" element={<Navigate to="dashboard"/>}/>
                         <Route path="admin/dashboard" element={<DashBoard bu={businessUnit}/>} />
+                        <Route path="/admin/teammembers" element={<TeamMembers/>}/>
                         <Route path="admin/create_incident" element={<MainActionPage bu={businessUnit} />} />
                         <Route path="admin/create_incident/:action/:id" element={<MainActionPage bu={businessUnit}/>}/>
                         <Route path="admin/incidents" element={<IncidentPage bu={businessUnit} />} />

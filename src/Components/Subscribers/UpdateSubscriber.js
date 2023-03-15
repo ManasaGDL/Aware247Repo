@@ -59,10 +59,7 @@ const UpdateSubscriber = () =>{
     )
     setAllComponentsList(componentsArray) 
     },[data])
-    useEffect(()=>{
-console.log("componnentsStatusList",componentStatusList)
-console.log("AllCOmponentList",allComponentsList)
-    },[componentStatusList,allComponentsList])
+   
     useEffect(()=>{ 
        setBusinessUnit(bu);     
     },[bu])

@@ -104,8 +104,7 @@ const Component = () => {
     }
   };
 
-  const updateComponent = async (componentDetails) => {
-    console.log("componentDetals for edit", componentDetails);
+  const updateComponent = async (componentDetails) => {   
     let payload = {};
     try {
       if (componentDetails.action === "Create") {
@@ -154,20 +153,11 @@ const Component = () => {
             new_group_name: componentDetails.newGroup,
           };
          else
-         {if(componentDetails.component_id!==-2)
           payload = {
             component_name: componentDetails.component_name,
             description: componentDetails.description,
             component_group: componentDetails.component_id,
           };
-          else{
-            payload = {
-              component_name: componentDetails.component_name,
-              description: componentDetails.description,
-             
-            };
-          }
-        }
         const res = await api.editComponent(componentDetails.id, payload);
         const message = `${componentDetails.component_name} ${componentDetails.type} succesfully updated`;
         setSnackBarConfig({
@@ -182,8 +172,7 @@ const Component = () => {
               getGroups();
         }
       }
-    } catch (e) {
-      console.log(e.response.data);
+    } catch (e) {     
       if (e.response?.data) {
         const errordata = e.response.data.Error;
         setOpenCustomDialogs({
@@ -227,7 +216,7 @@ const Component = () => {
   return (
     <div style={{ textAlign: "left" }}>
         {error && <h4>Error</h4>}
-        <h5 style={{ paddingTop: 20, marginLeft: 20 }}>Components</h5>
+        {/* <h5 style={{ paddingTop: 20, marginLeft: 20 }}>Components</h5> */}
      
       <CustomDialogs
         open={openCustomDialogs.open}
@@ -239,24 +228,29 @@ const Component = () => {
       />
       <Box
         sx={{
-          pl: 3,
-          pt: 2,
-          pr: 3,
-          mt: 0,
-          backgroundColor: "white",
+          // pl: 2,
+          // pt: 2,
+          // pr: 3,
+          // mt: 0,
+          // backgroundColor: "white",
           height: "auto",
         }}
       >
       
-        <Stack
-          sx={{
-            display: "flex",
-            direction: "row",
-            alignItems: "flex-end",
-            justifyContent: "center",
-            marginRight: 3,
-          }}
+        <Stack   direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+            spacing={12}
+            sx={{ height: 50, marginRight: 2 }}
+          // sx={{
+          //   display: "flex",
+          //   direction: "row",
+          //   alignItems: "flex-end",
+          //   justifyContent: "center",
+          //   marginRight: 3,
+          // }}
         >
+             <h5 style={{ paddingTop: 20, marginLeft: 20 }}>Components</h5>
           <StyledButton
             variant="contained"
             onClick={() =>
@@ -267,6 +261,14 @@ const Component = () => {
             + Add A Component
           </StyledButton>{" "}
         </Stack>
+        <Box  sx={{
+          pl: 2,
+          pt: 2,
+          pr: 3,
+          mt: 0,
+          backgroundColor: "white",
+          height: "auto",
+        }}>
          {loading && (
         <Backdrop
           sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -483,6 +485,7 @@ const Component = () => {
         <br />
         <br />
         <br />
+        </Box>
       </Box>
     </div>
   );

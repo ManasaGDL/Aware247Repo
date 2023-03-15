@@ -141,7 +141,6 @@ const Subscribe = () => {
   let subCategoryArray = [];
   let componentsArray = [];
   const navigate = useNavigate();
-  console.log("type",type)
   useEffect(() => {
     if (checkAllChecked) setMaintainChecked([...componentsList]);
     else setMaintainChecked([]);
