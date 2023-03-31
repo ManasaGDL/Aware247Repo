@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect ,useContext} from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Box, Container, Stack } from "@mui/system";
 import api from "../../Api";
@@ -6,14 +6,16 @@ import dayjs from "dayjs";
 import { Backdrop } from "@mui/material";
 import LoadingPanel from "../common/TabPanel/LoadingPanel";
 import { StyledButton } from "../../CustomStyles/StyledComponents";
+import businessUnitContext from "../../context/businessUnitContext";
 const TeamMembers = () => {
+  const bu = useContext(businessUnitContext);
   const [data, setData] = useState([]);
   const [pageSize, setPageSize] = useState(15);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     setLoading(true);
     getTeamMembers();
-  }, []);
+  }, [bu]);
   const getTeamMembers = async () => {
     try {
       const response = await api.getTeamMembers();
