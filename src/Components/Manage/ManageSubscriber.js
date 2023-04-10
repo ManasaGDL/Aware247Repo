@@ -10,8 +10,9 @@ import {
   ListItemText,
   Divider,
   Backdrop,
+  Button
 } from "@mui/material";
-import { useNavigate, useLocation, useParams } from "react-router-dom";
+import { useNavigate, useLocation, useParams ,Link} from "react-router-dom";
 
 import BasicHeader from "../common/BasicHeader";
 import { StyledButton } from "../../CustomStyles/StyledComponents";
@@ -29,6 +30,7 @@ const ManageSubscriber = () => {
   // This component gets rendered once we click manage link in the Email that recieved when user subscribes
   const { data, loading, error } = state;
   let componentsArray = [];
+  const navigate= useNavigate();
   useEffect(() => {
     makeApiCall();
     getSubscriberComponents();
@@ -51,9 +53,7 @@ const ManageSubscriber = () => {
       setComponentStatusList([...allComponentsList]);
     }
   }, [selectedAllEnabled]);
-  useEffect(() => {
-    console.log("ACL", allComponentsList, componentStatusList);
-  }, [allComponentsList, componentStatusList]);
+ 
   const handleSelectAll = (e) => {
     setSelectedAllEnabled(e.target.checked);
     if (e.target.checked === false) setComponentStatusList([]);
@@ -89,8 +89,20 @@ const ManageSubscriber = () => {
         user_token: token,
         components: componentStatusList,
       });
+      navigate(`/Status/${businessunit}`)
     } catch (e) {}
   };
+  const callUnSubscribe =()=>{
+    try{
+const res= clientApi.deleteSubscriber({
+  "user_token":token
+})
+navigate(`/Status/${businessunit}`)
+    }catch(e)
+    {
+
+    }
+  }
   return (
     <div className="status">
       <BasicHeader />
@@ -267,9 +279,15 @@ const ManageSubscriber = () => {
             >
               Update{" "}
             </StyledButton>
+        
             <div>
               To unsubscribe globally please click on the{" "}
-              <a href="#">Unsubscribe</a>
+             
+            
+            <Button  sx={{ fontWeight:700}} onClick={()=>callUnSubscribe()}>
+                 Unsubscribe
+            </Button>
+       
             </div>
             </Box>
           </div>
