@@ -149,7 +149,7 @@ setComponentStatusList([...allComponentsList])
         {!loading &&<h5 style={{ paddingTop: 20, marginLeft: 20 }}>{"Update Subscriber"}</h5>}
     
      {!loading &&<div style={{ textAlign:"center",paddingBottom:20}}>
-        
+        <Box >
         <Stack direction = "row" spacing ='8' alignItems={"flex-start"}
         ml={5} mr={15}
          justifyContent="space-between">
@@ -186,12 +186,13 @@ setComponentStatusList([...allComponentsList])
           />
         <Grid container justify="flex-start">
               <Grid item md={12}>
-                <Box sx={{ width: "1000px", margin: "0 auto" }}>
+                <Box sx={{ maxWidth: "900px", margin: "0 auto" }}>
                   <List
                     sx={{
                       border: 1,
                       borderRadius: "5px",
                       borderColor: "#CFD2CF",
+                      maxWidth:"900px"
                     }}
                   >
                     {data.map((item) => {
@@ -280,6 +281,7 @@ setComponentStatusList([...allComponentsList])
             <StyledButton variant="contained" onClick={()=>{
               handleUpdateSubscriber();
             }}>Update Subscriber</StyledButton>
+            </Box>
         </div>}
     </div>
     </>

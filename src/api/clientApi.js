@@ -23,6 +23,9 @@ const clientApi = {
     },
     updateSubscriber : (payload)=>{
         return axiosInstance.patch(`${baseURL}/api/common/subscribers/subscribers_update/`,payload)
+    },
+    deleteSubscriber : (payload) => {
+        return axiosInstance.delete(`${baseURL}/api/common/subscribers/unsubscribe_public/`,payload)
     }
 }
 export default clientApi;
