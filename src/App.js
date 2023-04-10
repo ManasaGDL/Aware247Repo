@@ -10,6 +10,8 @@ import StatusPage from './Components/Client/StatusPage';
 import { ThemeProvider } from '@mui/material/styles'
 import theme from './theme';
 import Subscribe from './Components/Client/Subscribe';
+import ManageSubscriber from './Components/Manage/ManageSubscriber';
+import UnsubscribeUser from './Components/Manage/UnsubscribeUser';
 
 function App(props) {
   const history=useNavigate();
@@ -24,6 +26,8 @@ document.title = "Status App"
      
       <Routes history={history}> 
       <Route path ="Status" >
+        <Route path=":businessunit/manage/*"element={<ManageSubscriber/>}/>
+        <Route path = ":businessunit/unsubscribe/*" element={<UnsubscribeUser/>}/>
         <Route path = ":businessunit" element ={<StatusPage/>}/>
         <Route path ="add/:businessunit" element ={<Subscribe />}/>
         <Route path="*" element= {<div>No Page</div>}/>

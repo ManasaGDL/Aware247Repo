@@ -1,6 +1,7 @@
 import { useReducer } from "react";
 import { useEffect , useState } from "react"
 import api from "../Api";
+import clientApi from "../api/clientApi";
 const initialState = {
     data:[],
     loading:false,
@@ -24,12 +25,17 @@ switch(type){
                 return state;
 
 }}
-        const useFetch = (bu , callFetchApi) => {
+        const useFetch = (bu , readBusinessUnitFromUrl=false) => {
+        //readBusinessUNitFromUrl picks BU from url instead from localStorage
     const [state , dispatch ] = useReducer(reducer , initialState);
 const makeApiCall = () =>{
-   
+ 
     dispatch({ type :ACTIONS.API_REQUEST});
-    api.getComponents().then(res =>{ dispatch({ type :ACTIONS.FETCH_DATA, payload:res.data})}).catch((e)=>dispatch({ type:ACTIONS.ERROR,payload:e.response.data}))
+    if(readBusinessUnitFromUrl)
+    {
+   clientApi.getComponentStatus(bu).then(res =>{ dispatch({ type :ACTIONS.FETCH_DATA, payload:res.data})}).catch((e)=>dispatch({ type:ACTIONS.ERROR,payload:e.response.data}))
+    }
+  else  api.getComponents().then(res =>{ dispatch({ type :ACTIONS.FETCH_DATA, payload:res.data})}).catch((e)=>dispatch({ type:ACTIONS.ERROR,payload:e.response.data}))
 }
     useEffect(()=>{
       makeApiCall();
