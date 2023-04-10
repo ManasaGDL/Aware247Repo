@@ -1,4 +1,4 @@
-FROM node:14.17.3 AS builder
+FROM node:16.17.1 AS builder
 
 WORKDIR /frontend
 
