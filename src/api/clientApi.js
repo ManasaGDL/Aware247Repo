@@ -24,8 +24,9 @@ const clientApi = {
     updateSubscriber : (payload)=>{
         return axiosInstance.patch(`${baseURL}/api/common/subscribers/subscribers_update/`,payload)
     },
-    deleteSubscriber : (payload) => {
-        return axiosInstance.delete(`${baseURL}/api/common/subscribers/unsubscribe_public/`,payload)
+    deleteSubscriber : (id,businessunit) => {
+        axiosInstance.defaults.headers["businessunit"]=businessunit;
+        return axiosInstance.delete(`${baseURL}/api/common/subscribers/unsubscribe_public/?id=${id}`)
     }
 }
 export default clientApi;
