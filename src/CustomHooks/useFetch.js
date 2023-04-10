@@ -28,8 +28,9 @@ switch(type){
         const useFetch = (bu , readBusinessUnitFromUrl=false) => {
         //readBusinessUNitFromUrl picks BU from url instead from localStorage
     const [state , dispatch ] = useReducer(reducer , initialState);
+  
 const makeApiCall = () =>{
- 
+   
     dispatch({ type :ACTIONS.API_REQUEST});
     if(readBusinessUnitFromUrl)
     {

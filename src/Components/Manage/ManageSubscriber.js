@@ -21,6 +21,7 @@ import { SnackbarContext } from "../../context/SnackbarContext";
 import useFetch from "../../CustomHooks/useFetch";
 import clientApi from "../../api/clientApi";
 import CustomDialogs from "../common/Dialogs/CustomDialogs";
+import UnsubscribeUser from "./UnsubscribeUser";
 
 const ManageSubscriber = () => {
   const { businessunit } = useParams();
@@ -28,6 +29,8 @@ const ManageSubscriber = () => {
   const [selectedAllEnabled, setSelectedAllEnabled] = useState(false);
   const [allComponentsList, setAllComponentsList] = useState([]);
   const [componentStatusList, setComponentStatusList] = useState([]);
+  const [callToUnsubscribeComponent, setCallToUnsubscribeComponent] =
+    useState(false);
   const [state, makeApiCall] = useFetch(businessunit, true); // second argument allows to read BU from Url instead of reading from loacal storage
   // This component gets rendered once we click manage link in the Email that recieved when user subscribes
   const { data, loading, error } = state;
@@ -37,7 +40,7 @@ const ManageSubscriber = () => {
   useEffect(() => {
     makeApiCall();
     getSubscriberComponents();
-  }, []);
+  }, [businessunit]);
   useEffect(() => {
     data?.length > 0 &&
       data?.forEach((item) => {
@@ -105,11 +108,14 @@ const ManageSubscriber = () => {
     setOpenCustomDialog({ open: false, message: "" });
     navigate(`/Status/${businessunit}`);
   };
-  const callUnSubscribe = async () => {
-    try {
-      const res = await clientApi.deleteSubscriber(token,businessunit);
-      navigate(`/Status/${businessunit}/unsubscribe/${token}`);
-    } catch (e) {}
+  const callUnSubscribe = () => {
+    setCallToUnsubscribeComponent(true);
+    // try {
+    //   const res = await clientApi.deleteSubscriber(token,businessunit);
+    //   navigate(`/Status/${businessunit}/unsubscribe/${token}`);
+    // } catch (e) {
+
+    // }
   };
   return (
     <div className="status">
@@ -129,6 +135,7 @@ const ManageSubscriber = () => {
           hideButton={true}
           handleConfirmation={stayOnSamePage}
         />
+        {callToUnsubscribeComponent && <UnsubscribeUser />}
         {!loading && componentStatusList.length > 0 && (
           <div style={{ textAlign: "center", paddingBottom: 20 }}>
             <Box sx={{ maxWidth: 1000, margin: "0 auto" }}>
