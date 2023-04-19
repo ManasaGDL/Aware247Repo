@@ -4,8 +4,14 @@ import Paper from "@mui/material/Paper";
 import HeaderTabs from "../common/HeaderTabs";
 import ViewIncidentWithDropDown from "./ViewIncidentWithDropDown";
 import ScheduledMaintenance from "./ScheduledMaintenance";
+import { useLocation } from "react-router-dom";
 const IncidentPage=({bu})=>{
-    const [tabValue, setTabValue] = React.useState(0);
+  const location = useLocation();
+
+    const [tabValue, setTabValue] = React.useState(location?.state?.tabValue?location?.state?.tabValue:0 );
+    //(location?.state?.tabValue) directing to specific tab :example::Directing to ScheduleMaintenance grid once SM instance is created
+    
+
     const tabs= [
       { title: "View Incidents",
        content: <ViewIncidentWithDropDown bu={bu}></ViewIncidentWithDropDown>

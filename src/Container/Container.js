@@ -20,6 +20,8 @@ import { useContext } from "react";
 import { ProSidebarProvider } from "react-pro-sidebar";
 import UpdateSubscriber from "../Components/Subscribers/UpdateSubscriber";
 import TeamMembers from "../Components/TeamMembers/TeamMembers";
+import CreateScheduleMaintenance from "../Components/Incidents/CreateScheduleMaintenance";
+import ViewScheduleMaintenance from "../Components/Incidents/ViewScheduleMaintenance";
 // import "./containerStyles
 const Container = ({ user }) => {
     const [collapse, setCollapse] = useState(false)
@@ -59,6 +61,9 @@ const Container = ({ user }) => {
                         <Route path="admin" element={<Navigate to="dashboard"/>}/>
                         <Route path="admin/dashboard" element={<DashBoard bu={businessUnit}/>} />
                         <Route path="/admin/teammembers" element={<TeamMembers/>}/>
+                        <Route path="/admin/viewScheduleMaintenance/:id" element={<ViewScheduleMaintenance/>}/>
+                        <Route path="/admin/scheduled/:action" element={<CreateScheduleMaintenance/>}/>
+                        <Route path="/admin/scheduled/:action/:id" element={<CreateScheduleMaintenance/>}/>
                         <Route path="admin/create_incident" element={<MainActionPage bu={businessUnit} />} />
                         <Route path="admin/create_incident/:action/:id" element={<MainActionPage bu={businessUnit}/>}/>
                         <Route path="admin/incidents" element={<IncidentPage bu={businessUnit} />} />

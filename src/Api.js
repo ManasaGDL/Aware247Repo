@@ -82,6 +82,21 @@ const api = {
      },
      getTeamMembers:()=>{
       return axiosInstance.get(`${baseURL}/api/account/profile/`)
+     },
+     getScheduleMaintenanceIncidents:()=>{
+      return axiosInstance.get(`${baseURL}/api/common/scheduled_maintanence/`)
+     },
+     createScheduleMaintenance:(obj)=>{
+      return axiosInstance.post(`${baseURL}/api/common/scheduled_maintanence/`,obj)
+     },
+     getScheduledIncident:(id)=>{
+      return axiosInstance.get(`${baseURL}/api/common/scheduled_maintanence/components_list?id=${id}`)
+     },
+     updateScheduledIncident:(id,payload)=>{
+    return axiosInstance.put(`${baseURL}/api/common/scheduled_maintanence/${id}/`,payload)
+     },
+     deleteScheduledIncident:(id)=>{
+      return axiosInstance.delete(`${baseURL}/api/common/scheduled_maintanence/${id}/sch_mnt_del/`)
      }
 }
 export default api;

@@ -228,11 +228,7 @@ const Component = () => {
       />
       <Box
         sx={{
-          // pl: 2,
-          // pt: 2,
-          // pr: 3,
-          // mt: 0,
-          // backgroundColor: "white",
+          
           height: "auto",
         }}
       >
@@ -242,13 +238,7 @@ const Component = () => {
             alignItems="center"
             spacing={12}
             sx={{ height: 50, marginRight: 2 }}
-          // sx={{
-          //   display: "flex",
-          //   direction: "row",
-          //   alignItems: "flex-end",
-          //   justifyContent: "center",
-          //   marginRight: 3,
-          // }}
+      
         >
              <h5 style={{ paddingTop: 20, marginLeft: 20 }}>Components</h5>
           <StyledButton

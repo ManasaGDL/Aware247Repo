@@ -12,6 +12,8 @@ import theme from './theme';
 import Subscribe from './Components/Client/Subscribe';
 import ManageSubscriber from './Components/Manage/ManageSubscriber';
 import UnsubscribeUser from './Components/Manage/UnsubscribeUser';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 
 function App(props) {
   const history=useNavigate();
@@ -22,6 +24,7 @@ document.title = "Status App"
   return (
     <div className="App">
       <ThemeProvider theme = {theme}>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
       <SnackbarContextProvider>
      
       <Routes history={history}> 
@@ -38,6 +41,7 @@ document.title = "Status App"
       
       </Routes> 
       </SnackbarContextProvider>
+   </LocalizationProvider>
       </ThemeProvider>
     </div>
   );

@@ -95,7 +95,7 @@ const EditIncident = ({ bu }) => {
     navigate("/admin/incidents")
  }
    },[bu])
-  
+
   
     const onEditorChange = (val) => {
         setEditorState(val);
@@ -122,7 +122,6 @@ const EditIncident = ({ bu }) => {
         })
         setTrackStatus(initialObj.status)
         setInitialStatus(initialObj.status)
-      
         setIncidentObject({ ...initialObj })
         if(initialObj.hasOwnProperty('components'))
         {
