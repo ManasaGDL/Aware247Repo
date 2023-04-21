@@ -30,7 +30,7 @@ const getInitialState = (defaultValue) => {
   if (defaultValue) {
     const blocksFromHtml = htmlToDraft(defaultValue);
     const { contentBlocks, entityMap } = blocksFromHtml;
-    
+
     const contentState = ContentState.createFromBlockArray(
       contentBlocks,
       entityMap
@@ -49,9 +49,9 @@ const CreateScheduleMaintenance = () => {
   const { setSnackBarConfig } = useContext(SnackbarContext);
   const [componentStatusList, setComponentStatusList] = useState([]);
   const location = useLocation();
-  const [ responseerror , setresponseError] = useState({})
-  const [ dateError , setDateError] = useState()
-  const [openCustomDialog , setOpenCustomDialog] = useState({open:false})
+  const [responseerror, setresponseError] = useState({});
+  const [dateError, setDateError] = useState();
+  const [openCustomDialog, setOpenCustomDialog] = useState({ open: false });
   const [initialObj, setInitialObj] = useState({
     name: "",
     message: "",
@@ -67,7 +67,7 @@ const CreateScheduleMaintenance = () => {
     components: [],
   });
   const [finalObject, setFinalObject] = useState({ message: "" });
- 
+
   const [selectedAllEnabled, setSelectedAllEnabled] = useState(false);
   const [allComponentsList, setAllComponentsList] = useState([]); // storing components id of all the "components"
   const [businessUnit, setBusinessUnit] = useState(bu);
@@ -78,7 +78,7 @@ const CreateScheduleMaintenance = () => {
   );
 
   useEffect(() => {
-    if (id && action === "update") {
+    if (typeof id !== undefined && action === "update") {
       // setFinalObject({...finalObject,message:location.state.message})
       setInitialObj({
         components: location?.state?.components,
@@ -102,19 +102,26 @@ const CreateScheduleMaintenance = () => {
       );
     }
   }, [id]);
-
   useEffect(() => {
-    setEditorState(() => {
-      const contentBlock = htmlToDraft(initialObj?.message || "");
-      const contentState = ContentState.createFromBlockArray(
-        contentBlock.contentBlocks
-      );
-      const editorState = EditorState.createWithContent(contentState);
-      return editorState;
-    });
+    if (action === "update") {
+      setObj({ ...initialObj });
+    }
+  }, [action]);
+  useEffect(() => {
+    if (action === "update") {
+      setEditorState(() => {
+        const contentBlock = htmlToDraft(initialObj?.message || "");
+        const contentState = ContentState.createFromBlockArray(
+          contentBlock.contentBlocks
+        );
+        const editorState = EditorState.createWithContent(contentState);
+        return editorState;
+      });
 
-    setObj({ ...initialObj });
-    setFinalObject({ ...finalObject, message: obj.message });
+      setObj({ ...initialObj });
+
+      setFinalObject({ ...finalObject, message: obj.message });
+    }
   }, [initialObj]);
 
   useEffect(() => {
@@ -142,18 +149,22 @@ const CreateScheduleMaintenance = () => {
     onChange && onChange(cleanHtml);
   };
   const onChange = (val) => {
-  
-    setObj({ ...obj, message: val });
+    setObj((prev) => {
+      return { ...prev, message: val };
+    });
+
     setFinalObject({ ...finalObject, message: val });
   };
-
+  useEffect(() => {
+    console.log(obj);
+  }, [obj]);
   useEffect(() => {
     let data;
     if (editorState)
       data = draftToHtml(convertToRaw(editorState.getCurrentContent()));
 
-    if (id) setObj({ ...initialObj, message: data });
-    else setObj({ ...obj, message: data });
+    setObj((prev) => ({ ...prev, message: data }));
+
     setFinalObject({ ...finalObject, message: data });
   }, [editorState]);
   useEffect(() => {
@@ -190,9 +201,9 @@ const CreateScheduleMaintenance = () => {
     setObj((prev) => {
       return { ...prev, [e.target.name]: e.target.value };
     });
-    setInitialObj((prev) => {
-      return { ...prev, [e.target.name]: e.target.value };
-    });
+    // setInitialObj((prev) => {
+    //   return { ...prev, [e.target.name]: e.target.value };
+    // });
   };
   const handleSelectAll = (e) => {
     setSelectedAllEnabled(e.target.checked);
@@ -233,16 +244,15 @@ const CreateScheduleMaintenance = () => {
           message: finalObject.message,
           components: components,
         };
-        
+
         const rs = await api.updateScheduledIncident(id, finalObj);
         setSnackBarConfig({
           open: true,
           message: "Updated Successfully",
           severity: "success",
         });
-      
       } else {
-        finalObj = { ...obj, components: componentStatusList };       
+        finalObj = { ...obj, components: componentStatusList };
 
         const response = await api.createScheduleMaintenance(finalObj);
         setSnackBarConfig({
@@ -250,45 +260,45 @@ const CreateScheduleMaintenance = () => {
           message: "Created successfully",
           severity: "success",
         });
-      
       }
+      setObj({
+        name: "",
+        message: "",
+        schstartdate: "",
+        schenddate: "",
+        components: [],
+      });
+      setInitialObj({
+        name: "",
+        message: "",
+        schstartdate: "",
+        schenddate: "",
+        components: [],
+      });
       navigate("/admin/incidents", { state: { tabValue: 1 } });
     } catch (e) {
-     
-      setresponseError((e.response.data));
-      if(e.response?.data?.Error)
-      {
+      setresponseError(e.response.data);
+      if (e.response?.data?.Error) {
         setOpenCustomDialog({
           open: true,
           message: e.response.data.Error,
           title: "Error",
         });
       }
-    
-    }
-    finally{
-      setObj({ name: "",
-      message: "",
-      schstartdate: "",
-      schenddate: "",
-      components: [],});
-      setInitialObj({ name: "",
-      message: "",
-      schstartdate: "",
-      schenddate: "",
-      components: [],})
-      
+    } finally {
     }
   };
   const stayOnSamePage = () => {
     setOpenCustomDialog({ open: false, message: "" });
-    
   };
-  const errorMessage = useMemo(()=>{
-    switch(dateError)
-    { case "minDate":return "End Date should be greater than Start Date";
-      case "minTime": return "End DateTime should be greater than Start DateTime";
-      case "minDateTime":return "End Date should be greater than Start Date";
+  const errorMessage = useMemo(() => {
+    switch (dateError) {
+      case "minDate":
+        return "End Date should be greater than Start Date";
+      case "minTime":
+        return "End DateTime should be greater than Start DateTime";
+      case "minDateTime":
+        return "End Date should be greater than Start Date";
       // case 'invalidDate': {
       //   return 'Your date is not valid';
       // }
@@ -296,8 +306,8 @@ const CreateScheduleMaintenance = () => {
         return "";
       }
     }
-  })
-  
+  });
+
   return (
     <div style={{ textAlign: "left" }}>
       <h4 style={{ paddingTop: 20, marginLeft: 20 }}>
@@ -308,7 +318,7 @@ const CreateScheduleMaintenance = () => {
       <Box
         sx={{ pl: 3, pt: 2, pr: 3, mt: 0, backgroundColor: "white", pb: 10 }}
       >
-         <CustomDialogs
+        <CustomDialogs
           open={openCustomDialog.open}
           message={openCustomDialog.message}
           title={openCustomDialog.title}
@@ -330,10 +340,10 @@ const CreateScheduleMaintenance = () => {
             <br />
 
             {responseerror?.name?.length > 0 ? (
-                  <div style={{ color: "red" }}>{responseerror.name[0]}</div>
-                ) : (
-                  ""
-                )}
+              <div style={{ color: "red" }}>{responseerror.name[0]}</div>
+            ) : (
+              ""
+            )}
           </Box>
         </FormControl>
         <FormLabel sx={{ fontWeight: "bold" }}>Message</FormLabel>
@@ -356,57 +366,59 @@ const CreateScheduleMaintenance = () => {
             <DateTimePicker
               name="schstartdate"
               disablePast
-            
               value={dayjs(obj.schstartdate)}
               sx={{ width: 400 }}
               onChange={(val) => {
                 let onlyDate = val.$d.toISOString();
                 // delete responseerror.schstartdate
-                setresponseError({...responseerror,"schstartdate":''})
+                setresponseError({ ...responseerror, schstartdate: "" });
+
                 setObj({ ...obj, schstartdate: onlyDate });
               }}
             />
             {responseerror?.schstartdate?.length > 0 ? (
-                  <div style={{ color: "red" }}>{responseerror.schstartdate[0]}</div>
-                ) : (
-                  ""
-                )}
+              <div style={{ color: "red" }}>
+                {responseerror.schstartdate[0]}
+              </div>
+            ) : (
+              ""
+            )}
           </div>
-          
+
           <div>
             <div>
               <FormLabel>Maintenance End Time (CST)</FormLabel>
             </div>
             <DateTimePicker
-            disablePast
-           
+              disablePast
               slotProps={{
                 textField: {
-                  helperText: errorMessage
-                }
+                  helperText: errorMessage,
+                },
               }}
-              onError={error=>{
-              // setresponseError({'schenddate':['']})
-                setDateError(error)}}
+              onError={(error) => {
+                // setresponseError({'schenddate':['']})
+                setDateError(error);
+              }}
               name="schenddate"
               // dayjs().set('hour', 12).startOf('hour');
-              minDateTime={(dayjs(obj.schstartdate).set('hour',dayjs(obj.schstartdate).hour()).startOf('hour'))}
+              minDateTime={dayjs(obj.schstartdate)
+                .set("hour", dayjs(obj.schstartdate).hour())
+                .startOf("hour")}
               value={dayjs(obj.schenddate)}
               onChange={(val) => {
                 //  delete responseerror.schenddate
-                setresponseError({...responseerror,"schenddate":''})
+                setresponseError({ ...responseerror, schenddate: "" });
                 setObj({ ...obj, schenddate: val.$d.toISOString() });
-               
-              
               }}
               // defaultValue={dayjs('2022-04-17T15:30')}
               sx={{ width: 400 }}
             />
             {responseerror?.schenddate?.length > 0 ? (
-                  <div style={{ color: "red" }}>{responseerror?.schenddate[0]}</div>
-                ) : (
-                  ""
-                )}
+              <div style={{ color: "red" }}>{responseerror?.schenddate[0]}</div>
+            ) : (
+              ""
+            )}
           </div>
           <div></div>
         </Stack>
@@ -573,11 +585,9 @@ const CreateScheduleMaintenance = () => {
               <br />
               <StyledButton
                 variant="contained"
-               
                 onClick={() => {
                   handleCreateUpdateSM();
                 }}
-              
               >
                 {action === "create" ? "Create " : "Update "}
               </StyledButton>

@@ -48,9 +48,10 @@ const CustomDeleteDialog = ({ open, id, type, deleteComponent,name }) => {
             onChange={checkText}
             value={text}
           />
+        
         </DialogContent>
         <DialogActions sx={{ textAlign: "center" }}>
-          <StyledButton
+         <StyledButton
             variant="contained"
             color="error"
             disabled={text !== "DELETE"}
