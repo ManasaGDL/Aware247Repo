@@ -95,8 +95,26 @@ const api = {
      updateScheduledIncident:(id,payload)=>{
     return axiosInstance.put(`${baseURL}/api/common/scheduled_maintanence/${id}/`,payload)
      },
+     viewScheduleMaintenance:(id)=>{
+return axiosInstance.get(`${baseURL}/api/common/scheduled_maintanence/activity_list?id=${id}`)
+     },
      deleteScheduledIncident:(id)=>{
       return axiosInstance.delete(`${baseURL}/api/common/scheduled_maintanence/${id}/sch_mnt_del/`)
+     },
+     getIncidentTemplates:()=>{
+      return axiosInstance.get(`${baseURL}/api/common/incident_template/`)
+     },
+     createIncidentTemplate:(payload)=>{
+      // axiosInstance.defaults.headers["businessunit"]=localStorage.getItem("BU");
+      // axiosInstance.defaults.headers["Authorization"]="Bearer "+ localStorage.getItem("access_token")
+     
+      return axiosInstance.post(`${baseURL}/api/common/incident_template/`,payload)
+     },
+     deleteTemplate:(id)=>{
+      return axiosInstance.delete(`${baseURL}/api/common/incident_template/${id}/inc_temp_del/`)
+     },
+     updateTemplate:(id , payload)=>{
+      return axiosInstance.put(`${baseURL}/api/common/incident_template/${id}/`,payload)
      }
 }
 export default api;

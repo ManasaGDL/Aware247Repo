@@ -4,6 +4,7 @@ import Paper from "@mui/material/Paper";
 import HeaderTabs from "../common/HeaderTabs";
 import ViewIncidentWithDropDown from "./ViewIncidentWithDropDown";
 import ScheduledMaintenance from "./ScheduledMaintenance";
+import IncidentTemplate from "./IncidentTemplate";
 import { useLocation } from "react-router-dom";
 const IncidentPage=({bu})=>{
   const location = useLocation();
@@ -20,7 +21,7 @@ const IncidentPage=({bu})=>{
       content:<ScheduledMaintenance/>
       },
       { title: "Incident Templates",
-      content:<></>
+      content:<IncidentTemplate/>
       }
     ]
     return <div style={{textAlign:"left" }}>      
