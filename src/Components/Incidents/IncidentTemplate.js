@@ -141,6 +141,7 @@ const IncidentTemplate = () => {
     } catch (e) {
       setError(e.response.data);
     } finally {
+     
     }
   };
   const handleFormSubmit = (e) => {

@@ -115,6 +115,9 @@ return axiosInstance.get(`${baseURL}/api/common/scheduled_maintanence/activity_l
      },
      updateTemplate:(id , payload)=>{
       return axiosInstance.put(`${baseURL}/api/common/incident_template/${id}/`,payload)
+     },
+     getTemplateDetails:(id)=>{
+      return axiosInstance.get(`${baseURL}/api/common/incident_template/${id}/`)
      }
 }
 export default api;

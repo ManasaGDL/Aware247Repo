@@ -88,14 +88,12 @@ const UpdateSubscriber = () => {
       setComponentStatusList([...allComponentsList]);
     }
   }, [selectedAllEnabled]);
-  //   useEffect(()=>{
-  // getComponentList();
-  //   },[bu])
+ 
   const getComponentList = async () => {
     try {
-      // setLoading(true);
+     
       const res = await clientApi.getComponentStatus(bu);
-      // setData(res?.data)
+    
     } catch (e) {
       console.log(e.response);
       //    alert(e.response.data.Error)

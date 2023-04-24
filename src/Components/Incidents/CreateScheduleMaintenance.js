@@ -155,9 +155,7 @@ const CreateScheduleMaintenance = () => {
 
     setFinalObject({ ...finalObject, message: val });
   };
-  useEffect(() => {
-    console.log(obj);
-  }, [obj]);
+ 
   useEffect(() => {
     let data;
     if (editorState)
@@ -358,7 +356,7 @@ const CreateScheduleMaintenance = () => {
         />
         <br />
         <br />
-        <Stack direction={"row"} spacing={8}>
+        <Stack direction={{ xs: 'column', sm: 'row',md:"row" }} spacing={{ xs: 1, sm: 2, md: 8 }}  >
           <div>
             <div>
               <FormLabel>Maintenance Start Time (CST)</FormLabel>
@@ -367,7 +365,7 @@ const CreateScheduleMaintenance = () => {
               name="schstartdate"
               disablePast
               value={dayjs(obj.schstartdate)}
-              sx={{ width: 400 }}
+              sx={{ width: 350 }}
               onChange={(val) => {
                 let onlyDate = val.$d.toISOString();
                 // delete responseerror.schstartdate
@@ -412,7 +410,7 @@ const CreateScheduleMaintenance = () => {
                 setObj({ ...obj, schenddate: val.$d.toISOString() });
               }}
               // defaultValue={dayjs('2022-04-17T15:30')}
-              sx={{ width: 400 }}
+              sx={{ width: 350 }}
             />
             {responseerror?.schenddate?.length > 0 ? (
               <div style={{ color: "red" }}>{responseerror?.schenddate[0]}</div>

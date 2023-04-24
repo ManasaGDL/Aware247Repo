@@ -25,8 +25,7 @@ document.title = "Status App"
     <div className="App">
       <ThemeProvider theme = {theme}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <SnackbarContextProvider>
-     
+      <SnackbarContextProvider>     
       <Routes history={history}> 
       <Route path ="Status" >
         <Route path=":businessunit/manage/*"element={<ManageSubscriber/>}/>

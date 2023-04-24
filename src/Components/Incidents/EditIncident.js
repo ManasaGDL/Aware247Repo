@@ -4,7 +4,7 @@ import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box"
 import Grid from "@mui/material/Grid";
 import Backdrop from '@mui/material/Backdrop';
-import { FormControl, Typography } from "@mui/material";
+import { FormControl, Typography ,InputLabel} from "@mui/material";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel"
@@ -68,7 +68,9 @@ const EditIncident = ({ bu }) => {
     const [trackStatus,setTrackStatus] = useState(initialObj?.status)
     const [ finalObjToUpdate,setFinalObjToUpdate] = useState({}) ////reads status from api response of getIncident and bears current change of status
     const [editorState, setEditorState] = useState(getInitialState(initialObj.message));
-
+    const [ incidentTemplates , setIncidentTemplates ] = useState([]);
+    const [ templateSelected , setTemplateSelected]= useState('')
+    const [ selectedTemplateObject , setSelectedTemplateObject] = useState({})
     let statusArray = []
     const { id} = useParams();
    const navigate = useNavigate()
@@ -162,6 +164,22 @@ const EditIncident = ({ bu }) => {
 
        id && callGetIncident();
     }, [])
+    useEffect(()=>{
+        if(templateSelected)
+        getTemplateDetails();
+       
+    },[templateSelected])
+
+    const getTemplateDetails = async()=>{
+        try{
+const res=await api.getTemplateDetails(templateSelected);
+setSelectedTemplateObject({name:res?.data.template_name, message:res?.data.description})
+
+        }catch(e)
+        {
+
+        }
+    }
     useEffect(() => {
         async function getComponents() {
             try {
@@ -172,8 +190,28 @@ const EditIncident = ({ bu }) => {
             } catch (e) { }
         }
         getComponents();
+        getTemplatesList();
     }, [bu]);
-   
+ 
+   useEffect(()=>{
+ if(action === "create" && Object.keys(selectedTemplateObject).length>0)
+ {
+    setInitialObj({name:selectedTemplateObject.name,message:selectedTemplateObject.message})
+    setIncidentObject({name:selectedTemplateObject.name,message:selectedTemplateObject.message})
+ }
+   },[selectedTemplateObject])
+   const getTemplatesList = async() =>{
+    try{
+const res = await api.getIncidentTemplates();
+
+setIncidentTemplates(res?.data.results.map( template=>{
+    return { id:template.template_id , name:template.template_name}
+}))
+    }catch(e)
+    {
+
+    }
+   }
 useEffect(()=>{
 if(callCreate)
 {
@@ -344,10 +382,41 @@ if(callUpdate)
         setIncidentObject({...incidentObject,message:val})
        
     }
+  const  handleTemplateChange =(e)=>{
+setTemplateSelected(e.target.value)
+  }
    
     return <div style={{ textAlign: "left" }}>
         {/* <Paper sx={{ mr: 4, ml: 2, mt: 4, mb: 4 }} elevation={3}> */}
-            <h4 style={{ paddingTop: 20 , marginLeft:20 }}>{id ? `` :' Create Incident'}</h4>           
+            
+            <Stack
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
+        spacing={12}
+        sx={{ height: 50, marginRight: 2 }}
+      >
+      <h4 style={{ paddingTop: 20 , marginLeft:20 }}>{id ? `` :' Create Incident'}</h4>  
+         {!id && <FormControl    sx={{ ml: 2, mt: 6,pb:2, color: "white" ,fontWeight:"bold" }}>
+  <InputLabel id="demo-simple-select-label" sx={{ color:"#80daeb"  , fontWeight:"700"}}>Prefill with Template</InputLabel>
+  <Select
+   sx={{ minWidth: "300px" }}
+    labelId="demo-simple-select-label"
+    id="demo-simple-select"
+     value={templateSelected}
+    label="Prefill with Template"
+    onChange={handleTemplateChange}
+  >
+    {
+        incidentTemplates.map( template=>{
+            return <MenuItem value={template.id}  key={ template.id}
+            > {template.name}</MenuItem>
+        })
+    }
+    
+  </Select>
+</FormControl>}
+      </Stack>        
             { <Box sx={{ pl: 3,pt:2, pr: 3, mt: 0, backgroundColor: "white" }}>
                 <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={loading}>
                     <LoadingPanel></LoadingPanel>
@@ -671,6 +740,22 @@ if(callUpdate)
               >
                 {id?'Update Incident':' Create Incident'}
               </Button>
+
+              {/* {!id && <FormControl    sx={{ ml: 2, mt: 6,pb:2, color: "white" ,fontWeight:"bold" }}>
+  <InputLabel id="demo-simple-select-label">Prefill with Template</InputLabel>
+  <Select
+   sx={{ minWidth: "300px" ,color:"cyan"}}
+    labelId="demo-simple-select-label"
+    id="demo-simple-select"
+    // value={age}
+    label="Prefill with Template"
+    // onChange={handleChange}
+  >
+    <MenuItem value={10}>Ten</MenuItem>
+    <MenuItem value={20}>Twenty</MenuItem>
+    <MenuItem value={30}>Thirty</MenuItem>
+  </Select>
+</FormControl>} */}
               </div>
             </div>
             </Box>}
