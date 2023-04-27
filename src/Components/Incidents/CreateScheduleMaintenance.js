@@ -581,6 +581,7 @@ const CreateScheduleMaintenance = () => {
                 </Grid>
               </Grid>
               <br />
+              <div style={{ textAlign: "center" }}>
               <StyledButton
                 variant="contained"
                 onClick={() => {
@@ -589,6 +590,7 @@ const CreateScheduleMaintenance = () => {
               >
                 {action === "create" ? "Create " : "Update "}
               </StyledButton>
+              </div>
             </Box>
           </div>
         )}

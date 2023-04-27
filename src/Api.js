@@ -118,6 +118,9 @@ return axiosInstance.get(`${baseURL}/api/common/scheduled_maintanence/activity_l
      },
      getTemplateDetails:(id)=>{
       return axiosInstance.get(`${baseURL}/api/common/incident_template/${id}/`)
+     },
+     getSeverityList:()=>{
+      return axiosInstance.get(`${baseURL}/api/common/incidents/impact_list`)
      }
 }
 export default api;
