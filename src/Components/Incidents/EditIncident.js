@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useRef ,useContext} from "react"
+import React, { useEffect, useState, useMemo, useRef ,useContext} from "react"
 import { useParams ,useNavigate} from "react-router-dom";
-import Paper from "@mui/material/Paper";
+import dayjs from "dayjs";
 import Box from "@mui/material/Box"
 import Grid from "@mui/material/Grid";
 import Backdrop from '@mui/material/Backdrop';
@@ -24,11 +24,10 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import DOMPurify from "dompurify";
 import Tooltip from '@mui/material/Tooltip';
+import { DateTimePicker } from "@mui/x-date-pickers";
 import CustomDialogs from "../common/Dialogs/CustomDialogs";
 import { EditorState, convertToRaw, ContentState} from "draft-js";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import useStatus from "../DashBoard/useStatus";
-
 import htmlToDraft from 'html-to-draftjs';
 import api from "../../Api";
 import { SnackbarContext } from "../../context/SnackbarContext";
@@ -48,7 +47,7 @@ const getInitialState = (defaultValue) => {
   };
 const EditIncident = ({ bu }) => {
     const [initialObj, setInitialObj] = useState({status:'investigating'})
-    const [incidentObject, setIncidentObject] = useState({status:'investigating'})
+    const [incidentObject, setIncidentObject] = useState({status:'investigating',start_time:"",end_time:""})
     const [incidentstatus, setIncidentStatus] = useState('investigating')
     const [callCreate,setCallCreate] = useState(false)
     const [callUpdate,setCallUpdate]= useState(false)
@@ -70,24 +69,29 @@ const EditIncident = ({ bu }) => {
     const [editorState, setEditorState] = useState(getInitialState(initialObj.message));
     const [ incidentTemplates , setIncidentTemplates ] = useState([]);
     const [ templateSelected , setTemplateSelected]= useState('')
-    const [ selectedTemplateObject , setSelectedTemplateObject] = useState({})
+    const [ selectedTemplateObject , setSelectedTemplateObject] = useState({});
+    const [ impactSeverityList , setImpactSeverityList ] = useState([]);
+    const  [selectedSeverity , setSelectedSeverity]= useState('')
+    const [ mailObject , setMailObject] = useState("")
+    const [dateError, setDateError] = useState();
+    const [responseerror, setresponseError] = useState({});
     let statusArray = []
     const { id} = useParams();
-   const navigate = useNavigate()
+    const navigate = useNavigate()
     const incident_id =  useRef(id);
+    let recipientList=[]
     const prevbusinessunit = useRef(bu)
- useEffect(()=>{
+    useEffect(()=>{
     setLoading(true)
    if(typeof id==="undefined")
    {setAction('create')
     setInitialObj({status:'investigating'})
-    setIncidentObject({status:'investigating'})
+    setIncidentObject({status:'investigating',start_time:"",end_time:""})
     setIncidentStatus('investigating')
     setComponentStatusList([])
    }else {
-    setIncidentStatus(null)
-    setAction('edit')
- 
+    setIncidentStatus(null);
+    setAction('edit');
    }
     },[id])
 
@@ -96,9 +100,7 @@ const EditIncident = ({ bu }) => {
  {
     navigate("/admin/incidents")
  }
-   },[bu])
-
-  
+   },[bu])  
     const onEditorChange = (val) => {
         setEditorState(val);
         const rawContentState = convertToRaw(val.getCurrentContent());
@@ -113,7 +115,6 @@ const EditIncident = ({ bu }) => {
       }
       },[initialObj,componentStatusList])
     useEffect(() => {
-       
         setEditorState(() => {
             
             const contentBlock = htmlToDraft(initialObj?.message||'');
@@ -191,8 +192,17 @@ setSelectedTemplateObject({name:res?.data.template_name, message:res?.data.descr
         }
         getComponents();
         getTemplatesList();
+        getSeverityList();
     }, [bu]);
- 
+ const getSeverityList = async() =>{
+  try{
+   const res= await api.getSeverityList();
+   setImpactSeverityList(res?.data);
+  }catch(e)
+  {
+
+  }
+ }
    useEffect(()=>{
  if(action === "create" && Object.keys(selectedTemplateObject).length>0)
  {
@@ -262,10 +272,18 @@ if(callUpdate)
 
     const callGetIncident = async () => { //get detailts w rt specific incident
         try {
+            recipientList=[];
+            let list=[];
             const res = await api.getIncident(incident_id.current)
             setLoading(false)
             setInitialObj(res?.data)
-        }
+            setSelectedSeverity(res?.data?.impact_severity)
+            setMailObject( res?.data?.recipients?.map(recipient=>{
+                recipientList=[]
+                   recipientList?.push(recipient?.email)
+                   return recipientList.join(',')
+                   
+        }))}
         catch (e) {
             console.log(e)
         }
@@ -333,6 +351,22 @@ if(callUpdate)
     
     }
     }
+    const errorMessage = useMemo(() => {
+        switch (dateError) {
+          case "minDate":
+            return "End Date should be greater than Start Date";
+          case "minTime":
+            return "End DateTime should be greater than Start DateTime";
+          case "minDateTime":
+            return "End Date should be greater than Start Date";
+          // case 'invalidDate': {
+          //   return 'Your date is not valid';
+          // }
+          default: {
+            return "";
+          }
+        }
+      });
     const callUpdateIncidentApi= async() =>{
         try{           
         const res = await api.updateIncident(incident_id.current , finalObjToUpdate) 
@@ -385,6 +419,10 @@ if(callUpdate)
   const  handleTemplateChange =(e)=>{
 setTemplateSelected(e.target.value)
   }
+
+  useEffect(()=>{
+console.log("IncidentObj",incidentObject)
+  },[incidentObject])
    
     return <div style={{ textAlign: "left" }}>
         {/* <Paper sx={{ mr: 4, ml: 2, mt: 4, mb: 4 }} elevation={3}> */}
@@ -397,8 +435,9 @@ setTemplateSelected(e.target.value)
         sx={{ height: 50, marginRight: 2 }}
       >
       <h4 style={{ paddingTop: 20 , marginLeft:20 }}>{id ? `` :' Create Incident'}</h4>  
-         {!id && <FormControl    sx={{ ml: 2, mt: 6,pb:2, color: "white" ,fontWeight:"bold" }}>
-  <InputLabel id="demo-simple-select-label" sx={{ color:"#80daeb"  , fontWeight:"700"}}>Prefill with Template</InputLabel>
+         {!id && 
+         <FormControl    sx={{ ml: 2, mt: 6,pb:2, color: "white" ,fontWeight:"bold" }}>
+  <InputLabel id="demo-simple-select-label" sx={{ color:"#80daeb"  , fontWeight:"600"}}>Prefill with Template</InputLabel>
   <Select
    sx={{ minWidth: "300px" }}
     labelId="demo-simple-select-label"
@@ -446,6 +485,53 @@ setTemplateSelected(e.target.value)
                 </FormControl>
                 <br />
                 <br />
+                <Stack direction={"row"}  
+               spacing={8}  
+     >         
+                <div>
+            <TextField
+                            fullWidth
+                            id="outlined"
+                            label="ACER Number"
+                            name="acer_number"
+                            type="number"
+                           value={incidentObject.acer_number || ''}
+                             onChange={e=>{
+                                setIncidentObject({...incidentObject,"acer_number":parseInt(e.target.value)})
+                             setFinalObjToUpdate({...finalObjToUpdate,[e.target.name]:parseInt(e.target.value)})}}
+                        />
+                </div>
+                <div>
+                <FormControl    >
+                <InputLabel id="demo-simple-select-label" >Impact Severity</InputLabel>
+  <Select
+   sx={{ minWidth: "300px" }}
+    labelId="demo-simple-select-label"
+    id="demo-simple-select"
+     value={selectedSeverity}
+  label="Impact Severity"
+     onChange={(e)=>{
+setSelectedSeverity(e.target.value)
+setIncidentObject({...incidentObject,"impact_severity":e.target.value})
+setFinalObjToUpdate({...finalObjToUpdate,"impact_severity": e.target.value})
+     }}
+  >
+     {
+        impactSeverityList.map( item=>{
+            return <MenuItem value={item}  key={ item}
+            > {item}</MenuItem>
+        })
+    }
+    </Select>
+    </FormControl>
+                </div>
+                </Stack>
+                <br/>
+              
+                <Stack direction={"row"}  
+               spacing={8}  
+     >
+        <div>
                 <FormLabel id="status" sx={{ fontWeight: "bold" }}>
                     Incident Status
                 </FormLabel>
@@ -477,7 +563,72 @@ setTemplateSelected(e.target.value)
                         control={<Radio />}
                         label="Resolved"
                     />
-                </RadioGroup>}
+                </RadioGroup>
+                }
+                </div>
+                <div>
+            <div>
+              <FormLabel> Start Time (CST)</FormLabel>
+            </div>
+            <DateTimePicker
+              name="start_time"
+              disablePast
+              value={dayjs(incidentObject.start_time)}
+              sx={{ width: 230 }}
+              onChange={(val) => {
+                let onlyDate = val.$d.toISOString();
+                // delete responseerror.schstartdate
+                setresponseError({ ...responseerror, start_time: "" });
+
+                setIncidentObject({ ...incidentObject, start_time: onlyDate });
+               setFinalObjToUpdate({...finalObjToUpdate,'start_time':onlyDate})
+             }}
+            />
+            {responseerror?.start_time?.length > 0 ? (
+              <div style={{ color: "red" }}>
+                {responseerror.start_time[0]}
+              </div>
+            ) : (
+              ""
+            )}
+          </div>
+          <div>
+            <div>
+              <FormLabel> End Time (CST)</FormLabel>
+            </div>
+            <DateTimePicker
+              disablePast
+              slotProps={{
+                textField: {
+                  helperText: errorMessage,
+                },
+              }}
+              onError={(error) => {
+                 setresponseError({'end_time':['']})
+                setDateError(error);
+              }}
+              name="end_time"
+              // dayjs().set('hour', 12).startOf('hour');
+              minDateTime={dayjs(incidentObject.start_time)
+                .set("hour", dayjs(incidentObject.start_time).hour())
+                .startOf("hour")}
+              value={dayjs(incidentObject.end_time)}
+              onChange={(val) => {
+                //  delete responseerror.schenddate
+                setresponseError({ ...responseerror, end_time: "" });
+                setIncidentObject({ ...incidentObject, 'end_time': val.$d.toISOString() });
+                setFinalObjToUpdate({...finalObjToUpdate,'end_time':val.$d.toISOString() })
+              }}
+             // defaultValue={dayjs('2022-04-17T15:30')}
+              sx={{ width: 230 }}
+            />
+            {responseerror?.end_time?.length > 0 ? (
+              <div style={{ color: "red" }}>{responseerror?.end_time[0]}</div>
+            ) : (
+              ""
+            )}
+          </div>  
+                </Stack>
               
                 <FormLabel sx={{ fontWeight: "bold" }}>Message</FormLabel>
                 <br />
@@ -497,6 +648,39 @@ setTemplateSelected(e.target.value)
                 ) : (
                   ""
                 )}
+                <Stack direction="row" spacing={8}>
+                    <div>
+                    <TextField
+                            fullWidth
+                            id="outlined"
+                            // multiline
+                            // rows={4}
+                            sx={{ width:400}}
+                            label="Impact Update"
+                            name="issue_impact"
+                            value={incidentObject.issue_impact || ''}
+                            onChange={e=>{setIncidentObject({...incidentObject,"issue_impact":e.target.value})
+                            setFinalObjToUpdate({...finalObjToUpdate,"issue_impact":e.target.value})}}
+                        />
+                    </div>
+                    <div>
+                    <TextField
+                            fullWidth
+                            id="outlined"
+                            // multiline
+                            // rows={4}
+                            sx={{ width:400}}
+                            label="Recipients"
+                            name="recipients"
+                            value={mailObject}
+                            onChange={e=>{
+                              setMailObject(e.target.value)
+                              setIncidentObject({...incidentObject,"recipients":e.target.value.split(',')})
+                            setFinalObjToUpdate({...finalObjToUpdate,"recipients":e.target.value.split(',')})
+                            }}
+                        />
+                    </div>
+                </Stack>
                 <div className={initialObj.status ==="resolved"?'disable-pointer-events':''}>
                 <Stack
                     direction="row"
@@ -741,21 +925,6 @@ setTemplateSelected(e.target.value)
                 {id?'Update Incident':' Create Incident'}
               </Button>
 
-              {/* {!id && <FormControl    sx={{ ml: 2, mt: 6,pb:2, color: "white" ,fontWeight:"bold" }}>
-  <InputLabel id="demo-simple-select-label">Prefill with Template</InputLabel>
-  <Select
-   sx={{ minWidth: "300px" ,color:"cyan"}}
-    labelId="demo-simple-select-label"
-    id="demo-simple-select"
-    // value={age}
-    label="Prefill with Template"
-    // onChange={handleChange}
-  >
-    <MenuItem value={10}>Ten</MenuItem>
-    <MenuItem value={20}>Twenty</MenuItem>
-    <MenuItem value={30}>Thirty</MenuItem>
-  </Select>
-</FormControl>} */}
               </div>
             </div>
             </Box>}
