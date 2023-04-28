@@ -30,7 +30,7 @@ const  ViewAllIncidents = () =>{
       pt: 2,
       textAlign:"left"
     }
-    const severityColors={"Major":	"#ffa901","Critical":"red","Minor":"#FFFF00","Moderate":"green"}
+    const severityColors={"Major":	"#ffa901","Critical":"#FF5733","Minor":"#FFC300","Moderate":"#33FFA8"}
     const CustomWidthTooltip = styled(({ className, ...props }) => (
       <Tooltip {...props} classes={{ popper: className }} placement = "right-end"/>
     ))({
