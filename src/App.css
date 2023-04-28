@@ -3,14 +3,14 @@
 *{
   margin:0;
   padding:0;
-  text-decoration: none;
-  font-family:  "proxima-nova", "Helvetica Neue", "Helvetica", "Arial", "Sans-Serif","Roboto", "Arial",
+  text-decoration: none;  
+  /* font-family:   "Helvetica", "Arial", "Sans-Serif","Roboto", "Arial",
  "Georgia",
  "Impact",
  "Tahoma",
  "Times New Roman",
  "Verdana",
-;
+; */
  font-size: 12;
 }
 .App {
@@ -18,9 +18,15 @@
   height:100%;
   
 }
-/* body{
-  font-family: 'Tahoma';
-} */
+body{
+  font-family:   "Helvetica", "Arial", "Sans-Serif","Roboto", "Arial",
+  "Georgia",
+  "Impact",
+  "Tahoma",
+  "Times New Roman",
+  "Verdana",
+ ;
+}
 #root{
   height:100%;
 }

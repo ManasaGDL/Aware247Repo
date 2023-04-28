@@ -1,7 +1,7 @@
 import axios from "axios";
 import React from "react";
 
-// export const baseURL = "http://18.118.80.163:8080";
+//export const baseURL = "http://18.118.80.163:8080";
 // export const baseURL = "http://127.0.0.1:8000";
  export const baseURL = "";
 
@@ -62,11 +62,13 @@ axiosInstance.interceptors.response.use(
             });
         } else {
           console.log("Refresh token is expired", tokenParts.exp, now);
+          alert("Token expired");
           localStorage.removeItem("access_token");
           localStorage.removeItem("refresh_token");
           window.location.href = "/login";
         }
       } else {
+        alert("Token not available");
         console.log("Refresh token not available.");
         localStorage.removeItem("access_token");
         window.location.href = "/login";

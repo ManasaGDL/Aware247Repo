@@ -19,6 +19,7 @@ import Backdrop from '@mui/material/Backdrop';
 import LoadingPanel from "../common/TabPanel/LoadingPanel";
 import { useParams } from "react-router-dom";
 import clientApi from "../../api/clientApi";
+import { axiosInstance } from "../../axios";
 const useStyles = makeStyles((theme) => ({
   header: {
     backgroundImage: `url(${bgLogo})`,
@@ -46,8 +47,10 @@ const StatusPage = () => {
   const { businessunit } = useParams();
   useEffect(() => {
     getComponentsList();
-    localStorage.removeItem("refresh_token")
-    localStorage.removeItem("access_token")
+
+ delete axiosInstance.defaults.headers.common["Authorization"];
+    // localStorage.removeItem("refresh_token")
+    // localStorage.removeItem("access_token")
   }, []);
   const getComponentsList = async () => {
     try {

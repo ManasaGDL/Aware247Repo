@@ -14,6 +14,7 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
+import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 const  ViewAllIncidents = () =>{
@@ -29,6 +30,7 @@ const  ViewAllIncidents = () =>{
       pt: 2,
       textAlign:"left"
     }
+    const severityColors={"Major":	"#ffa901","Critical":"red","Minor":"#FFFF00","Moderate":"green"}
     const CustomWidthTooltip = styled(({ className, ...props }) => (
       <Tooltip {...props} classes={{ popper: className }} placement = "right-end"/>
     ))({
@@ -44,13 +46,7 @@ const  ViewAllIncidents = () =>{
       },
     });
     const columns =[ 
-    //  {
-    //   field:"id",
-    //   headerName:'',
-    //   renderCell:(val)=>{
-    //     return <IconButton onClick={()=>expanded===val.value?setExpanded(-1):setExpanded(val.value)}>{val.value === expanded?<RemoveCircleIcon />:<AddCircleRoundedIcon/>}</IconButton>
-    //   }
-    //  },
+  
 
     {
    field:"status",
@@ -60,15 +56,6 @@ const  ViewAllIncidents = () =>{
    renderCell:(val)=>{
    
     return val?.value?.charAt(0).toUpperCase()+val?.value?.slice(1)
-    
-    // <Box sx={{ width:1}}><div style={{ textAlign:"left"}}>{params.value}</div><Collapse in={params.id === expanded}>
-    //   <Box sx={detailStyles}> 
-    //   <div><label>Test</label>{"Test"}</div>
-    //   <div><label>Test</label>{"Test"}</div>
-    //   <div><label>Test</label>{"Test"}</div>
-    //   </Box></Collapse></Box>
-    
-    
    }
     },{
   field:"name",
@@ -122,7 +109,7 @@ const getIncidentsStatusPage = async() =>{
     }
 }
 const displayClass ={  display: "flex", justifyContent: "flex-start",fontWeight:"bolder",variant:'caption'}
-const labelClass={color:"#4b4b4b",fontSize:'13px',color:"#4b4b4b"}
+const labelClass={color:"#4b4b4b",fontSize:'13px',color:"#4b4b4b",justifyContent:"flex-start"}
     return <div>
         <Box sx={{width: "100%",margin: '0 auto',height:1000}}>
        
@@ -158,38 +145,78 @@ const labelClass={color:"#4b4b4b",fontSize:'13px',color:"#4b4b4b"}
           id="panel1a-header"
         
         >
-          <Grid container sx={{ display:"flex"}}>
-      <Grid item md={6} xs={12}>
-      <Typography sx={displayClass}>Name : <label style={labelClass}>{`\u00A0 ${list.name}`}</label></Typography>
-        <Typography sx={displayClass}>ACER Number<label style={labelClass}>{`\u00A0 # ${list.acer_number}`}</label>
+          <Grid container    direction="row"
+    display="flex"  >
+            <Grid item md={0.5} justifyContent={"center"} alignItems={"center"} alignContent={"center"}>
+            <ReportProblemIcon sx={{ color:Object.keys(severityColors).map(key=>{
+              
+              if(key===list.impact_severity)
+              { 
+                return severityColors[key]
+              }
+              if(list.impact_severity === null || list.impact_severity === undefined)
+              {
+                return "#808080"
+              }
+            }),paddingTop:"20px"}} />
+            </Grid>
+      <Grid item md={7.5} >
+   <Typography sx={displayClass}>Incident Name : <label style={labelClass}>{`\u00A0 ${list.name}`}</label></Typography>
+        <Typography sx={displayClass}>ACER Number :<label style={labelClass}>{`\u00A0 # ${list.acer_number}`}</label>
         {/* {components.join(',')} */}
-        </Typography>
-        <Typography sx={displayClass}>Services Impacted :<label style={labelClass}>{`\u00A0 ${components.join(',')}`}</label></Typography>
+       </Typography>
         <Typography sx={displayClass}>Status:<label style={labelClass}>{`\u00A0 ${list?.status?.charAt(0).toUpperCase()+list?.status?.slice(1)}`}</label></Typography>
-      </Grid>
+       
+       </Grid> 
+    
      
       {/* <Divider orientation="vertical" flexItem  /> */}
-     <Grid item md={6} xs={12}>
+     {list.start_time!== null  && <Grid item md={3} xs={12}>
 
         <Typography sx={displayClass}>Start Time : <label style={labelClass}>{` \u00A0\u00A0${dayjs(list?.start_time).format("DD/MM/YYYY hh:mm:ss A")}`}</label></Typography>
         <Typography sx={displayClass}>End Time :<label style={labelClass}>{`\u00A0\u00A0\u00A0${dayjs(list?.end_time).format("DD/MM/YYYY  hh:mm:ss A")}`}</label></Typography>
-     </Grid>
+     </Grid>}
           </Grid>
           {/* <Typography sx={{ fontWeight:600 , color:"grey" , width:"33%",flexShrink: 0,textAlign:"left"}}>{components.join(',')}</Typography>
           <Typography sx={{ fontWeight:600 , color:"grey",width:"33%",textAlign:"left"}}>Issue <label style={{color:"#4b4b4b",fontSize:'13px'}}>{` # ${list?.acer_number}`}</label> </Typography>
           <Typography sx={{ fontWeight:600 , color:"grey",textAlign:"left"}}>Status <label style={{color:"#4b4b4b",fontSize:'13px'}}>{` : ${list?.status}`}</label> </Typography> */}
         </AccordionSummary>
         <AccordionDetails>
-          <Typography>
-            <Stack direction="column">
-            <Typography sx={displayClass}>Details : <label style={labelClass}>{` \u00A0 ${list.message.replace(regex, '')
+         <Divider/>
+            <Grid container sx={{ textAlign:"left",paddingTop:2}}>
+            <Grid item md={1.3}>
+              <label style={displayClass}>Impact Update:</label>
+              </Grid>
+              <Grid item md={10.7}>
+              <span >{` ${list.issue_impact}`}</span>
+              </Grid>
+              <Grid item md={1.5} xs={12} sx={{ width:10}}>
+              <label style={displayClass}>Impact Severity:</label>
+              </Grid>
+              <Grid item md={10} xs={12}>
+             <span>{list?.impact_severity}</span>
+              </Grid>
+              <Grid item md={1.8} xs={12}>
+              <label style={displayClass}>Services Impacted :</label>
+              </Grid>
+              <Grid item md={10} xs={12}>
+             <span>{`${components.join(',')}`}</span>
+              </Grid>
+              <Grid item md={0.8} xs={12} sx={{ width:10}}>
+              <label style={displayClass}>Details :</label>
+              </Grid>
+              <Grid item md={11} xs={12}>
+             <span>{list.message.replace(regex, '').replace(/&nbsp;/g,'')}</span>
+              </Grid>
+              
+            </Grid>
+            {/* <Typography sx={displayClass}>Details:<span style={labelClass}>{` \u00A0 ${list.message.replace(regex, '').replace(/&nbsp;/g,'')
             //  .replace(/&lt;/g, "").replace(/&gt;/g, "").replace(/&lt;p&gt;/g,'')
             }
-            `
-    }</label></Typography>
-        <Typography sx={displayClass}>Impact Update:<label style={labelClass}>{` \u00A0 ${list.issue_impact}`}</label></Typography>
-            </Stack>
-          </Typography>
+            ` */}
+    {/* }</span> */}
+       
+            
         </AccordionDetails>
       </Accordion> })}
       
