@@ -17,6 +17,7 @@ import Stack from "@mui/material/Stack";
 import Divider from "@mui/material/Divider";
 import Checkbox from "@mui/material/Checkbox";
 import List from "@mui/material/List";
+import CustomDialogs from "../common/Dialogs/CustomDialogs";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import ListItem from "@mui/material/ListItem";
@@ -25,7 +26,7 @@ import MenuItem from "@mui/material/MenuItem";
 import DOMPurify from "dompurify";
 import Tooltip from "@mui/material/Tooltip";
 import { DateTimePicker } from "@mui/x-date-pickers";
-import CustomDialogs from "../common/Dialogs/CustomDialogs";
+
 import { EditorState, convertToRaw, ContentState } from "draft-js";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import htmlToDraft from "html-to-draftjs";
@@ -49,9 +50,11 @@ const getInitialState = (defaultValue) => {
   }
 };
 const EditIncident = ({ bu }) => {
-  const [initialObj, setInitialObj] = useState({ status: "investigating" });
+  const [initialObj, setInitialObj] = useState({ status: "investigating"    });
   const [incidentObject, setIncidentObject] = useState({
     status: "investigating",
+  //  start_time:"",
+  //  end_time:""
   });
   const [incidentstatus, setIncidentStatus] = useState("investigating");
   const [callCreate, setCallCreate] = useState(false);
@@ -95,8 +98,8 @@ const EditIncident = ({ bu }) => {
       setInitialObj({ status: "investigating" });
       setIncidentObject({
         status: "investigating",
-        start_time: "",
-        end_time: "",
+        // start_time: "",
+        // end_time: "",
       });
       setIncidentStatus("investigating");
       setComponentStatusList([]);
@@ -226,10 +229,12 @@ const EditIncident = ({ bu }) => {
       setInitialObj({
         name: selectedTemplateObject.name,
         message: selectedTemplateObject.message,
+        status:"investigating"
       });
       setIncidentObject({
         name: selectedTemplateObject.name,
         message: selectedTemplateObject.message,
+        status:"investigating"
       });
     }
   }, [selectedTemplateObject]);
@@ -446,6 +451,14 @@ const EditIncident = ({ bu }) => {
       setCallCreate(false);
       if (e?.response?.data) {
         setError(e.response.data);
+        if(e.response?.data?.Error)
+        {
+          setOpenCustomDialog({
+            open:true,
+            message:e.response.data.Error,
+            title:"Error"
+          })
+        }
         setresponseError(e.response.data);
       }
     }
@@ -470,7 +483,9 @@ const EditIncident = ({ bu }) => {
   const handleTemplateChange = (e) => {
     setTemplateSelected(e.target.value);
   };
-
+  const stayOnSamePage = () => {
+    setOpenCustomDialog({ open: false, message: "" });
+  };
   return (
     <div style={{ textAlign: "left" }}>
       {/* <Paper sx={{ mr: 4, ml: 2, mt: 4, mb: 4 }} elevation={3}> */}
@@ -552,6 +567,9 @@ const EditIncident = ({ bu }) => {
             <div>
               <TextField
                 fullWidth
+                InputProps={{
+                  inputProps: { min: 0 }
+                }}
                 id="outlined"
                 label="ACER Number"
                 name="acer_number"
@@ -650,7 +668,7 @@ const EditIncident = ({ bu }) => {
               <DateTimePicker
                 name="start_time"
                 disablePast
-                value={dayjs(incidentObject.start_time)}
+                value={dayjs(incidentObject?.start_time||'')}
                 sx={{ width: 230 }}
                 onChange={(val) => {
                   let onlyDate = val.$d.toISOString();
@@ -695,7 +713,7 @@ const EditIncident = ({ bu }) => {
                 minDateTime={dayjs(incidentObject.start_time)
                   .set("hour", dayjs(incidentObject.start_time).hour())
                   .startOf("hour")}
-                value={dayjs(incidentObject.end_time)}
+                value={dayjs(incidentObject?.end_time||'')}
                 onChange={(val) => {
                   //  delete responseerror.schenddate
                   setresponseError({ ...responseerror, end_time: "" });
@@ -784,6 +802,14 @@ const EditIncident = ({ bu }) => {
               />
             </div>
           </Stack>
+          <CustomDialogs
+          open={openCustomDialog.open}
+          message={openCustomDialog.message}
+          title={openCustomDialog.title}
+          setOpenCustomDialog={setOpenCustomDialog}
+          hideButton={true}
+          handleConfirmation={stayOnSamePage}
+        />
           <div
             className={
               initialObj.status === "resolved" ? "disable-pointer-events" : ""

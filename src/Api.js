@@ -24,7 +24,7 @@ const api = {
         return axiosInstance.post(`${baseURL}/api/common/incidents/`,body)
       },
       viewIncidents : () =>{ // do we need to suuply BU
-        return axiosInstance.get(`${baseURL}/api/common/incidents/?limit=600`)
+        return axiosInstance.get(`${baseURL}/api/common/incidents/?limit=50`)
       },
       getSideBarData : () =>{
         axiosInstance.defaults.headers["businessunit"]=localStorage.getItem("BU");

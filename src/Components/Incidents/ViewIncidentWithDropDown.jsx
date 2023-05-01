@@ -178,7 +178,9 @@ const ViewIncidentWithDropDown = ({ bu }) => {
 
   return <><div className="pages" >
    <div >
-   <Backdrop  sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={loading}>
+   <Backdrop 
+    sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+     open={loading}>
     <LoadingPanel ></LoadingPanel>
     </Backdrop>
     </div>
