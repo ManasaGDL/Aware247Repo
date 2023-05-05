@@ -141,7 +141,7 @@ const IncidentTemplate = () => {
     } catch (e) {
       setError(e.response.data);
     } finally {
-     
+      setTemplateObj({});
     }
   };
   const handleFormSubmit = (e) => {
@@ -270,7 +270,7 @@ const IncidentTemplate = () => {
             <Button
               variant="contained"
               type="submit"
-              sx={{ color: "white" }}
+              sx={{ color: "white" , fontWeight:"600" }}
               onClick={() => createTemplate()}
             >
               {" "}
@@ -280,7 +280,7 @@ const IncidentTemplate = () => {
         </form>
       </Dialog>
 
-      <Box sx={{ width: "95%", margin: "0 auto", height: 900 }}>
+      <Box sx={{ width: "95%", margin: "0 auto", height: 'auto'}}>
         <DataGrid
           columns={columns}
           rows={data}
@@ -295,7 +295,8 @@ const IncidentTemplate = () => {
               fontWeight: 600,
             },
           }}
-          rowHeight={80}
+          autoHeight={true}
+          rowHeight={40}
           pageSize={pageSize}
           rowsPerPageOptions={[5, 10, 15, 20, 50]}
           pagination

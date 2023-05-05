@@ -363,6 +363,12 @@ const CreateScheduleMaintenance = () => {
             </div>
             <DateTimePicker
               name="schstartdate"
+              slotProps={{
+                textField: {
+                  helperText: errorMessage,
+                  error:false
+                },
+              }}
               disablePast
               value={dayjs(obj.schstartdate)}
               sx={{ width: 350 }}
@@ -392,6 +398,7 @@ const CreateScheduleMaintenance = () => {
               slotProps={{
                 textField: {
                   helperText: errorMessage,
+                  error:errorMessage?true:false
                 },
               }}
               onError={(error) => {

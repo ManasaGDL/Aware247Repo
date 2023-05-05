@@ -76,6 +76,7 @@ const TeamMembers = () => {
           </Stack>
           <Container sx={{ paddingTop: 2, paddingBottom: 4 }}>
             <DataGrid
+            rowHeight={40}
               columns={columns}
               autoHeight={true}
               rows={data}

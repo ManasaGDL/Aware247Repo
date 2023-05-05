@@ -18,14 +18,16 @@
   height:100%;
   
 }
+
 body{
-  font-family:   "Helvetica", "Arial", "Sans-Serif","Roboto", "Arial",
+  font-family: "Assistant",  "Helvetica", "Arial", "Sans-Serif","Roboto", "Arial",
   "Georgia",
   "Impact",
   "Tahoma",
   "Times New Roman",
   "Verdana",
  ;
+
 }
 #root{
   height:100%;
@@ -43,6 +45,7 @@ body{
 }
 .incident-link:hover{
   color: #2DCDDF;
+  font-weight: 100;
 }
 .editor-class {
   background-color:white;

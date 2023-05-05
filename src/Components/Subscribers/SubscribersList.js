@@ -118,6 +118,7 @@ setData(response?.data?.results)
         pageSize={pageSize}
         rowsPerPageOptions={[5, 10,15, 20,50]}
         pagination
+        rowHeight={40}
         onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
        sx={{
             "&.MuiDataGrid-root .MuiDataGrid-cell:focus-within": {

@@ -27,6 +27,9 @@ const clientApi = {
     deleteSubscriber : (id,businessunit) => {
         axiosInstance.defaults.headers["businessunit"]=businessunit;
         return axiosInstance.delete(`${baseURL}/api/common/subscribers/unsubscribe_public/?id=${id}`)
+    },
+    getScheduledMaintenanceList:()=>{
+        return axiosInstance.get(`${baseURL}/api/common/scheduled_maintanence/status_page_sch_mnt_inc`)
     }
 }
 export default clientApi;

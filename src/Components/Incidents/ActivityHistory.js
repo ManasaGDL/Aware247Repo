@@ -1,73 +1,95 @@
 import React, { useEffect, useState } from "react";
 import api from "../../Api";
-import { DataGrid } from '@mui/x-data-grid'
+import { DataGrid } from "@mui/x-data-grid";
 import { Box } from "@mui/material";
 import dayjs from "dayjs";
-const ActivityHistory = ({ id ,bu}) => {
-  const [data, setData] = useState({})
-  const [ pageSize , setPageSize ] = useState(5)
+const ActivityHistory = ({ id, bu }) => {
+  const [data, setData] = useState({});
+  const [pageSize, setPageSize] = useState(5);
   useEffect(() => {
     if (id) {
-      getActivityLog(id)
+      getActivityLog(id);
     }
-  }, [id])
+  }, [id]);
   const columns = [
     // {
     //   field: 'incidents_activity_id',
     //   headerName: 'Activity ID',
     //   headerClassName: "header",
     //   minWidth: 150,
-    //   flex:0.5
-    // }, 
+    //   flex:0.5,
+
+    // },
     {
       field: "component_name",
       headerName: "Component Name",
       minWidth: 150,
-      flex:1
+      flex: 1,
     },
     {
       field: "component_status",
       headerName: "Status",
       minWidth: 150,
-      flex:1
+      flex: 1,
     },
 
     {
-      field: "modified_datetime",
-      headerName: "ModifiedTime",
+      field: "created_datetime",
+      headerName: "CreatedDateTime",
       minWidth: 150,
-      flex:1,
-      renderCell:(val)=>{
-        return dayjs(val.value).format("YYYY/MM/DD hh:mm:ss A")
-      }
-    }
-  ]
+      flex: 1,
+      renderCell: (val) => {
+        return dayjs(val.value).format("YYYY/MM/DD hh:mm:ss A");
+      },
+    },
+  ];
+
   const getActivityLog = async (id) => {
     try {
-      const response = await api.getActivityLog({ "incident_id": id })
-      setData(response?.data)
-    } catch (e) {
-
-    }
-  }
-  return <div className="pages">
-     <Box sx={{ height: 700, width: '100%' }}>   
-    <DataGrid columns={columns} rows={data} getRowId={(row)=>row.incidents_activity_id} sx={{
-          "&.MuiDataGrid-root .MuiDataGrid-cell:focus-within": {
-            outline: "none !important",
-          },
-          '.MuiDataGrid-columnSeparator': {
-            display: 'none',
-          },
-          '.MuiDataGrid-columnHeaderTitle': {
-            fontWeight: 600
-          }
-        }} 
-        pageSize={pageSize}
-        rowsPerPageOptions={[5, 10,15, 20,50]}
-        pagination
-        onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}/>
-    </Box>
-  </div>
-}
+      let arr = [];
+      let a = [];
+      const response = await api.getActivityLog({ incident_id: id });
+      response?.data?.forEach((obj) => {
+        if (obj.components.length > 0) {
+          obj.components.map((item) => {
+            return arr.push(item);
+          });
+        }
+        setData(arr);
+      });
+    } catch (e) {}
+  };
+  return (
+    <div className="pages">
+      <Box sx={{ height: 700, width: "100%" }}>
+        {
+          <DataGrid
+            columns={columns}
+            rows={data}
+            getRowId={(row) => {
+              return row?.incident_component_act_id;
+            }}
+            sx={{
+              "&.MuiDataGrid-root .MuiDataGrid-cell:focus-within": {
+                outline: "none !important",
+              },
+              ".MuiDataGrid-columnSeparator": {
+                display: "none",
+              },
+              ".MuiDataGrid-columnHeaderTitle": {
+                fontWeight: 600,
+              },
+            }}
+            rowHeight={40}
+            autoHeight={true}
+            pageSize={pageSize}
+            rowsPerPageOptions={[5, 10, 15, 20, 50]}
+            pagination
+            onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+          />
+        }
+      </Box>
+    </div>
+  );
+};
 export default ActivityHistory;

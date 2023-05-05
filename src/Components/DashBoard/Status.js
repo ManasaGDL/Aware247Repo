@@ -35,8 +35,8 @@ export default ({ labels,showLink,isSubComponent,id,bu,incidentId,isDashboardPag
     </Status>
     </Grid>
   {showLink && <Grid item md={7} textAlign="center"> 
-       <div style={{paddingLeft: isSubComponent?'':'55px'}}>{status?.name!=="Operational" && <Link className="incident-link" href={`/admin/create_incident/edit/${incidentId}`}>Due to Incident {incidentId}</Link>}
-       </div>
+       {incidentId && <div style={{paddingLeft: isSubComponent?'':'55px'}}>{status?.name!=="Operational" && <Link className="incident-link" href={`/admin/create_incident/edit/${incidentId}`}>Due to Incident {incidentId}</Link>}
+       </div>}
     </Grid>}
    
     </Grid>:<Status colour={status?.colour} backgroundColour={status?.backgroundColour}>

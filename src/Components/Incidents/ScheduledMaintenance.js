@@ -196,7 +196,7 @@ const ScheduledMaintenance = () => {
           + Scheduled Maintenance
         </StyledButton>{" "}
       </Stack>
-      <Box sx={{ width: "100%", margin: "0 auto", height: 1000 }}>
+      <Box sx={{ width: "100%", margin: "0 auto", height: "auto" }}>
         <Backdrop
           sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
           open={loading}
@@ -217,7 +217,8 @@ const ScheduledMaintenance = () => {
               fontWeight: 600,
             },
           }}
-          rowHeight={80}
+          rowHeight={40}
+          autoHeight={true}
           pageSize={pageSize}
           rowsPerPageOptions={[5, 10, 15, 20, 50]}
           pagination

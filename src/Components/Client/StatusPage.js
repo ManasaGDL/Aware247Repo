@@ -15,7 +15,8 @@ import Status from "../DashBoard/Status";
 import HeaderTabs from "../common/HeaderTabs";
 import ViewAllIncidents from "./ViewAllIncidents";
 import Backdrop from '@mui/material/Backdrop';
-
+import "./index.css";
+import ScheduledMaintanence_client from "./ScheduledMaintenace_client";
 import LoadingPanel from "../common/TabPanel/LoadingPanel";
 import { useParams } from "react-router-dom";
 import clientApi from "../../api/clientApi";
@@ -37,10 +38,10 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
-const tabs = [ {title:"Incidents",content:<ViewAllIncidents/>},{title:"Scheduled Maintenance",content:<></>}]
+const tabs = [ {title:"Incidents",content:<ViewAllIncidents/>},{title:"Scheduled Maintenance",content:<ScheduledMaintanence_client></ScheduledMaintanence_client>}]
 const StatusPage = () => {
   const classes = useStyles();
-  const [tabValue , setTabValue] = useState(0)
+  const [tabValue , setTabValue] = useState(-1)
   const [ loading ,setLoading ] = useState(false)
   const [componentList, setComponentList] = useState([]);
   const navigate = useNavigate();
@@ -113,9 +114,7 @@ const StatusPage = () => {
                     <ListItem sx={{ paddingTop: "2px" }}>
                       <ListItemText
                         disableTypography
-                        sx={{
-                          fontWeight: "bold",
-                        //   color: "rgb(101, 101, 101)",
+                        sx={{                       
                           fontSize: "16px",
                           fontWeight:600,
                          
@@ -135,8 +134,6 @@ const StatusPage = () => {
                           >
                             <ListItemText  disableTypography
                         sx={{
-                          fontWeight: "bold",
-                         
                           fontSize: "16px",
                           fontWeight:600,
                          
@@ -150,15 +147,15 @@ const StatusPage = () => {
                   </>
                  
                 ) : (
-                  <ListItem
+                  <ListItem 
                     secondaryAction={
                       <Status labels={item.component_status.component_status_name}></Status>
                     }
                   >
                     <ListItemText disableTypography
                         sx={{
-                          fontWeight: "bold",
-                         
+                        
+                          fontFamily:"Assistant",
                           fontSize: "16px",
                           fontWeight:600,
                          

@@ -107,6 +107,7 @@ setLoading(false)
       <HeaderTabs tabs={[{ title: "Incident Updates" }]} tabValue={0} />
       <Box sx={{ width: "95%", margin: "0 auto", height: 900 }}>
         <DataGrid
+         rowHeight={40}
           columns={columns}
           rows={data}
           sx={{
@@ -120,7 +121,7 @@ setLoading(false)
               fontWeight: 600,
             },
           }}
-          rowHeight={80}
+          autoHeight={true}
           pageSize={pageSize}
           rowsPerPageOptions={[5, 10, 15, 20, 50]}
           pagination

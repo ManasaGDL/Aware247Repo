@@ -26,7 +26,6 @@ import MenuItem from "@mui/material/MenuItem";
 import DOMPurify from "dompurify";
 import Tooltip from "@mui/material/Tooltip";
 import { DateTimePicker } from "@mui/x-date-pickers";
-
 import { EditorState, convertToRaw, ContentState } from "draft-js";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import htmlToDraft from "html-to-draftjs";
@@ -667,7 +666,12 @@ const EditIncident = ({ bu }) => {
               </div>
               <DateTimePicker
                 name="start_time"
-                disablePast
+                slotProps={{
+                  textField: {
+                   
+                    error:errorMessage?true:false
+                  },
+                }}
                 value={dayjs(incidentObject?.start_time||'')}
                 sx={{ width: 230 }}
                 onChange={(val) => {
@@ -698,13 +702,15 @@ const EditIncident = ({ bu }) => {
                 <FormLabel> End Time (CST)</FormLabel>
               </div>
               <DateTimePicker
-                disablePast
+            
                 slotProps={{
                   textField: {
                     helperText: errorMessage,
+                    error:errorMessage?true:false
                   },
                 }}
                 onError={(error) => {
+                  
                   setresponseError({ end_time: [""] });
                   setDateError(error);
                 }}
@@ -740,7 +746,7 @@ const EditIncident = ({ bu }) => {
           <FormLabel sx={{ fontWeight: "bold" }}>Message</FormLabel>
           <br />
 
-          <Editor
+          <Editor 
             editorState={editorState}
             wrapperClassName="wrapper-class"
             editorClassName="editor-class"
@@ -755,14 +761,14 @@ const EditIncident = ({ bu }) => {
           ) : (
             ""
           )}
-          <Stack direction="row" spacing={8}>
+          <Stack direction="column" spacing={2}>
             <div>
               <TextField
                 fullWidth
+                multiline
+                rows={4}
                 id="outlined"
-                // multiline
-                // rows={4}
-                sx={{ width: 400 }}
+                sx={{ width: 900 }}
                 label="Impact Update"
                 name="issue_impact"
                 value={incidentObject.issue_impact || ""}
@@ -781,10 +787,8 @@ const EditIncident = ({ bu }) => {
             <div>
               <TextField
                 fullWidth
-                id="outlined"
-                // multiline
-                // rows={4}
-                sx={{ width: 400 }}
+                id="outlined"              
+                sx={{ width: 900 }}
                 label="Recipients"
                 name="recipients"
                 value={mailObject}

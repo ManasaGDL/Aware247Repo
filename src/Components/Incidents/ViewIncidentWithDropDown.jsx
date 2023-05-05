@@ -184,9 +184,13 @@ const ViewIncidentWithDropDown = ({ bu }) => {
     <LoadingPanel ></LoadingPanel>
     </Backdrop>
     </div>
-    <Box sx={{ height: 700, width: '100%' }}>    
+    <Box 
+    // sx={{ height: 700, width: '100%' }}
+    sx={{ height: "auto" }}
+    >    
       {data.length > 0 ? <DataGrid rows={data} columns={columns} 
         rowHeight={45}
+        autoHeight={true}
         pageSize={pageSize}
         rowsPerPageOptions={[5, 10,15, 20,50]}
         pagination
@@ -208,7 +212,7 @@ const ViewIncidentWithDropDown = ({ bu }) => {
     
     <Dialog open={openDialog.flag} onBackdropClick={handleClose} >
       <form onSubmit={handleFormSubmit}>
-        <DialogTitle>Write Postmortem</DialogTitle>
+        <DialogTitle >Write Postmortem</DialogTitle>
         <DialogContent style={{ height: '300px' }}>
           <TextField name="comments" multiline sx={{
             width: 400
@@ -224,7 +228,7 @@ const ViewIncidentWithDropDown = ({ bu }) => {
           > </TextField>
         </DialogContent>
         <DialogActions sx={{ alignItems: "center" }}>
-          <Button variant="contained" type="submit" sx={{ color: "white" }} onClick={e => insertComments()}> Write Postmortem</Button>
+          <Button variant="contained" type="submit" sx={{ color: "white",fontWeight:"600"}}  onClick={e => insertComments()}> Write Postmortem</Button>
         </DialogActions>
       </form>
     </Dialog>
