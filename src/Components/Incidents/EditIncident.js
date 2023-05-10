@@ -159,7 +159,6 @@ const EditIncident = ({ bu }) => {
       );
     }
   }, [initialObj]);
-
   useEffect(() => {
     if (action === "edit") {
       setIncidentObject({
@@ -199,7 +198,7 @@ const EditIncident = ({ bu }) => {
     try {
       const res = await api.getTemplateDetails(templateSelected);
       setSelectedTemplateObject({
-        name: res?.data.template_name,
+        name: res?.data?.incident_title,
         message: res?.data.description,
       });
     } catch (e) {}
@@ -499,6 +498,15 @@ const EditIncident = ({ bu }) => {
         <h4 style={{ paddingTop: 20, marginLeft: 20 }}>
           {id ? `` : " Create Incident"}
         </h4>
+        {id && <Button
+                variant="contained"
+                sx={{ ml: 2, color: "white", fontWeight: "bold" }}
+                size="large"
+                onClick={() => handleUpdateIncident()}
+                // disabled={disableUpdateButton}
+              >
+                { "Update Incident"}
+              </Button>}
         {!id && (
           <FormControl
             sx={{ ml: 2, mt: 6, pb: 2, color: "white", fontWeight: "bold" }}
@@ -743,7 +751,7 @@ const EditIncident = ({ bu }) => {
             </div>
           </Stack>
 
-          <FormLabel sx={{ fontWeight: "bold" }}>Message</FormLabel>
+          <FormLabel >Message</FormLabel>
           <br />
 
           <Editor 
@@ -862,10 +870,10 @@ const EditIncident = ({ bu }) => {
                             Typography
                             sx={{
                               fontWeight: "600",
-                              color: "rgb(101, 101, 101)",
-                              fontSize: "12px",
+                              color: "rgb(101, 101, 101)",                            
+                              fontSize: "14px",
                             }}
-                            primary={<b>{component.component_name}</b>}
+                            primary={<b style={{  fontFamily:"Assistant",}}>{component.component_name}</b>}
                           ></ListItemText>
                         </ListItem>
                         {/* <Divider /> */}
@@ -1010,9 +1018,10 @@ const EditIncident = ({ bu }) => {
                                     }
                                     sx={{
                                       pl: 4,
-                                      fontSize: "12px",
+                                      fontSize: "14px",
                                       fontWeight: "bold",
                                       color: "rgb(101, 101, 101)",
+                                      fontFamily:"Assistant",
                                     }}
                                   ></ListItemText>
                                 </ListItem>
@@ -1106,7 +1115,8 @@ const EditIncident = ({ bu }) => {
                             sx={{
                               fontWeight: "bold",
                               color: "rgb(101, 101, 101)",
-                              fontSize: "12px",
+                              fontFamily:"Assistant",
+                              fontSize: "14px",
                             }}
                             primary={
                               <Grid

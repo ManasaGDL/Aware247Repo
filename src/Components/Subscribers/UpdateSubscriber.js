@@ -161,11 +161,28 @@ const UpdateSubscriber = () => {
         >
           <LoadingPanel></LoadingPanel>
         </Backdrop>
-        {!loading && (
+        <Stack direction="row"
+  justifyContent="space-between"
+  alignItems="center"
+  spacing={12} 
+  sx={{ height:50,marginRight:2}}
+      
+        >
+             {!loading && (
           <h5 style={{ paddingTop: 20, marginLeft: 20 }}>
             {"Update Subscriber"}
           </h5>
         )}
+      {!loading && <StyledButton
+                variant="contained"
+                onClick={() => {
+                  handleUpdateSubscriber();
+                }}
+              >
+                Update Subscriber
+              </StyledButton>}
+        </Stack>
+       
 
         {!loading && (
           <div style={{ textAlign: "center", paddingBottom: 20 }}>

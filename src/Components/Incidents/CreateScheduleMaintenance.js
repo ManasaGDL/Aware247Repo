@@ -308,11 +308,29 @@ const CreateScheduleMaintenance = () => {
 
   return (
     <div style={{ textAlign: "left" }}>
-      <h4 style={{ paddingTop: 20, marginLeft: 20 }}>
+      <Stack direction="row"
+  justifyContent="space-between"
+  alignItems="center"
+  spacing={12} 
+  sx={{ height:50,marginRight:2}}
+      
+        >
+             <h4 style={{ paddingTop: 20, marginLeft: 20 }}>
         {action === "create"
           ? "Create Scheduled Maintenance "
           : " Update Schedule Maintenance "}
       </h4>
+      {action !=="create"&&<StyledButton
+                variant="contained"
+                onClick={() => {
+                  handleCreateUpdateSM();
+                }}
+              >
+                {  "Update "}
+              </StyledButton>}
+        </Stack>
+     
+      
       <Box
         sx={{ pl: 3, pt: 2, pr: 3, mt: 0, backgroundColor: "white", pb: 10 }}
       >

@@ -20,7 +20,19 @@
 }
 
 body{
-  font-family: "Assistant",  "Helvetica", "Arial", "Sans-Serif","Roboto", "Arial",
+  font-family: 
+  "Assistant",
+  "-apple-system",
+  "BlinkMacSystemFont",
+  '"Segoe UI"',
+  "Roboto",
+  '"Helvetica Neue"',
+  "Arial",
+  "sans-serif",
+  '"Apple Color Emoji"',
+  '"Segoe UI Emoji"',
+  '"Segoe UI Symbol"',
+   "Helvetica", "Arial", "Sans-Serif","Roboto", "Arial",
   "Georgia",
   "Impact",
   "Tahoma",
@@ -35,7 +47,6 @@ body{
 .wrapper-class {
   padding: 1rem;
   border: 1px solid #ccc;
- 
 }
 .custom-link:hover {
   color: white;

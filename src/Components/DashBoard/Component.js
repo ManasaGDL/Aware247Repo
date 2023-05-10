@@ -41,7 +41,9 @@ export default ({
     <>
       <Component>
         <Grid container textAlign={"left"} alignItems="center">
-          <Grid item md={3} sx={{ fontWeight: 500, paddingLeft: "25px" }}>
+          <Grid item md={3} sx={{ fontWeight: "bold", paddingLeft: "25px", fontWeight: "bold",
+                            color: "rgb(101, 101, 101)",
+                            fontSize: "14px" }}>
             {component}
           </Grid>
           <Grid item md={9}>

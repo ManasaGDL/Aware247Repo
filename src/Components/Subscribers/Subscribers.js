@@ -39,15 +39,7 @@ const Subscribers = () => {
   alignItems="center"
   spacing={12} 
   sx={{ height:50,marginRight:2}}
-        //   sx={{
-        //     // display: "flex",
-        //     direction: "row",
-        //  justifyContent:"space-evenly",
-        //     // alignItems: "flex-end",
-        //     // justifyContent: "center",
-        //     marginRight: 3,
-            
-        //   }}
+      
         >
             <h5 style={{ paddingTop: 20, marginLeft: 20 }}>{"Subscribers"}</h5>
           <StyledButton 

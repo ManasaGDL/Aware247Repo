@@ -57,7 +57,7 @@ const TeamMembers = () => {
       </Backdrop>
       {!loading && (
         <Box sx={{ height: "auto" }}>
-          {/* <h5 style={{ paddingTop: 20, marginLeft: 20 }}>Team Members</h5> */}
+        
           <Stack
             direction="row"
             justifyContent="space-between"
@@ -68,7 +68,7 @@ const TeamMembers = () => {
             <h5 style={{ paddingTop: 20, marginLeft: 20 }}>Team Members</h5>
             <StyledButton
               variant="contained"
-              // onClick={() => navigate("/admin/subscribers/addSubscriber")}
+           
             >
               {" "}
               + Add A Team Member
