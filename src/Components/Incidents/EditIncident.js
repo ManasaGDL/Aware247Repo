@@ -427,14 +427,31 @@ const EditIncident = ({ bu }) => {
         message: "Incident updated successfully",
         severity: "success",
       });
-
+      setCallUpdate(false);
       setAction(null);
     } catch (e) {
-    } finally {
-      setAction("");
       setCallUpdate(false);
+      if (e?.response?.data) {
+        setError(e.response.data);
+       
+        if(e.response?.data?.Error)
+        {
+          setOpenCustomDialog({
+            open:true,
+            message:e.response.data.Error,
+            title:"Error"
+          })
+        }
+        setresponseError(e.response.data);
+      }
+    } finally {
+    
+   
     }
   };
+  useEffect(()=>{
+console.log(callUpdate)
+  },[error,callUpdate])
   const callCreateIncidentApi = async () => {
     try {
       const res = await api.createIncident({ ...incidentObject });
@@ -449,6 +466,7 @@ const EditIncident = ({ bu }) => {
       setCallCreate(false);
       if (e?.response?.data) {
         setError(e.response.data);
+        console.log(e.response.data)
         if(e.response?.data?.Error)
         {
           setOpenCustomDialog({
@@ -583,6 +601,10 @@ const EditIncident = ({ bu }) => {
                 type="number"
                 value={incidentObject.acer_number || ""}
                 onChange={(e) => {
+                  console.log(e.target.value)
+                  if (e.target.value.length > 0) {
+                    setError({ acer_name: [] });
+                  }
                   setIncidentObject({
                     ...incidentObject,
                     acer_number: parseInt(e.target.value),
@@ -592,8 +614,16 @@ const EditIncident = ({ bu }) => {
                     [e.target.name]: parseInt(e.target.value),
                   });
                 }}
-              />
+              /> 
+              <div>
+            {error?.acer_number?.length > 0 ? (
+                <div style={{ color: "red" }}>{error.acer_number[0]}</div>
+              ) : (
+                ""
+              )}
+              </div> 
             </div>
+            
             <div>
               <FormControl>
                 <InputLabel id="demo-simple-select-label">
@@ -606,6 +636,9 @@ const EditIncident = ({ bu }) => {
                   value={selectedSeverity}
                   label="Impact Severity"
                   onChange={(e) => {
+                    if (e.target.value.length > 0) {
+                      setError({ impact_severity: [] });
+                    }
                     setSelectedSeverity(e.target.value);
                     setIncidentObject({
                       ...incidentObject,
@@ -627,7 +660,15 @@ const EditIncident = ({ bu }) => {
                   })}
                 </Select>
               </FormControl>
+              <div>
+            {error?.impact_severity?.length > 0 ? (
+                <div style={{ color: "red" }}>{error.impact_severity[0]}</div>
+              ) : (
+                ""
+              )}
+              </div>
             </div>
+           
           </Stack>
           <br />
 
@@ -781,6 +822,9 @@ const EditIncident = ({ bu }) => {
                 name="issue_impact"
                 value={incidentObject.issue_impact || ""}
                 onChange={(e) => {
+                  if (e.target.value.length > 0) {
+                    setError({ issue_impact : [] });
+                  }
                   setIncidentObject({
                     ...incidentObject,
                     issue_impact: e.target.value,
@@ -791,6 +835,13 @@ const EditIncident = ({ bu }) => {
                   });
                 }}
               />
+                 <div>
+            {error?.issue_impact?.length > 0 ? (
+                <div style={{ color: "red" }}>{error.issue_impact[0]}</div>
+              ) : (
+                ""
+              )}
+              </div>
             </div>
             <div>
               <TextField
