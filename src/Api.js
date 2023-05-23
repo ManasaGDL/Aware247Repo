@@ -3,6 +3,10 @@ import axios from "axios";
 import {baseURL, axiosInstance} from "./axios";
 
 const api = {
+  getToken:()=>{
+    delete axiosInstance.defaults.headers["Authorization"];
+return axiosInstance.post(`${baseURL}/jwt_refresh`,{token:localStorage.getItem("access_token")});
+  },
     login : (body) => {
       return  axiosInstance.post(`${baseURL}/auth/token/` , body);
     },
@@ -15,6 +19,8 @@ const api = {
         return axiosInstance.get(`${baseURL}/api/common/components/components_list`)
       },
       getBusinessUnits : () =>{
+        axiosInstance.defaults.headers["businessunit"]=localStorage.getItem("BU");
+        axiosInstance.defaults.headers["Authorization"]="Bearer "+ localStorage.getItem("access_token")
         return axiosInstance.get(`${baseURL}/api/common/businessunits`)
       },
       getUserProfile: () =>{
@@ -50,6 +56,7 @@ const api = {
       return axiosInstance.put(`${baseURL}/api/common/incident_activity_log/incident_activity/`,body)
      },
      getIncidentStatusDashBoard : () =>{
+      axiosInstance.defaults.headers["businessunit"]=localStorage.getItem("BU");
       return axiosInstance.get(`${baseURL}/api/common/dashboard_incident`)
      },
     //  Cmponents API

@@ -22,12 +22,14 @@ import UpdateSubscriber from "../Components/Subscribers/UpdateSubscriber";
 import TeamMembers from "../Components/TeamMembers/TeamMembers";
 import CreateScheduleMaintenance from "../Components/Incidents/CreateScheduleMaintenance";
 import ViewScheduleMaintenance from "../Components/Incidents/ViewScheduleMaintenance";
+import { Dashboard } from "@mui/icons-material";
+import Login from "../Components/Login/Login";
 // import "./containerStyles
 const Container = ({ user }) => {
     const [collapse, setCollapse] = useState(false)
     const [dynamicSideBarData, setDynamicSideBarData] = useState([])
     const [loading,setLoading] = useState(false)
-    const [businessUnit, setBusinessUnit] = useState(localStorage.getItem("BU"))//passing BU to components 
+    const [bu, setBu] = useState(localStorage.getItem("BU"))//passing BU to components 
     const handleCollapse = (collapse) => {
        
         setCollapse(!collapse)
@@ -39,17 +41,20 @@ const Container = ({ user }) => {
     }
 
     return <>   
-     <ProSidebarProvider>      
+     <ProSidebarProvider> 
+     <businessUnitContext.Provider value={[bu , setBu]}>     
         <section>
-           
+        
             <div style={{ height: "60px" }}>
                 {/* pass sidebar data from Header to container to SidebarComponent  */}
-                <Header user={user} setDynamicSideBarData={setDynamicSideBarData} businessunit={setBusinessUnit}></Header>
+                <Header user={user} setDynamicSideBarData={setDynamicSideBarData} businessunit={setBu}></Header>
               
             </div>
         </section>
         <section >
-        <businessUnitContext.Provider value={localStorage.getItem('BU')}>
+{/*         
+            // localStorage.getItem('BU') */}
+        
            { <Grid container sx={{ height: '100vh' }} spacing={2}>
                 <Grid item md={collapse ? 1 : 2} xs={12}>
                     <SidebarComponent width={window.innerWidth} handleCollapse={handleCollapse} setLoading={setLoading} dynamicSideBarData={dynamicSideBarData}></SidebarComponent>
@@ -58,19 +63,23 @@ const Container = ({ user }) => {
                 <Paper sx={{mr: 4,ml:2 ,mt:4,mb:4, height:'auto'}} elevation={3}>
      <Box sx={{width:"100%",height:"100%"}}>
                     <Routes>
+                        <Route path="/login/*" element={<Dashboard />}/>
+                       
                         <Route path="admin" element={<Navigate to="dashboard"/>}/>
-                        <Route path="admin/dashboard" element={<DashBoard bu={businessUnit}/>} />
+                       
+                        <Route path="admin/dashboard" element={<DashBoard bu={bu}/>} />
                         <Route path="/admin/teammembers" element={<TeamMembers/>}/>
                         <Route path="/admin/viewScheduleMaintenance/:id" element={<ViewScheduleMaintenance/>}/>
                         <Route path="/admin/scheduled/:action" element={<CreateScheduleMaintenance/>}/>
                         <Route path="/admin/scheduled/:action/:id" element={<CreateScheduleMaintenance/>}/>
-                        <Route path="admin/create_incident" element={<MainActionPage bu={businessUnit} />} />
-                        <Route path="admin/create_incident/:action/:id" element={<MainActionPage bu={businessUnit}/>}/>
-                        <Route path="admin/incidents" element={<IncidentPage bu={businessUnit} />} />
+                        <Route path="admin/create_incident" element={<MainActionPage bu={bu} />} />
+                        <Route path="admin/create_incident/:action/:id" element={<MainActionPage bu={bu}/>}/>
+                        <Route path="admin/incidents" element={<IncidentPage bu={bu} />} />
                         <Route path="admin/subscribers/manage/:id" element={<UpdateSubscriber/>}/>
                         <Route path="admin/subscribers/addSubscriber" element={<AddSubscriber/>}/>
                         <Route path="admin/subscribers" element={<Subscribers />} />
                         <Route path="admin/components" element ={<Component/>}/>
+                        {/* <Route path="*" element={<Navigate to="/login"/>}/> */}
                         <Route path="*" element={<Navigate to="wrongurl"  />} />
                         <Route path="wrongurl" element={<h3>URL does not exists.</h3>}/>
                     </Routes>
@@ -80,9 +89,10 @@ const Container = ({ user }) => {
             </Grid>}
             <div>
             </div>
-            </businessUnitContext.Provider>
+             
           
         </section>
+        </businessUnitContext.Provider>  
         </ProSidebarProvider>
     </>
 }

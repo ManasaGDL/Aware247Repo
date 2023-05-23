@@ -449,9 +449,7 @@ const EditIncident = ({ bu }) => {
    
     }
   };
-  useEffect(()=>{
-console.log(callUpdate)
-  },[error,callUpdate])
+
   const callCreateIncidentApi = async () => {
     try {
       const res = await api.createIncident({ ...incidentObject });
@@ -466,7 +464,7 @@ console.log(callUpdate)
       setCallCreate(false);
       if (e?.response?.data) {
         setError(e.response.data);
-        console.log(e.response.data)
+        
         if(e.response?.data?.Error)
         {
           setOpenCustomDialog({
@@ -601,7 +599,7 @@ console.log(callUpdate)
                 type="number"
                 value={incidentObject.acer_number || ""}
                 onChange={(e) => {
-                  console.log(e.target.value)
+                 
                   if (e.target.value.length > 0) {
                     setError({ acer_name: [] });
                   }

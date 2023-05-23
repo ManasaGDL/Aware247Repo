@@ -126,9 +126,9 @@ const [ error , setError ] = useState(false)
   const subscriptionArray = ["Select Subscription Type", "SMS", "Email"];
   let subCategoryArray = [];
   let componentsArray = [];
-const bu = useContext(businessUnitContext)
+const [bu,setBU] = useContext(businessUnitContext)
   const navigate = useNavigate();
- 
+
   useEffect(() => {
     if (checkAllChecked) setMaintainChecked([...componentsList]);
     else setMaintainChecked([]);
@@ -298,7 +298,7 @@ const bu = useContext(businessUnitContext)
             hideButton={true}
             handleConfirmation={stayOnSamePage}
           />
-         {data.length > 0 && <form onSubmit={handleSubmit(onSubmit)}>
+         {data?.length > 0 && <form onSubmit={handleSubmit(onSubmit)}>
             <Grid container spacing={2}>
               <Grid item md={12}>
                 <Controller
@@ -538,7 +538,9 @@ const bu = useContext(businessUnitContext)
         
             <Grid container justify="flex-start">
               <Grid item md={12}>
-                <Box sx={{ width: "1000px", margin: "0 auto" }}>
+                <Box sx={{ width:"100%"
+                  // width: "950px", margin: "0 auto"
+                   }}>
                   <List
                     sx={{
                       border: 1,

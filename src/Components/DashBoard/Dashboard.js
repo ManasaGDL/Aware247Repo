@@ -1,14 +1,15 @@
-import React, { useMemo, useEffect, useState } from "react";
-
-import { Outlet } from "react-router-dom";
+import React, { useMemo, useEffect, useState , useContext } from "react";
+import { useSearchParams } from "react-router-dom";
 import api from "../../Api";
+import { Outlet } from "react-router-dom";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import DisplayComponents from "./DisplayComponents";
 import styled from "styled-components";
 import { Backdrop } from "@mui/material";
 import LoadingPanel from "../common/TabPanel/LoadingPanel";
-
+import { axiosInstance } from "../../axios";
+import businessUnitContext from "../../context/businessUnitContext";
 const useStyles = makeStyles({
   root: {
     flexGrow: 1,
@@ -22,11 +23,35 @@ const Container = styled.div`
   min-height: 700px;
 `;
 
-const DashBoard = ({ bu }) => {
+const DashBoard = ({bu}) => {
+
   const classes = useStyles();
   const [data, setData] = useState([]);
   const [incidentCauseData, setIncidentCauseData] = useState([]);
   const [componentsLoading, setComponentsLoading] = useState(false);
+  const [ searchParams , setSearchParams ] = useSearchParams();
+  const [ ,setBu]=useContext(businessUnitContext);
+   useEffect(()=>{
+//     localStorage.setItem("access_token",searchParams.get("token"));
+//  localStorage.setItem("refresh_token",searchParams.get("token"));
+//  axiosInstance.defaults.headers["Authorization"]="Bearer "+localStorage.getItem("access_token");
+ 
+      callProfileApis();
+  },[])
+  const callProfileApis=async()=>{
+  try{
+    const userResponse= await api.getUserProfile();
+    const businessUnit= userResponse?.data?.Profile?.last_businessiunit_name; 
+    setBu( userResponse?.data?.Profile?.last_businessiunit_name)
+  localStorage.setItem("Privileges",userResponse?.data?.Privileges)
+  localStorage.setItem("Profile",JSON.stringify(userResponse?.data?.Profile))
+  localStorage.setItem("BU",businessUnit)
+   localStorage.setItem("user",userResponse?.data?.Profile?.email)
+  }catch(e)
+  {
+
+  }
+  }
   useEffect(() => {
     setComponentsLoading(true);
     getComponents();
@@ -68,8 +93,8 @@ const DashBoard = ({ bu }) => {
             bu={bu}
             incidentCauseData={incidentCauseData}
           />
-        </Container>
-        {/* <Outlet /> */}
+        </Container> 
+        <Outlet />
       </div>
     </>
   );

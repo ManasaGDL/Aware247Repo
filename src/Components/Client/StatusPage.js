@@ -56,14 +56,16 @@ const StatusPage = () => {
   const getComponentsList = async () => {
     try {
         setLoading(true)
+      
       const response = await clientApi.getComponentStatus(businessunit);
+    
       setComponentList(response?.data);
       if(response.data.length === 0)
       {
         alert("check whether Businessunit is valid or not!")
       }
     } catch (e) {
-      
+      console.log("error",e)
     } finally{
         setLoading(false)
     }

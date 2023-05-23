@@ -1,18 +1,19 @@
-import React, { useState , useEffect,useRef} from "react";
+import React, { useState , useEffect,useRef , useContext} from "react";
 import { AppBar,Toolbar,Typography ,Grid} from "@mui/material"
 import { makeStyles } from "@material-ui/core/styles";
 import companylogo from "../assets/data_axle.PNG"
 import bgLogo from "../assets/body_bg.png"
 import Button from "@mui/material/Button";
 import FormLabel from "@mui/material/FormLabel";
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useSearchParams } from "react-router-dom"
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import IconButton from "@mui/material/IconButton";
 import api from "../Api";
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import { display } from "@mui/system";
-
+import { axiosInstance } from "../axios";
+import businessUnitContext from "../context/businessUnitContext";
 
 const useStyles = makeStyles( theme =>({
  
@@ -41,13 +42,26 @@ const Header=({user,setDynamicSideBarData,businessunit})=>{
   const [selectedBU,setSelectedBU] =useState(localStorage.getItem("BU"))
   const [anchor,setAnchor] =useState(null)
   const open = Boolean(anchor)
-const [businessUnit,setBusinessUnit]=useState(localStorage.getItem("BU"))
- const prevBU = useRef();
-  useEffect(()=>{
- 
+  const [ searchParams , setSearchParams] = useSearchParams();
+  const prevBU = useRef();
+   const [ bu , setBu]= useContext(businessUnitContext);
+useEffect(()=>{
+  if(searchParams.get("token"))
+  {
+   
+  localStorage.setItem("access_token",searchParams.get("token"));
+  localStorage.setItem("refresh_token",searchParams.get("token"));
+  
+  axiosInstance.defaults.headers["Authorization"]="Bearer "+localStorage.getItem("access_token");
+  axiosInstance.defaults.headers["businessunit"]=localStorage.getItem("BU");
+  
+  }
+  callBusinessUnits();
+},[])
+
     const callBusinessUnits=async()=>{
    try{
-
+   
      const response= await api.getBusinessUnits();
     setBusinessunitdata(response?.data?.BusinessUnits)
    }catch(e)
@@ -55,8 +69,8 @@ const [businessUnit,setBusinessUnit]=useState(localStorage.getItem("BU"))
 
    }
     }
-    callBusinessUnits();
-  },[])
+    // callBusinessUnits();
+
   
   useEffect(()=>{
  
@@ -65,7 +79,7 @@ const [businessUnit,setBusinessUnit]=useState(localStorage.getItem("BU"))
    const res =await  api.getSideBarData()
    const user= JSON.parse(localStorage.getItem('Profile'))
   const last_login_BU = (localStorage.getItem('BU'))
- 
+
    const switchUserApi = await api.switchBusinessUnit(user.user_id,{"last_businessiunit_name":last_login_BU});
    setDynamicSideBarData(res?.data)
     }catch(e)
@@ -74,7 +88,7 @@ const [businessUnit,setBusinessUnit]=useState(localStorage.getItem("BU"))
     }
    }
   callSideBarAPI()
-  },[selectedBU])
+  },[selectedBU,bu])
   const handleChange =(e) =>{
    
     setAnchor(e.currentTarget)
