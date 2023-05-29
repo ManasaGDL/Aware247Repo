@@ -54,9 +54,13 @@ body{
   font-weight: 700;
   font-size:medium;
 }
+.inciddent-link{
+  font-size: 10px;
+}
 .incident-link:hover{
-  color: #2DCDDF;
-  font-weight: 100;
+  color:#2DCDDF;
+
+  /* font-weight: 100; */
 }
 .editor-class {
   background-color:white;

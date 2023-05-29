@@ -35,6 +35,7 @@ import LinearProgress from "@mui/material/LinearProgress";
 import statuses from "../DashBoard/statuses";
 import LoadingPanel from "../common/TabPanel/LoadingPanel";
 
+
 const getInitialState = (defaultValue) => {
   if (defaultValue) {
     const blocksFromHtml = htmlToDraft(defaultValue);
@@ -502,9 +503,15 @@ const EditIncident = ({ bu }) => {
   };
   return (
     <div style={{ textAlign: "left" }}>
-      {/* <Paper sx={{ mr: 4, ml: 2, mt: 4, mb: 4 }} elevation={3}> */}
-
-      <Stack
+    <Box sx= {{ width : "100%" ,margin:'0 auto' , height:"auto" , textAlign:"left"}}>
+    <Backdrop
+            sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+            open={loading}
+          >
+            <LoadingPanel></LoadingPanel>
+          </Backdrop>
+{componentsData?.length===0 && loading===false?<h5 style={{ paddingLeft:20}}>No Components. Incident cannot be created</h5>:
+     <> <Stack
         direction="row"
         justifyContent="space-between"
         alignItems="center"
@@ -555,17 +562,8 @@ const EditIncident = ({ bu }) => {
       </Stack>
       {
         <Box sx={{ pl: 3, pt: 2, pr: 3, mt: 0, backgroundColor: "white" }}>
-          <Backdrop
-            sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-            open={loading}
-          >
-            <LoadingPanel></LoadingPanel>
-          </Backdrop>
-          {/* <CustomDialogs open ={openCustomDialog.open} message={openCustomDialog.message}
-                title={openCustomDialog.title} setOpenCustomDialog={setOpenCustomDialog} 
-                handleConfirmation={handleConfirmation}
-                />
-                */}
+          
+       
           <FormControl fullWidth>
             <Box>
               <TextField
@@ -1228,8 +1226,8 @@ const EditIncident = ({ bu }) => {
           </div>
         </Box>
       }
-      <br />
-      {/* </Paper> */}
+      <br /></>}
+      </Box>
     </div>
   );
 };

@@ -28,14 +28,16 @@ export default ({ labels,showLink,isSubComponent,id,bu,incidentId,isDashboardPag
     alignItems="center"
     justifyContent="center" 
          >
-     <Grid item md ={isSubComponent?5:4} 
+     <Grid item
+      md ={isSubComponent?5:4} 
+      sm={7}
      >
     <Status colour={status?.colour} backgroundColour={status?.backgroundColour}>
       {labels} 
     </Status>
     </Grid>
-  {showLink && <Grid item md={7} textAlign="center"> 
-       {incidentId && <div style={{paddingLeft: isSubComponent?'':'55px'}}>{status?.name!=="Operational" && <Link className="incident-link" href={`/admin/create_incident/edit/${incidentId}`}>Due to Incident {incidentId}</Link>}
+  {showLink && <Grid item md={7} sm={5} textAlign="center" > 
+       {incidentId && <div style={{paddingLeft: isSubComponent?'':'55px'}}>{status?.name!=="Operational" && <Link sx={{fontSize:"14px"}} className="incident-link" href={`/admin/create_incident/edit/${incidentId}`}>#Incident : {incidentId}</Link>}
        </div>}
     </Grid>}
    

@@ -1,5 +1,5 @@
 import React, { useState , useEffect,useRef , useContext} from "react";
-import { AppBar,Toolbar,Typography ,Grid} from "@mui/material"
+import { AppBar,Toolbar,Typography ,Grid, TextField } from "@mui/material"
 import { makeStyles } from "@material-ui/core/styles";
 import companylogo from "../assets/data_axle.PNG"
 import bgLogo from "../assets/body_bg.png"
@@ -10,11 +10,15 @@ import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import IconButton from "@mui/material/IconButton";
 import api from "../Api";
+import Box from "@mui/material/Box";
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import { display } from "@mui/system";
 import { axiosInstance } from "../axios";
 import businessUnitContext from "../context/businessUnitContext";
-
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
 const useStyles = makeStyles( theme =>({
  
     header: {
@@ -44,7 +48,9 @@ const Header=({user,setDynamicSideBarData,businessunit})=>{
   const open = Boolean(anchor)
   const [ searchParams , setSearchParams] = useSearchParams();
   const prevBU = useRef();
-   const [ bu , setBu]= useContext(businessUnitContext);
+  const [ bu , setBu]= useContext(businessUnitContext);
+  const [ openDialog , setOpenDialog]= useState(false);
+  const [ newbusinessunit , setNewBusinessUnit] = useState('')
 useEffect(()=>{
   if(searchParams.get("token"))
   {
@@ -63,6 +69,7 @@ useEffect(()=>{
    try{
    
      const response= await api.getBusinessUnits();
+     response.data?.BusinessUnits.push("Add Business Unit")
     setBusinessunitdata(response?.data?.BusinessUnits)
    }catch(e)
    {
@@ -96,15 +103,28 @@ useEffect(()=>{
   }
   const handleClose=(e)=>{ 
    
-   if(e.target.innerText)
-   {
+   if(e.target.innerText && e.target.innerText!=="Add Business Unit")
+   { 
     prevBU.current = e.target.innerText
     setSelectedBU(e.target.innerText)
     businessunit(e.target.innerText)
     localStorage.setItem("BU",e.target.innerText)
    }
- 
+ else{
+ setOpenDialog(true)
+ }
     setAnchor(null)
+  }
+  const  createBussinessUnit=async()=>{
+  try{
+   alert(newbusinessunit)
+   setOpenDialog(false)
+   setNewBusinessUnit('')
+  }catch(e)
+  {
+
+  }
+
   }
     return <>
     <AppBar className={classes.header}> 
@@ -144,6 +164,28 @@ useEffect(()=>{
         <div><Button variant="contained" sx={{color:"white",mr:3,fontWeight:"bold"}} onClick={()=>navigate("/admin/create_incident")}>Create Incident</Button></div>
        
        </Toolbar > 
+       <Dialog open={openDialog} onClose={()=>setOpenDialog(false)
+      }>
+        <DialogTitle>Add Business Unit</DialogTitle>
+        <DialogContent style={{ height: "80px" ,width:"300px"}}>
+         <Box  sx={{ textAlign: "center", margin: 2 }}>
+          <TextField name="new_bussinessunit" fullWidth
+          label="BussinessUnit"
+          value={newbusinessunit}
+          onChange={(e)=>setNewBusinessUnit(e.target.value)}></TextField>
+          </Box>
+        </DialogContent>
+        <DialogActions>
+<Button variant="contained"
+              type="submit"
+              sx={{ color: "white" , fontWeight:"600" }}
+              onClick={()=>{
+                createBussinessUnit();
+              }}>
+Add BusinessUnit
+</Button>
+        </DialogActions>
+       </Dialog>
          </AppBar> 
 
         </>

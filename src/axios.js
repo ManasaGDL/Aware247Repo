@@ -2,7 +2,7 @@ import axios from "axios";
 import React from "react";
 import api from "./Api";
 
- //export const baseURL = "http://18.118.80.163:29170";
+// export const baseURL = "http://18.118.80.163:29170";
 // export const baseURL = "http://127.0.0.1:8000";
 export const baseURL = "";
 
@@ -33,10 +33,9 @@ axiosInstance.interceptors.request.use(async config=>{
         
           await axios.post(`${baseURL}/jwt_refresh`,{token:localStorage.getItem("access_token")}
           ).then(res=>{
-              console.log("new token",res?.data.token);
               localStorage.setItem("access_token",res?.data?.token)
               config.headers  ={'Authorization': `Bearer ${res?.data.token}`, "Content-Type": "application/json",
-              accept: "application/json",}        
+              accept: "application/json",'bussinessunit':localStorage.getItem('BU')}        
                }).catch((error) => {
                if(error.response.status === 401||error.response.status === 400)
                {
@@ -45,8 +44,7 @@ axiosInstance.interceptors.request.use(async config=>{
                 window.location.href = "/admin/login/";
                  return Promise.reject(error);
                }
-              // console.log(error);
-              // throw error;
+            
             });
             
           }

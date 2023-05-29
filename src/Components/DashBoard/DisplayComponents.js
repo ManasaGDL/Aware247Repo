@@ -11,10 +11,12 @@ const DisplayComponents = ({ data , bu , incidentCauseData }) => {
             {comp.has_subgroup ? (
               <div
                 style={{
+                  maxWidth:"1300px",
                   backgroundColor: `#f7f8f9`,
-                  padding: `8px 16px`,
-                  borderRadius: `3px`,
-                  marginBottom: "8px",
+                  // padding:`8px 10px`,
+                  // padding: `8px 16px`,
+                  // borderRadius: `3px`,
+                  // marginBottom: "8px",
                 }}
               >
                 <Component component={comp.component_name} status="" showLink={false} bu={bu} />

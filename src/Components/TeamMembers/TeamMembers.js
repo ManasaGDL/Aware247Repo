@@ -66,13 +66,13 @@ const TeamMembers = () => {
             sx={{ height: 50, marginRight: 2 }}
           >
             <h5 style={{ paddingTop: 20, marginLeft: 20 }}>Team Members</h5>
-            <StyledButton
+            {/* <StyledButton
               variant="contained"
            
             >
               {" "}
               + Add A Team Member
-            </StyledButton>{" "}
+            </StyledButton>{" "} */}
           </Stack>
           <Container sx={{ paddingTop: 2, paddingBottom: 4 }}>
             <DataGrid

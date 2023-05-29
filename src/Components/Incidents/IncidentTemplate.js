@@ -193,7 +193,7 @@ const IncidentTemplate = () => {
           variant="contained"
           onClick={() => setOpenDialog({ open: true })}
         >
-          + New Incident Template
+          + Incident Template
         </StyledButton>{" "}
       </Stack>
       <Dialog

@@ -121,7 +121,7 @@ return axiosInstance.get(`${baseURL}/api/common/scheduled_maintanence/activity_l
       return axiosInstance.delete(`${baseURL}/api/common/incident_template/${id}/inc_temp_del/`)
      },
      updateTemplate:(id , payload)=>{
-      return axiosInstance.put(`${baseURL}/api/common/incident_template/${id}/`,payload)
+      return axiosInstance.put(`${baseURL}/api/common/incident_template/${id}/`,payload);
      },
      getTemplateDetails:(id)=>{
       return axiosInstance.get(`${baseURL}/api/common/incident_template/${id}/`)
@@ -129,5 +129,19 @@ return axiosInstance.get(`${baseURL}/api/common/scheduled_maintanence/activity_l
      getSeverityList:()=>{
       return axiosInstance.get(`${baseURL}/api/common/incidents/impact_list`)
      }
+     ,
+     getBusinessUnit_Security:()=>{
+      return axiosInstance.get(`${baseURL}/api/common/businessunit/`)
+     },
+     createNewBusinessUnit:(payload)=>{
+      return axiosInstance.post(`${baseURL}/api/common/businessunit/`,payload);
+     },
+     updateBusinessUnit:(id,payload)=>{//update and deactivate
+      return axiosInstance.patch(`${baseURL}/api/common/businessunit/${id}/inactive_businessunit/`,payload)
+     },
+     deleteBusinessUnit:(id)=>{
+      return axiosInstance.delete(`${baseURL}/api/common/businessunit/${id}`)
+     }
+     
 }
 export default api;

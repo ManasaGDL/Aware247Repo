@@ -82,7 +82,7 @@ const ViewIncidentWithDropDown = ({ bu }) => {
           showInMenu
         />,
         <GridActionsCellItem
-          label="View Incident"
+          label="Update Incident"
           onClick={() => handleViewIncident(params.id)}
           showInMenu
         />,

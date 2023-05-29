@@ -18,7 +18,7 @@ const Menuitem = styled(MenuItem)`
   background-color: ${(props) => (props.bg === "active" ? "#80daeb" : "")};
 `;
 
-const SidebarComponent = ({ handleCollapse, dynamicSideBarData }) => {
+const SidebarComponent = ({ handleCollapse, dynamicSideBarData ,collapse=false}) => {
   const [innerWidth, setInnerWidth] = useState({ width: window.innerWidth });
   const [position, setPosition] = useState("fixed");
   const { collapseSidebar, collapsed } = useProSidebar();
@@ -26,15 +26,24 @@ const SidebarComponent = ({ handleCollapse, dynamicSideBarData }) => {
   // const [toggled, setToggled] = useState(false)
 
   const location = useLocation();
+
   const setWidth = () => {
     setInnerWidth({ width: window.innerWidth });
   };
 
   useEffect(() => {
     window.addEventListener("resize", setWidth);
-
-    if (innerWidth.width < 1150) {
+    if(innerWidth.width<1050)
+    {
+      collapseSidebar(true)
+      // handleCollapse(true)
+    }
+    else {collapseSidebar(false)
+      // handleCollapse(false)
+    }
+    if (innerWidth.width < 600) {
       setPosition("static");
+     collapseSidebar(false)
       handleCollapse(true);
     } else setPosition("fixed");
     return () => {
@@ -91,8 +100,8 @@ const SidebarComponent = ({ handleCollapse, dynamicSideBarData }) => {
                 )
               }
               onClick={() => {
-                collapseSidebar();
-                handleCollapse(collapsed);
+                collapseSidebar();               
+                handleCollapse(collapsed , innerWidth.width);
               }}
             ></MenuItem>
             {sidebardata.map((item) => {

@@ -24,17 +24,6 @@ function App(props) {
  useEffect(()=>{
 document.title = "Status App"
  },[])
-//   useEffect(async()=>{
-
-//   const timer = setInterval(async() => {
-//     const res= await api.getToken();
-//     console.log(res)
-//     localStorage.setItem("access_token",res?.data?.token)
-//     console.log("RES",res?.data)
-//   },1200000);
-//   return () => clearInterval(timer);
-//  },[])
-
 
   return (
     <div className="App">

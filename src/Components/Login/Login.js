@@ -58,8 +58,7 @@ export default function Login(props) {
       delete axiosInstance.defaults.headers["Authorization"];
    const response = await axiosInstance.get("http://18.118.80.163:29170/admin/login/") ;
    if(response?.status === 200)
-   {
-    console.log(response?.data?.redirect_url)
+   {  
     window.location.replace(response?.data?.redirect_url)
    }
     }catch(e)

@@ -24,14 +24,26 @@ import CreateScheduleMaintenance from "../Components/Incidents/CreateScheduleMai
 import ViewScheduleMaintenance from "../Components/Incidents/ViewScheduleMaintenance";
 import { Dashboard } from "@mui/icons-material";
 import Login from "../Components/Login/Login";
+import Security from "../Components/Security/Security";
 // import "./containerStyles
 const Container = ({ user }) => {
     const [collapse, setCollapse] = useState(false)
     const [dynamicSideBarData, setDynamicSideBarData] = useState([])
     const [loading,setLoading] = useState(false)
+    const [ containerWidth , setContainerWidth]= useState({width:window.innerWidth})
     const [bu, setBu] = useState(localStorage.getItem("BU"))//passing BU to components 
+    useEffect(()=>{
+        const handleResize=()=>{
+            setContainerWidth({width:window.innerWidth})
+        }
+   window.addEventListener("resize",handleResize)
+   return ()=>{
+    window.removeEventListener("resize",handleResize)
+   }
+    },[])
+
     const handleCollapse = (collapse) => {
-       
+    
         setCollapse(!collapse)
     }
   
@@ -52,21 +64,27 @@ const Container = ({ user }) => {
             </div>
         </section>
         <section >
-{/*         
-            // localStorage.getItem('BU') */}
         
-           { <Grid container sx={{ height: '100vh' }} spacing={2}>
-                <Grid item md={collapse ? 1 : 2} xs={12}>
-                    <SidebarComponent width={window.innerWidth} handleCollapse={handleCollapse} setLoading={setLoading} dynamicSideBarData={dynamicSideBarData}></SidebarComponent>
+           { <Grid container sx={{ height: '100vh' }} spacing={1}>
+                <Grid item 
+                 md={collapse ? 1 : 2}
+                 sm={collapse?1:2}
+                 xs={12}
+                >
+                    <SidebarComponent width={window.innerWidth} handleCollapse={handleCollapse} setLoading={setLoading} collapse={collapse} dynamicSideBarData={dynamicSideBarData}></SidebarComponent>
                 </Grid>
-                <Grid item md={collapse ? 11 : 10} xs={12}>
+                <Grid item 
+               sm={collapse?11:10}
+                 md={collapse ? 11 : 10}
+                 xs={12} 
+               >
                 <Paper sx={{mr: 4,ml:2 ,mt:4,mb:4, height:'auto'}} elevation={3}>
      <Box sx={{width:"100%",height:"100%"}}>
                     <Routes>
                         <Route path="/login/*" element={<Dashboard />}/>
                        
                         <Route path="admin" element={<Navigate to="dashboard"/>}/>
-                       
+                       <Route path="/admin/security" element={<Security/>}/>
                         <Route path="admin/dashboard" element={<DashBoard bu={bu}/>} />
                         <Route path="/admin/teammembers" element={<TeamMembers/>}/>
                         <Route path="/admin/viewScheduleMaintenance/:id" element={<ViewScheduleMaintenance/>}/>

@@ -5,6 +5,7 @@ import { Grid } from "@mui/material";
 const Component = styled.div`
   background-color: #f7f8f9;
   padding: 8px 16px;
+ padding-left:30px;
   border-radius: 3px;
   //   justify-content: space-between;
   align-items: left;
@@ -39,14 +40,20 @@ export default ({
 
   return (
     <>
-      <Component>
-        <Grid container textAlign={"left"} alignItems="center">
-          <Grid item md={3} sx={{ fontWeight: "bold", paddingLeft: "25px", fontWeight: "bold",
+     
+        <Grid container textAlign={"left"} alignItems="center" spacing={0}>
+      
+          <Grid item md={3} sx={{ fontWeight: "bold", padding:"8px 16px" ,fontWeight: "bold",
                             color: "rgb(101, 101, 101)",
-                            fontSize: "14px" }}>
+                            fontSize: "14px" }}
+                            sm={3}
+                            >
+                 <Component>           
             {component}
+            </Component> 
           </Grid>
-          <Grid item md={9}>
+          <Grid item md={9} sm={9}>
+          <Component>
             <Status isDashboardPage={true}
               labels={status}
               showLink={showLink}
@@ -55,9 +62,10 @@ export default ({
               id={id}
               incidentId={incident?.incident_id}
             />
+          </Component>
           </Grid>
+          
         </Grid>
-      </Component>
-    </>
+     </>
   );
 };
