@@ -85,7 +85,7 @@ const Container = ({ user }) => {
                        
                         <Route path="admin" element={<Navigate to="dashboard"/>}/>
                        <Route path="/admin/security" element={<Security/>}/>
-                        <Route path="admin/dashboard" element={<DashBoard bu={bu}/>} />
+                        <Route path="/admin/dashboard" element={<DashBoard bu={bu}/>} />
                         <Route path="/admin/teammembers" element={<TeamMembers/>}/>
                         <Route path="/admin/viewScheduleMaintenance/:id" element={<ViewScheduleMaintenance/>}/>
                         <Route path="/admin/scheduled/:action" element={<CreateScheduleMaintenance/>}/>

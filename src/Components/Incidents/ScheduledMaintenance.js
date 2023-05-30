@@ -141,8 +141,7 @@ const ScheduledMaintenance = () => {
           showInMenu
         />,
         <GridActionsCellItem
-          label="Delete"
-          icon={<RemoveCircleIcon />}
+          label="Delete"         
           onClick={() =>
             setOpenDeleteDialog({
               open: true,
