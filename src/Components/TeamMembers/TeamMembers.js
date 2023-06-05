@@ -88,7 +88,7 @@ setPageState(prev=>({
               pagination
               rowsPerPageOptions={[5, 10, 15, 20, 50,100]}
               pageSize={pageSize}
-              paginationMode="server"
+              // paginationMode="server"
             
               rowCount={totalRecords}
               onPageChange={e=>{   //     console.log("TM",e)

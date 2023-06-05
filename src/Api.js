@@ -134,7 +134,7 @@ return axiosInstance.post(`${baseURL}/auth/token/jwt_refresh`,{token:localStorag
      }
      ,
      getBusinessUnit_Security:(obj)=>{
-      return axiosInstance.get(`${baseURL}/api/common/businessunit/?limit=${obj.limit}&&offset=${obj.offset}`)
+      return axiosInstance.get(`${baseURL}/api/common/businessunit/`)
      },
      createNewBusinessUnit:(payload)=>{
       return axiosInstance.post(`${baseURL}/api/common/businessunit/`,payload);

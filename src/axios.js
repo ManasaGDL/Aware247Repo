@@ -1,7 +1,7 @@
 import axios from "axios";
-//export const baseURL = "http://18.118.80.163:29170";
+export const baseURL = "http://18.118.80.163:29170";
 // export const baseURL = "http://127.0.0.1:8000";
-export const baseURL = "";
+// export const baseURL = "";
 
 export const axiosInstance = axios.create({
   baseURL: baseURL,

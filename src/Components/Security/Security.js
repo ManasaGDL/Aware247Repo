@@ -17,32 +17,34 @@ import UpdateIcon from '@mui/icons-material/Update'
 import { styled } from '@material-ui/styles';
 import LockOpenRoundedIcon from '@mui/icons-material/LockOpenRounded';
 import CircularProgress from '@mui/material/CircularProgress';
-const initialPageState={ limit :10,offset:0};
+// const initialPageState={ limit :10,offset:0};
 const Security = ()=>{
     const [bu,setBu] = useContext(businessUnitContext);
     const [ data , setData] = useState([])
     const [ loading , setLoading] = useState(false)
     const [ openDialog , setOpenDialog]= useState({open:false});
-    const [ pageSize , setPageSize]= useState(10);
+    const [ pageSize , setPageSize]= useState(15);
     const [ openDeleteDialog , setOpenDeleteDialog] = useState({open:false});
+    const [ error , setError] = useState({businessunit_name:''})
     const [ businessunitvalue, setbusinessunitvalue] = useState('');//businessunit created/edited
-   const [ pageState , setPageState] = useState({...initialPageState});
+  //  const [ pageState , setPageState] = useState({...initialPageState});
    const [ records , setRecords ] = useState(0)
    const [ actionProgress , setActionProgress] = useState(false);
+
     useEffect(()=>{    
       setLoading(true)
-      getBusinessUnits(pageState);
-    },[bu,pageState.limit,pageState.offset])
-   useEffect(()=>{
-setPageState({...pageState,limit:pageSize})
-   },[pageSize])
-    const getBusinessUnits=async(obj)=>{
+      getBusinessUnits();
+    },[bu])
+  
+ useEffect(()=>{
+ },[])
+    const getBusinessUnits=async()=>{
      
         try{
-        const response = await api.getBusinessUnit_Security(obj);
+        const response = await api.getBusinessUnit_Security();
           setData(response?.data?.results);
           setLoading(false)
-          setRecords(response?.data?.count);
+          // setRecords(response?.data?.count);
         }catch(e)
         {
 
@@ -123,18 +125,21 @@ setPageState({...pageState,limit:pageSize})
    
       }
   
-   getBusinessUnits(pageState);
+   getBusinessUnits();
    setbusinessunitvalue('')
    setOpenDialog({open:false});
-window.location.reload(true);
+ window.location.reload(true);
  
       }catch(e)
       {
-
+       console.log()
+     if(e?.response?.data?.businessunit_name)
+     {
+      setError({businessunit_name:e?.response?.data?.businessunit_name[0]})
+     }
       }
     }
     const deleteBusinessUnit =async( )=>{
-
     
       try{
         if(openDeleteDialog.action==="Deactivate")
@@ -150,12 +155,14 @@ window.location.reload(true);
         {
           const response = await api.updateBusinessUnit(openDeleteDialog.id,{"is_active":1});
         }
-   getBusinessUnits(pageState);
+   getBusinessUnits();
    setOpenDeleteDialog({open:false,action:''})
-   window.location.reload(true);
+    window.location.reload(true);
       }catch(e)
       {
 
+      }finally{
+        setActionProgress(false)
       }
     }
     return <div className="pages">
@@ -164,14 +171,13 @@ window.location.reload(true);
             justifyContent="space-between"
             alignItems="center"
             spacing={12}
-            sx={{ height: 50, marginRight: 2 }}
-      
+            sx={{ height: 50, marginRight: 2 }}      
         >
              <h5 style={{ paddingTop: 20, marginLeft: 20 }}>View Business Units</h5>
           <StyledButton
             variant="contained"
            onClick={()=>{
-   setOpenDialog({open:true , action:"Add"})
+            setOpenDialog({open:true , action:"Add"})
            }}
           >
             {" "}
@@ -193,14 +199,16 @@ window.location.reload(true);
         pageSize={pageSize}
         rowsPerPageOptions={[5, 10,15, 20,50]}
         pagination
-       paginationMode='server'   
-         rowCount={records}
-         onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-            onPageChange={val=>{
+      //  paginationMode='server'   
+        //  rowCount={records}
+         onPageSizeChange={(newPageSize) =>{ 
+        
+          setPageSize(newPageSize)}}
+      //       onPageChange={val=>{
      
-      // //    return  setPageState(prev=>({...prev , offset:val*prev.limit}))
-       }
-           }
+      // // //    return  setPageState(prev=>({...prev , offset:val*prev.limit}))
+      //  }
+      //      }
          sx={{
             "&.MuiDataGrid-root .MuiDataGrid-cell:focus-within": {
               outline: "none !important",
@@ -217,7 +225,7 @@ window.location.reload(true);
 
         }}/>
         <AddEditBusinessUnit open={openDialog.open} openDialog={openDialog} setOpenDialog={setOpenDialog} createBusinessUnit={createBusinessUnit} businessunitvalue={businessunitvalue}
-        setbusinessunitvalue={setbusinessunitvalue}/>
+        setbusinessunitvalue={setbusinessunitvalue} error={error} setError={setError}/>
         <Dialog open={openDeleteDialog.open} onClose={()=>setOpenDeleteDialog({open:false})}>
           <DialogTitle>
             {openDeleteDialog.action} Business Unit
