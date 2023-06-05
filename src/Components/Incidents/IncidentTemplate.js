@@ -15,7 +15,7 @@ import UpdateIcon from "@mui/icons-material/Update";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 import { SnackbarContext } from "../../context/SnackbarContext";
 import CustomDialogs from "../common/Dialogs/CustomDialogs";
-
+const initialObj= { limit:10, offset:0}
 const IncidentTemplate = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [data, setData] = useState([]);
@@ -26,21 +26,26 @@ const IncidentTemplate = () => {
   const { setSnackBarConfig } = useContext(SnackbarContext);
   const [error, setError] = useState({});
   const navigate = useNavigate();
+  const [ totalRecords , setTotalRecords] = useState(0)
+  const [ pageState , setPageState]=useState({...initialObj})
   const [openDeleteDialog, setOpenDeleteDialog] = useState({
     open: false,
     id: "",
     type: "Template",
   });
   useEffect(() => {
-    listIncidentTemplates();
+    listIncidentTemplates(pageState);
     setLoading(true);
-  }, [bu]);
-
-  const listIncidentTemplates = async () => {
+  }, [bu,pageState.limit,pageState.offset]);
+  useEffect(()=>{
+    setPageState(prev=>({...prev,limit:pageSize}))
+      },[pageSize])
+  const listIncidentTemplates = async (obj) => {
     try {
-      const res = await api.getIncidentTemplates();
+      const res = await api.getIncidentTemplates(obj);
 
       setData(res?.data.results);
+      setTotalRecords(res?.data?.count);
       setLoading(false);
     } catch (e) {}
   };
@@ -137,7 +142,7 @@ const IncidentTemplate = () => {
 
       setTemplateObj({});
       setLoading(true);
-      listIncidentTemplates();
+      listIncidentTemplates(pageState);
     } catch (e) {
       setError(e.response.data);
     } finally {
@@ -163,7 +168,7 @@ const IncidentTemplate = () => {
       const res = await api.deleteTemplate(openDeleteDialog.id);
       navigate(`/admin/incidents`, { state: { tabValue: 2 } });
       setOpenDeleteDialog({ open: false });
-      listIncidentTemplates();
+      listIncidentTemplates(pageState);
       setSnackBarConfig({
         open: "true",
         message: "Template Deleted Successfully",
@@ -171,7 +176,7 @@ const IncidentTemplate = () => {
       });
     } catch (e) {
     } finally {
-      listIncidentTemplates();
+      listIncidentTemplates(pageState);
     }
   };
   return (
@@ -279,9 +284,9 @@ const IncidentTemplate = () => {
           </DialogActions>
         </form>
       </Dialog>
-
+{data.length===0 && <h5>No Templates</h5>}
       <Box sx={{ width: "95%", margin: "0 auto", height: 'auto'}}>
-        <DataGrid
+        {data.length>0 && <DataGrid
           columns={columns}
           rows={data}
           sx={{
@@ -295,14 +300,19 @@ const IncidentTemplate = () => {
               fontWeight: 600,
             },
           }}
+          rowCount={totalRecords}
+          paginationMode="server"
           autoHeight={true}
           rowHeight={40}
           pageSize={pageSize}
-          rowsPerPageOptions={[5, 10, 15, 20, 50]}
+          rowsPerPageOptions={[5, 10, 15, 20, 50,100]}
           pagination
           getRowId={(row) => row.template_id}
+          onPageChange={val=>{
+            setPageState(prev=>({...prev,offset:val*prev.limit}))
+          }}
           onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-        />
+        />}
       </Box>
       <CustomDialogs
         open={openDeleteDialog.open}

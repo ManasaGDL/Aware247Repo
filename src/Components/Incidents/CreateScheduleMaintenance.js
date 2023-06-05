@@ -10,6 +10,7 @@ import { StyledButton } from "../../CustomStyles/StyledComponents";
 import dayjs from "dayjs";
 import CustomDialogs from "../common/Dialogs/CustomDialogs";
 import api from "../../Api";
+import CircularProgress from "@mui/material/CircularProgress";
 import {
   Stack,
   Checkbox,
@@ -52,6 +53,8 @@ const CreateScheduleMaintenance = () => {
   const [responseerror, setresponseError] = useState({});
   const [dateError, setDateError] = useState();
   const [openCustomDialog, setOpenCustomDialog] = useState({ open: false });
+  const [ actionProgress, setActionProgress]= useState(false)
+ 
   const [initialObj, setInitialObj] = useState({
     name: "",
     message: "",
@@ -276,6 +279,10 @@ const CreateScheduleMaintenance = () => {
       navigate("/admin/incidents", { state: { tabValue: 1 } });
     } catch (e) {
       setresponseError(e.response.data);
+      if(e.response.status === 500)
+     setOpenCustomDialog({
+      open:true,message:"Something went wrong. Please contact admin"
+     })
       if (e.response?.data?.Error) {
         setOpenCustomDialog({
           open: true,
@@ -284,6 +291,7 @@ const CreateScheduleMaintenance = () => {
         });
       }
     } finally {
+      setActionProgress(false)
     }
   };
   const stayOnSamePage = () => {
@@ -323,9 +331,13 @@ const CreateScheduleMaintenance = () => {
       {action !=="create"&&<StyledButton
                 variant="contained"
                 onClick={() => {
+                  setActionProgress(true)
                   handleCreateUpdateSM();
+                 
                 }}
               >
+               {actionProgress && <CircularProgress  sx={{marginLeft:0,color:"white",fontWeight:10}} size={20}/>}
+              &nbsp;  &nbsp;
                 {  "Update "}
               </StyledButton>}
         </Stack>
@@ -610,9 +622,12 @@ const CreateScheduleMaintenance = () => {
               <StyledButton
                 variant="contained"
                 onClick={() => {
+                  setActionProgress(true)
                   handleCreateUpdateSM();
                 }}
               >
+                 {actionProgress && <CircularProgress  sx={{marginLeft:0,color:"white",fontWeight:10}} size={20}/>}
+              &nbsp;  &nbsp;
                 {action === "create" ? "Create " : "Update "}
               </StyledButton>
               </div>

@@ -1,7 +1,7 @@
 import axios from "axios";
 //export const baseURL = "http://18.118.80.163:29170";
 // export const baseURL = "http://127.0.0.1:8000";
- export const baseURL = "";
+export const baseURL = "";
 
 export const axiosInstance = axios.create({
   baseURL: baseURL,
@@ -28,11 +28,11 @@ axiosInstance.interceptors.request.use(async config=>{
           if((tokenParts.exp - now) < (10*60) && (tokenParts.exp - now >0))
           {
         
-          await axios.post(`${baseURL}/jwt_refresh`,{token:localStorage.getItem("access_token")}
+          await axios.post(`${baseURL}/auth/token/jwt_refresh`,{token:localStorage.getItem("access_token")}
           ).then(res=>{
               localStorage.setItem("access_token",res?.data?.token)
               config.headers  ={'Authorization': `Bearer ${res?.data.token}`, "Content-Type": "application/json",
-              accept: "application/json",'bussinessunit':localStorage.getItem('BU')}        
+              accept: "application/json",'businessunit':localStorage.getItem('BU')}        
                }).catch((error) => {
                if(error.response.status === 401||error.response.status === 400)
                {

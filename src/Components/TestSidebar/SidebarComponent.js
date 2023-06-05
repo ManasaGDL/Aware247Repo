@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { IconButton } from "@mui/material";
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai";
 import { Link, NavLink, useLocation } from "react-router-dom";
+import LoadingPanel from "../common/TabPanel/LoadingPanel";
+import Backdrop from "@mui/material/Backdrop";
 import {
   Sidebar,
   Menu,
@@ -18,10 +20,11 @@ const Menuitem = styled(MenuItem)`
   background-color: ${(props) => (props.bg === "active" ? "#80daeb" : "")};
 `;
 
-const SidebarComponent = ({ handleCollapse, dynamicSideBarData ,collapse=false}) => {
+const SidebarComponent = ({ handleCollapse, dynamicSideBarData ,loading,collapse=false}) => {
   const [innerWidth, setInnerWidth] = useState({ width: window.innerWidth });
   const [position, setPosition] = useState("fixed");
   const { collapseSidebar, collapsed } = useProSidebar();
+
 
   // const [toggled, setToggled] = useState(false)
 
@@ -56,6 +59,7 @@ const SidebarComponent = ({ handleCollapse, dynamicSideBarData ,collapse=false})
   };
 
   return (
+  
     <div
       style={
         ({ height: "100vh" },
@@ -67,8 +71,10 @@ const SidebarComponent = ({ handleCollapse, dynamicSideBarData ,collapse=false})
         })
       }
     >
+
       <Paper elevation={3}>
         <Sidebar width="210px" style={{ height: "100vh" }}>
+       
           <Menu
             menuItemStyles={{
               button: ({ level, active, disabled }) => {
@@ -86,6 +92,9 @@ const SidebarComponent = ({ handleCollapse, dynamicSideBarData ,collapse=false})
               },
             }}
           >
+             {/* <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={loading}>
+    <LoadingPanel></LoadingPanel>
+</Backdrop> */}
             <MenuItem
               style={{ textAlign: "center" }}
               icon={
@@ -104,6 +113,7 @@ const SidebarComponent = ({ handleCollapse, dynamicSideBarData ,collapse=false})
                 handleCollapse(collapsed , innerWidth.width);
               }}
             ></MenuItem>
+          
             {sidebardata.map((item) => {
               if (dynamicSideBarData.includes(item.title))
                 return (

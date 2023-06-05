@@ -1,7 +1,7 @@
 import React, { useMemo, useEffect, useState , useContext } from "react";
 import { useSearchParams } from "react-router-dom";
 import api from "../../Api";
-import { Outlet } from "react-router-dom";
+import { Outlet ,useOutletContext} from "react-router-dom";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import DisplayComponents from "./DisplayComponents";
@@ -31,6 +31,8 @@ const DashBoard = ({bu}) => {
   const [componentsLoading, setComponentsLoading] = useState(false);
   const [ searchParams , setSearchParams ] = useSearchParams();
   const [ ,setBu]=useContext(businessUnitContext);
+
+
    useEffect(()=>{
 //     localStorage.setItem("access_token",searchParams.get("token"));
 //  localStorage.setItem("refresh_token",searchParams.get("token"));

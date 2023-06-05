@@ -9,11 +9,14 @@ import UpdateIcon from '@mui/icons-material/Update';
 import businessUnitContext from "../../context/businessUnitContext";
 import CustomDeleteDialog from "../common/Dialogs/CustomDeleteDialog";
 import { SnackbarContext } from "../../context/SnackbarContext";
+const initialPageState ={ limit :10, offset:0}
 const SubscribersList =({name,handleRefresh})=>{
     const [ data , setData ] = useState([])
     const [ pageSize , setPageSize ] = useState(15)
-    const bu =  useContext(businessUnitContext)
-
+    const bu =  useContext(businessUnitContext) 
+    
+    const [ records , setRecords] = useState(0)
+    const [ pageState , setPageState]= useState({...initialPageState})
     const [openDeleteDialog, setOpenDeleteDialog] = useState({
       open: false,
       type: "",
@@ -72,15 +75,19 @@ const SubscribersList =({name,handleRefresh})=>{
     ]
     useEffect(() =>{
         if(name === "email")
-      getSubscribersList({ "email_delivery":1 });
+      getSubscribersList({ "email_delivery":1 },pageState);
       if(name === "sms")
-      getSubscribersList({"sms_delivery":1})
+      getSubscribersList({"sms_delivery":1},pageState)
 
-    },[name,bu])
-    const getSubscribersList = async(payload) =>{
+    },[name,bu,pageState.limit, pageState.offset])
+    useEffect(()=>{
+      setPageState(prev=>({...prev,limit:pageSize}))
+        },[pageSize])
+    const getSubscribersList = async(payload,obj) =>{
   try{
- const response = await api.getSubscribersList(payload)
+ const response = await api.getSubscribersList(payload,obj)
 setData(response?.data?.results)
+setRecords(response?.data?.count)
   }catch(e)
   {
 
@@ -92,7 +99,11 @@ setData(response?.data?.results)
           const res = await api.deleteSubscriber(data.id);
           const message = `${data.name} ${data.type} succesfully deleted`;
           if (res.status === 200){ 
-            getSubscribersList();
+            if(name === "email")
+            getSubscribersList({ "email_delivery":1 },pageState);
+            if(name === "sms")
+            getSubscribersList({"sms_delivery":1},pageState)
+            // getSubscribersList();
            
           }
           setSnackBarConfig({
@@ -118,7 +129,11 @@ setData(response?.data?.results)
         pageSize={pageSize}
         rowsPerPageOptions={[5, 10,15, 20,50]}
         pagination
+        paginationMode="server"
         rowHeight={40}
+        rowCount={records}
+        onPageChange={val=>
+          setPageState(prev=>({...prev,offset:val*prev.limit}))}
         onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
        sx={{
             "&.MuiDataGrid-root .MuiDataGrid-cell:focus-within": {

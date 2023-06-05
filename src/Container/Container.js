@@ -1,5 +1,5 @@
 import Header from "../Components/Header";
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect ,useContext} from "react"
 import { Grid } from "@mui/material";
 import DashBoard from "../Components/DashBoard/Dashboard";
 import { Route, Routes ,Navigate} from "react-router-dom";
@@ -16,7 +16,6 @@ import Box from "@mui/material/Box";
 import Component from "../Components/ComponentPage/Component";
 import businessUnitContext from "../context/businessUnitContext";
 import Subscribe from "../Components/Client/Subscribe"
-import { useContext } from "react";
 import { ProSidebarProvider } from "react-pro-sidebar";
 import UpdateSubscriber from "../Components/Subscribers/UpdateSubscriber";
 import TeamMembers from "../Components/TeamMembers/TeamMembers";
@@ -25,13 +24,17 @@ import ViewScheduleMaintenance from "../Components/Incidents/ViewScheduleMainten
 import { Dashboard } from "@mui/icons-material";
 import Login from "../Components/Login/Login";
 import Security from "../Components/Security/Security";
+import { Outlet } from "react-router-dom";
+
 // import "./containerStyles
-const Container = ({ user }) => {
+const Container = ({ user}) => {
     const [collapse, setCollapse] = useState(false)
     const [dynamicSideBarData, setDynamicSideBarData] = useState([])
     const [loading,setLoading] = useState(false)
     const [ containerWidth , setContainerWidth]= useState({width:window.innerWidth})
-    const [bu, setBu] = useState(localStorage.getItem("BU"))//passing BU to components 
+    const [bu,setBu]=useContext(businessUnitContext);
+   
+
     useEffect(()=>{
         const handleResize=()=>{
             setContainerWidth({width:window.innerWidth})
@@ -54,12 +57,12 @@ const Container = ({ user }) => {
 
     return <>   
      <ProSidebarProvider> 
-     <businessUnitContext.Provider value={[bu , setBu]}>     
+     {/* <businessUnitContext.Provider value={[bu , setBu]}>      */}
         <section>
         
             <div style={{ height: "60px" }}>
                 {/* pass sidebar data from Header to container to SidebarComponent  */}
-                <Header user={user} setDynamicSideBarData={setDynamicSideBarData} businessunit={setBu}></Header>
+                <Header user={user} setDynamicSideBarData={setDynamicSideBarData} setLoading={setLoading} loading={loading}businessunit={setBu} ></Header>
               
             </div>
         </section>
@@ -71,7 +74,7 @@ const Container = ({ user }) => {
                  sm={collapse?1:2}
                  xs={12}
                 >
-                    <SidebarComponent width={window.innerWidth} handleCollapse={handleCollapse} setLoading={setLoading} collapse={collapse} dynamicSideBarData={dynamicSideBarData}></SidebarComponent>
+                    <SidebarComponent width={window.innerWidth} handleCollapse={handleCollapse} setLoading={setLoading} collapse={collapse} loading={loading} dynamicSideBarData={dynamicSideBarData}></SidebarComponent>
                 </Grid>
                 <Grid item 
                sm={collapse?11:10}
@@ -80,27 +83,31 @@ const Container = ({ user }) => {
                >
                 <Paper sx={{mr: 4,ml:2 ,mt:4,mb:4, height:'auto'}} elevation={3}>
      <Box sx={{width:"100%",height:"100%"}}>
-                    <Routes>
-                        <Route path="/login/*" element={<Dashboard />}/>
+        <Outlet />
+                    {/* <Routes>
+                      <Route path="/login/*" element={<Dashboard />}/>
                        
-                        <Route path="admin" element={<Navigate to="dashboard"/>}/>
-                       <Route path="/admin/security" element={<Security/>}/>
-                        <Route path="/admin/dashboard" element={<DashBoard bu={bu}/>} />
-                        <Route path="/admin/teammembers" element={<TeamMembers/>}/>
-                        <Route path="/admin/viewScheduleMaintenance/:id" element={<ViewScheduleMaintenance/>}/>
-                        <Route path="/admin/scheduled/:action" element={<CreateScheduleMaintenance/>}/>
-                        <Route path="/admin/scheduled/:action/:id" element={<CreateScheduleMaintenance/>}/>
-                        <Route path="admin/create_incident" element={<MainActionPage bu={bu} />} />
-                        <Route path="admin/create_incident/:action/:id" element={<MainActionPage bu={bu}/>}/>
-                        <Route path="admin/incidents" element={<IncidentPage bu={bu} />} />
-                        <Route path="admin/subscribers/manage/:id" element={<UpdateSubscriber/>}/>
-                        <Route path="admin/subscribers/addSubscriber" element={<AddSubscriber/>}/>
-                        <Route path="admin/subscribers" element={<Subscribers />} />
-                        <Route path="admin/components" element ={<Component/>}/>
-                        {/* <Route path="*" element={<Navigate to="/login"/>}/> */}
-                        <Route path="*" element={<Navigate to="wrongurl"  />} />
-                        <Route path="wrongurl" element={<h3>URL does not exists.</h3>}/>
-                    </Routes>
+                         <Route path="admin" element={<Navigate to="dashboard"/>}/> 
+                      <Route path="admin">
+                       <Route path="security" element={<Security/>}/>
+                        <Route path="dashboard" element={<DashBoard bu={bu}/>} />
+                        <Route path="teammembers" element={<TeamMembers/>}/>
+                        <Route path="viewScheduleMaintenance/:id" element={<ViewScheduleMaintenance/>}/>
+                        <Route path="scheduled/:action" element={<CreateScheduleMaintenance/>}/>
+                        <Route path="scheduled/:action/:id" element={<CreateScheduleMaintenance/>}/>
+                        <Route path="create_incident" element={<MainActionPage bu={bu} />} />
+                        <Route path="create_incident/:action/:id" element={<MainActionPage bu={bu}/>}/>
+                        <Route path="incidents" element={<IncidentPage bu={bu} />} />
+                        <Route path="subscribers/manage/:id" element={<UpdateSubscriber/>}/>
+                        <Route path="subscribers/addSubscriber" element={<AddSubscriber/>}/>
+                        <Route path="subscribers" element={<Subscribers />} />
+                        <Route path="components" element ={<Component/>}/>
+                        </Route>
+                        <Route path="*" element={<Navigate to="/login"/>}/>
+                         <Route  element={<Navigate to="wrongurl"  />} />
+                        <Route path="wrongurl" element={<h3>URL does not exists.</h3>}/>  
+                        
+                    </Routes> */}
                     </Box>
                     </Paper>
                 </Grid>
@@ -110,7 +117,7 @@ const Container = ({ user }) => {
              
           
         </section>
-        </businessUnitContext.Provider>  
+        {/* </businessUnitContext.Provider>   */}
         </ProSidebarProvider>
     </>
 }

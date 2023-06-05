@@ -39,7 +39,7 @@ const useStyles = makeStyles( theme =>({
       },
     },
      }))
-const Header=({user,setDynamicSideBarData,businessunit})=>{
+const Header=({user,setDynamicSideBarData,businessunit,setLoading,loading})=>{
   const classes = useStyles();
   const navigate= useNavigate();
   const [businessunitdata,setBusinessunitdata]= useState([])
@@ -51,6 +51,7 @@ const Header=({user,setDynamicSideBarData,businessunit})=>{
   const [ bu , setBu]= useContext(businessUnitContext);
   const [ openDialog , setOpenDialog]= useState(false);
   const [ newbusinessunit , setNewBusinessUnit] = useState('')
+
 useEffect(()=>{
   if(searchParams.get("token"))
   {
@@ -68,19 +69,19 @@ useEffect(()=>{
     const callBusinessUnits=async()=>{
    try{
    
-     const response= await api.getBusinessUnits();
-     response.data?.BusinessUnits.push("Add Business Unit")
+     const response= await api.getBusinessUnits();  
     setBusinessunitdata(response?.data?.BusinessUnits)
+
    }catch(e)
    {
 
    }
     }
-    // callBusinessUnits();
+
 
   
   useEffect(()=>{
- 
+setLoading(true)
    const callSideBarAPI = async()=>{
     try{
    const res =await  api.getSideBarData()
@@ -88,7 +89,8 @@ useEffect(()=>{
   const last_login_BU = (localStorage.getItem('BU'))
 
    const switchUserApi = await api.switchBusinessUnit(user.user_id,{"last_businessiunit_name":last_login_BU});
-   setDynamicSideBarData(res?.data)
+   setDynamicSideBarData(res?.data);
+   setLoading(false);
     }catch(e)
     {
 
@@ -103,7 +105,7 @@ useEffect(()=>{
   }
   const handleClose=(e)=>{ 
    
-   if(e.target.innerText && e.target.innerText!=="Add Business Unit")
+   if(e.target.innerText )
    { 
     prevBU.current = e.target.innerText
     setSelectedBU(e.target.innerText)
@@ -117,7 +119,7 @@ useEffect(()=>{
   }
   const  createBussinessUnit=async()=>{
   try{
-   alert(newbusinessunit)
+
    setOpenDialog(false)
    setNewBusinessUnit('')
   }catch(e)
@@ -164,28 +166,7 @@ useEffect(()=>{
         <div><Button variant="contained" sx={{color:"white",mr:3,fontWeight:"bold"}} onClick={()=>navigate("/admin/create_incident")}>Create Incident</Button></div>
        
        </Toolbar > 
-       <Dialog open={openDialog} onClose={()=>setOpenDialog(false)
-      }>
-        <DialogTitle>Add Business Unit</DialogTitle>
-        <DialogContent style={{ height: "80px" ,width:"300px"}}>
-         <Box  sx={{ textAlign: "center", margin: 2 }}>
-          <TextField name="new_bussinessunit" fullWidth
-          label="BussinessUnit"
-          value={newbusinessunit}
-          onChange={(e)=>setNewBusinessUnit(e.target.value)}></TextField>
-          </Box>
-        </DialogContent>
-        <DialogActions>
-<Button variant="contained"
-              type="submit"
-              sx={{ color: "white" , fontWeight:"600" }}
-              onClick={()=>{
-                createBussinessUnit();
-              }}>
-Add BusinessUnit
-</Button>
-        </DialogActions>
-       </Dialog>
+  
          </AppBar> 
 
         </>

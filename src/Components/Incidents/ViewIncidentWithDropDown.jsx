@@ -15,16 +15,18 @@ import DialogTitle from '@mui/material/DialogTitle'
 import { SnackbarContext } from "../../context/SnackbarContext";
 import Backdrop from "@mui/material/Backdrop";
 
-const ViewIncidentWithDropDown = ({ bu }) => {
+const initialObj={limit:10,offset:0}
+const ViewIncidentWithDropDown = ({bu}) => {
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(false)
   const [selectedRow, setSelectedRow] = useState({})
   const [openDialog, setOpenDialog] = useState({ flag: false, value: '' })
   const [openDeleteDialog, setOpenDeleteDialog] = useState({ flag: false, value: '' })
   const [text, setText] = useState("")
-  const [ pageSize , setPageSize] = useState(15)
-  const { setSnackBarConfig } = useContext(SnackbarContext)
-
+  const [ pageSize , setPageSize] = useState(50)
+  const { setSnackBarConfig } = useContext(SnackbarContext);
+  const [ totalRecords , setTotalRecords] = useState(0)
+const [ pageState, setPageState]= useState({...initialObj})
   const navigate = useNavigate();
 
   const columns = [
@@ -109,21 +111,24 @@ const ViewIncidentWithDropDown = ({ bu }) => {
   }
 
   useEffect(() => {
-
-    const getIncidents = async () => {
-      try {
-        setLoading(true)
-        const res = await api.viewIncidents();
-        setData(res?.data?.results)
-        setLoading(false)
-      }
-      catch (e) {
-        console.log(e)
-      }
+  
+    getIncidents(pageState);
+  }, [bu,pageState.limit,pageState.offset])
+  useEffect(()=>{
+setPageState(prev=>({...prev,limit:pageSize}))
+  },[pageSize])
+  const getIncidents = async (obj) => {
+    try {
+      setLoading(true)
+      const res = await api.viewIncidents(obj);
+      setData(res?.data?.results)
+      setTotalRecords(res?.data?.count)
+      setLoading(false)
     }
-    getIncidents();
-  }, [bu])
-
+    catch (e) {
+      console.log(e)
+    }
+  }
   const handleRowClick = (e) => {
     setSelectedRow(e)
   }
@@ -136,7 +141,7 @@ const ViewIncidentWithDropDown = ({ bu }) => {
       // window.location.reload() && loading && <LoadingPanel />
       setSnackBarConfig({ open: "true", message: "Incident Deleted Successfully", severity: "success" })
       setLoading(true)
-     let res2 = await api.viewIncidents();
+     let res2 = await api.viewIncidents(pageState);
      setData(res2?.data?.results)
      res2 && setLoading(false)
     } catch (e) {
@@ -178,6 +183,7 @@ const ViewIncidentWithDropDown = ({ bu }) => {
 
   return <><div className="pages" >
    <div >
+   {data.length===0 && <h5>No Incidents</h5>} 
    <Backdrop 
     sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
      open={loading}>
@@ -187,13 +193,20 @@ const ViewIncidentWithDropDown = ({ bu }) => {
     <Box 
     // sx={{ height: 700, width: '100%' }}
     sx={{ height: "auto" }}
-    >    
+    >   
+  
       {data.length > 0 ? <DataGrid rows={data} columns={columns} 
         rowHeight={45}
         autoHeight={true}
         pageSize={pageSize}
         rowsPerPageOptions={[5, 10,15, 20,50]}
         pagination
+        rowCount={totalRecords}
+       paginationMode="server"
+        onPageChange={e=>{
+       console.log("in VDP",e)
+        setPageState(prev=>({...prev,offset:(e*prev.limit)}))
+        }}
         onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
         onRowClick={handleRowClick}
         sx={{

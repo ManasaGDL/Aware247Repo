@@ -1,5 +1,5 @@
-import { useState, useEffect , useContext} from 'react';
-import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid'
+import { useState, useEffect , useContext} from 'react';//paginationMode && styled
+import { DataGrid, GridActionsCellItem} from '@mui/x-data-grid'
 import api from '../../Api';
 import businessUnitContext from '../../context/businessUnitContext';
 import dayjs from 'dayjs';
@@ -16,23 +16,33 @@ import HideSourceIcon from '@mui/icons-material/HideSource';
 import UpdateIcon from '@mui/icons-material/Update'
 import { styled } from '@material-ui/styles';
 import LockOpenRoundedIcon from '@mui/icons-material/LockOpenRounded';
+import CircularProgress from '@mui/material/CircularProgress';
+const initialPageState={ limit :10,offset:0};
 const Security = ()=>{
-    const {bu} = useContext(businessUnitContext);
+    const [bu,setBu] = useContext(businessUnitContext);
     const [ data , setData] = useState([])
     const [ loading , setLoading] = useState(false)
     const [ openDialog , setOpenDialog]= useState({open:false});
-    const [ pageSize , setPageSize]= useState(15);
+    const [ pageSize , setPageSize]= useState(10);
     const [ openDeleteDialog , setOpenDeleteDialog] = useState({open:false});
     const [ businessunitvalue, setbusinessunitvalue] = useState('');//businessunit created/edited
-    useEffect(()=>{
+   const [ pageState , setPageState] = useState({...initialPageState});
+   const [ records , setRecords ] = useState(0)
+   const [ actionProgress , setActionProgress] = useState(false);
+    useEffect(()=>{    
       setLoading(true)
-      getBusinessUnits();
-    },[bu])
-    const getBusinessUnits=async()=>{
+      getBusinessUnits(pageState);
+    },[bu,pageState.limit,pageState.offset])
+   useEffect(()=>{
+setPageState({...pageState,limit:pageSize})
+   },[pageSize])
+    const getBusinessUnits=async(obj)=>{
+     
         try{
-        const response = await api.getBusinessUnit_Security();
+        const response = await api.getBusinessUnit_Security(obj);
           setData(response?.data?.results);
           setLoading(false)
+          setRecords(response?.data?.count);
         }catch(e)
         {
 
@@ -82,7 +92,8 @@ const Security = ()=>{
                 icon={params.row.is_active===true?<HideSourceIcon/>:<LockOpenRoundedIcon/> }
                 onClick={()=>{
                   setOpenDeleteDialog({open:true, id:params.row.businessunit_id, name:params.row.businessunit_name,action:params.row.is_active===true?"Deactivate":"Activate"
-                  });
+                  
+                });
                 }}
                 showInMenu/>,
                 <GridActionsCellItem label="Delete BusinessUnit"
@@ -109,10 +120,13 @@ const Security = ()=>{
       }
       else{
     const response = await api.updateBusinessUnit(openDialog.id,{"businessunit_name":val})
+   
       }
-   getBusinessUnits();
+  
+   getBusinessUnits(pageState);
    setbusinessunitvalue('')
    setOpenDialog({open:false});
+window.location.reload(true);
  
       }catch(e)
       {
@@ -120,6 +134,8 @@ const Security = ()=>{
       }
     }
     const deleteBusinessUnit =async( )=>{
+
+    
       try{
         if(openDeleteDialog.action==="Deactivate")
         {
@@ -127,14 +143,16 @@ const Security = ()=>{
         }
         if(openDeleteDialog.action==="Delete")
         {
+     
           const response = await api.deleteBusinessUnit(openDeleteDialog.id)
         }
         if(openDeleteDialog.action==="Activate")
         {
           const response = await api.updateBusinessUnit(openDeleteDialog.id,{"is_active":1});
         }
-   getBusinessUnits();
-   setOpenDeleteDialog({open:false})
+   getBusinessUnits(pageState);
+   setOpenDeleteDialog({open:false,action:''})
+   window.location.reload(true);
       }catch(e)
       {
 
@@ -175,12 +193,14 @@ const Security = ()=>{
         pageSize={pageSize}
         rowsPerPageOptions={[5, 10,15, 20,50]}
         pagination
-        onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-        isRowSelectable={params=>{
-           
-            // return params.row.is_active!==false
-        return false
-        }}
+       paginationMode='server'   
+         rowCount={records}
+         onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+            onPageChange={val=>{
+     
+      // //    return  setPageState(prev=>({...prev , offset:val*prev.limit}))
+       }
+           }
          sx={{
             "&.MuiDataGrid-root .MuiDataGrid-cell:focus-within": {
               outline: "none !important",
@@ -207,8 +227,12 @@ const Security = ()=>{
           </DialogContent>
           <DialogActions>
           <Button variant="contained" color="error"
-           onClick={e => deleteBusinessUnit()}
-          >Yes
+           onClick={e => 
+            {setActionProgress(true)
+            deleteBusinessUnit()}}
+          >
+           {actionProgress && <CircularProgress size={20} sx={{ color:"white"}}></CircularProgress>}
+            Yes
           </Button>
         <Button variant="contained" color="success"
           onClick={(e) => {

@@ -17,6 +17,7 @@ import api from '../../Api';
 import "./login.css"
 import auth from '../../auth';
 import { axiosInstance } from '../../axios';
+
 import { baseURL } from '../../axios';
 const theme = createTheme({
  
@@ -57,7 +58,7 @@ export default function Login(props) {
   const callOktaPage = async()=>{
     try{
       delete axiosInstance.defaults.headers["Authorization"];
-   const response = await axiosInstance.get(`${baseURL}/admin/login/`) ;
+   const response = await axiosInstance.get(`${baseURL}/auth/token`) ;
    if(response?.status === 200)
    {  
     window.location.replace(response?.data?.redirect_url)

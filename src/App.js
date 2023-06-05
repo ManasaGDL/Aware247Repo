@@ -16,11 +16,22 @@ import UnsubscribeUser from './Components/Manage/UnsubscribeUser';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import DashBoard from './Components/DashBoard/Dashboard';
+import TeamMembers from './Components/TeamMembers/TeamMembers';
+import ViewScheduleMaintenance from './Components/Incidents/ViewScheduleMaintenance';
+import CreateScheduleMaintenance from './Components/Incidents/CreateScheduleMaintenance';
+import MainActionPage from './Components/Incidents/MainActionPage';
+import IncidentPage from './Components/Incidents/IncidentPage';
+import UpdateSubscriber from './Components/Subscribers/UpdateSubscriber';
+import AddSubscriber from './Components/Subscribers/AddSubscriber';
+import Component from './Components/ComponentPage/Component';
+import Subscribers from './Components/Subscribers/Subscribers';
+import Security from './Components/Security/Security';
 import api from './Api';
 function App(props) {
   const history=useNavigate();
   const [user,setUser] = useState({email:""})
   const [ bu ,setBu]= useState(localStorage.getItem("BU"))
+ 
  useEffect(()=>{
 document.title = "Status App"
  },[])
@@ -29,8 +40,9 @@ document.title = "Status App"
     <div className="App">
       <ThemeProvider theme = {theme}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <businessUnitContext.Provider value={[bu,setBu]}>
-      <SnackbarContextProvider>     
+
+      <SnackbarContextProvider>
+              <businessUnitContext.Provider value={[bu,setBu]}>   
       <Routes history={history}> 
       <Route path ="Status" >
         <Route path=":businessunit/manage/*"element={<ManageSubscriber/>}/>
@@ -39,15 +51,37 @@ document.title = "Status App"
         <Route path ="add/:businessunit" element ={<Subscribe />}/>
         <Route path="*" element= {<div>No Page</div>}/>
       </Route> 
-      <Route path="/login/*" element={<DashBoard/>}/>
+      <Route 
+      // path="admin"  
+      element={<Container user={user}/>}> 
+                                              
+                        <Route path="admin/security" element={<Security />}/>
+                        <Route path="admin/dashboard" element={<DashBoard bu={bu}/>} />
+                        <Route path="admin/teammembers" element={<TeamMembers/>}/>
+                        <Route path="admin/viewScheduleMaintenance/:id" element={<ViewScheduleMaintenance/>}/>
+                        <Route path="admin/scheduled/:action" element={<CreateScheduleMaintenance/>}/>
+                        <Route path="admin/scheduled/:action/:id" element={<CreateScheduleMaintenance/>}/>
+                        <Route path="admin/create_incident" element={<MainActionPage bu={bu} />} />
+                        <Route path="admin/create_incident/:action/:id" element={<MainActionPage bu={bu}/>}/>
+                        <Route path="admin/incidents" element={<IncidentPage bu={bu} />} />
+                        <Route path="admin/subscribers/manage/:id" element={<UpdateSubscriber/>}/>
+                        <Route path="admin/subscribers/addSubscriber" element={<AddSubscriber/>}/>
+                        <Route path="admin/subscribers" element={<Subscribers />} />
+                        <Route path="admin/components" element ={<Component/>}/>   
+                        {/* <Route path="*" element={<div></div>}></Route>                */}
+
+         </Route> 
+      <Route path="/login" element={<Login/>}/>    
+      <Route path="/admin" element={<Login/>}/>
       <Route path ="admin/login" element={<Login setUser={setUser} />}/>
       <Route path="/" element={<Navigate to="admin/login"/>}/>
+      <Route path="*" element={<h3>URL does not exists.</h3>} />
       <Route path="*" element={<Container user={user}/>}/>
-      
       </Routes> 
-      </SnackbarContextProvider>
       </businessUnitContext.Provider>
-   </LocalizationProvider>
+      </SnackbarContextProvider>
+      
+      </LocalizationProvider>
       </ThemeProvider>
     </div>
   );

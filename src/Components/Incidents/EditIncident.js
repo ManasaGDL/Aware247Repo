@@ -34,7 +34,7 @@ import { SnackbarContext } from "../../context/SnackbarContext";
 import LinearProgress from "@mui/material/LinearProgress";
 import statuses from "../DashBoard/statuses";
 import LoadingPanel from "../common/TabPanel/LoadingPanel";
-
+import CircularProgress from "@mui/material/CircularProgress";
 
 const getInitialState = (defaultValue) => {
   if (defaultValue) {
@@ -85,6 +85,7 @@ const EditIncident = ({ bu }) => {
   const [mailObject, setMailObject] = useState("");
   const [dateError, setDateError] = useState();
   const [responseerror, setresponseError] = useState({});
+  const [ actionProgress , setActionProgress] = useState(false)//spinner on button action
   let statusArray = [];
   const { id } = useParams();
   const navigate = useNavigate();
@@ -251,9 +252,11 @@ const EditIncident = ({ bu }) => {
   useEffect(() => {
     if (callCreate) {
       callCreateIncidentApi();
+      setActionProgress(true)
     }
     if (callUpdate) {
       callUpdateIncidentApi();
+      setActionProgress(true)
     }
   }, [callCreate, callUpdate]);
   useEffect(() => {
@@ -416,6 +419,7 @@ const EditIncident = ({ bu }) => {
     }
   });
   const callUpdateIncidentApi = async () => {
+   
     try {
       const res = await api.updateIncident(
         incident_id.current,
@@ -430,6 +434,7 @@ const EditIncident = ({ bu }) => {
       });
       setCallUpdate(false);
       setAction(null);
+
     } catch (e) {
       setCallUpdate(false);
       if (e?.response?.data) {
@@ -446,14 +451,16 @@ const EditIncident = ({ bu }) => {
         setresponseError(e.response.data);
       }
     } finally {
-    
+    setActionProgress(false)
    
     }
   };
 
   const callCreateIncidentApi = async () => {
+   
     try {
       const res = await api.createIncident({ ...incidentObject });
+      setActionProgress(true)
       navigate("/admin/incidents");
       setSnackBarConfig({
         open: "true",
@@ -461,6 +468,7 @@ const EditIncident = ({ bu }) => {
         severity: "success",
       });
       setCallCreate(false);
+     
     } catch (e) {
       setCallCreate(false);
       if (e?.response?.data) {
@@ -476,6 +484,9 @@ const EditIncident = ({ bu }) => {
         }
         setresponseError(e.response.data);
       }
+    }
+    finally{
+      setActionProgress(false)
     }
   };
   const handleConfirmation = () => {
@@ -510,7 +521,7 @@ const EditIncident = ({ bu }) => {
           >
             <LoadingPanel></LoadingPanel>
           </Backdrop>
-{componentsData?.length===0 && loading===false?<h5 style={{ paddingLeft:20}}>No Components. Incident cannot be created</h5>:
+{componentsData?.length===0 && loading===false?<h3 style={{ paddingLeft:20}}>No Components. Incident cannot be created</h3>:
      <> <Stack
         direction="row"
         justifyContent="space-between"
@@ -527,7 +538,8 @@ const EditIncident = ({ bu }) => {
                 size="large"
                 onClick={() => handleUpdateIncident()}
                 // disabled={disableUpdateButton}
-              >
+              > {actionProgress && <CircularProgress  sx={{marginLeft:0,color:"white",fontWeight:10}} size={20}/>}
+              &nbsp;  &nbsp;
                 { "Update Incident"}
               </Button>}
         {!id && (
@@ -844,7 +856,7 @@ const EditIncident = ({ bu }) => {
                 fullWidth
                 id="outlined"              
                 sx={{ width: 900 }}
-                label="Recipients"
+                label="Enter Recipients Email"
                 name="recipients"
                 value={mailObject}
                 onChange={(e) => {
@@ -1212,18 +1224,24 @@ const EditIncident = ({ bu }) => {
                 );
               })}
             </List>
+          
             <div style={{ textAlign: "center" }}>
               <Button
                 variant="contained"
                 sx={{ ml: 2, mt: 6, color: "white", fontWeight: "bold" }}
                 size="large"
-                onClick={() => handleUpdateIncident()}
+                onClick={() =>{ 
+                  setActionProgress(true)
+                  handleUpdateIncident()}}
                 // disabled={disableUpdateButton}
               >
+              {actionProgress && <CircularProgress  sx={{marginLeft:0,color:"white",fontWeight:10}} size={20}/>}
+              &nbsp;  &nbsp;
                 {id ? "Update Incident" : " Create Incident"}
               </Button>
             </div>
           </div>
+         
         </Box>
       }
       <br /></>}

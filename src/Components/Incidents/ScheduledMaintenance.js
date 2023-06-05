@@ -16,16 +16,21 @@ import api from "../../Api";
 import CustomDeleteDialog from "../common/Dialogs/CustomDeleteDialog";
 import { SnackbarContext } from "../../context/SnackbarContext";
 import businessUnitContext from "../../context/businessUnitContext";
+import CircularProgress from "@mui/material/CircularProgress";
+const initialObj={limit:10,offset:0}
 const ScheduledMaintenance = () => {
-  const [pageSize, setPageSize] = useState(15);
+  const [pageSize, setPageSize] = useState(50);
   const navigate = useNavigate();
+  const [ pageState , setPageState] = useState({...initialObj})
+  const [ totalRecords ,setTotalRecords] = useState(0)
+  const [ actionProgress, setActionProgress]=useState(false)
   const [openDeleteDialog, setOpenDeleteDialog] = useState({
     open: false,
     type: "",
     id: "",
   });
   const [loading, setLoading] = useState(false);
-  const bu = useContext(businessUnitContext);
+  const [bu ,setBu]= useContext(businessUnitContext);
 
   const { setSnackBarConfig } = useContext(SnackbarContext);
   const [data, setData] = useState({});
@@ -45,13 +50,18 @@ const ScheduledMaintenance = () => {
     },
   });
   useEffect(() => {
+    
     setLoading(true);
-    getScheduleMaintenaceIncidents();
-  }, [bu]);
-  const getScheduleMaintenaceIncidents = async () => {
+    getScheduleMaintenaceIncidents(pageState);
+  }, [bu,pageState.limit,pageState.offset]);
+  useEffect(()=>{
+    setPageState(prev=>({...prev,limit:pageSize}))
+      },[pageSize])
+  const getScheduleMaintenaceIncidents = async (obj) => {
     try {
-      const response = await api.getScheduleMaintenanceIncidents();
+      const response = await api.getScheduleMaintenanceIncidents(obj);
       setData(response?.data?.results);
+      setTotalRecords(response?.data?.count);
       setLoading(false);
     } catch (e) {
     } finally {
@@ -141,7 +151,8 @@ const ScheduledMaintenance = () => {
           showInMenu
         />,
         <GridActionsCellItem
-          label="Delete"         
+          label="Delete"  
+          icon={<RemoveCircleIcon/>}       
           onClick={() =>
             setOpenDeleteDialog({
               open: true,
@@ -155,26 +166,34 @@ const ScheduledMaintenance = () => {
     },
   ];
   const deleteIncident = async (data) => {
+    setActionProgress(true);
     try {
       if (data.id) {
         const res = await api.deleteScheduledIncident(data.id);
         const message = `Deleted Successfully `;
-        if (res.status === 200) {
-          getScheduleMaintenaceIncidents();
+        if (res?.status === 200) {
+        let res=await api.getScheduleMaintenanceIncidents(pageState);
+        setOpenDeleteDialog({ ...openDeleteDialog, open: data.open });
+        setData(res?.data?.results);
+      setTotalRecords(res?.data?.count);
+      setLoading(false);
         }
         setSnackBarConfig({
           open: true,
           message: message,
           severity: "success",
         });
+        setActionProgress(false)
       }
     } catch (e) {
     } finally {
     }
     setOpenDeleteDialog({ ...openDeleteDialog, open: data.open });
+    setActionProgress(false)
   };
   return (
     <div className="pages">
+       {data.length===0 && <h5>No Scheduled Maintenance</h5>} 
       <div>
         {/* <Backdrop  sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={loading}>
     <LoadingPanel ></LoadingPanel>  
@@ -202,7 +221,7 @@ const ScheduledMaintenance = () => {
         >
           <LoadingPanel></LoadingPanel>
         </Backdrop>
-        <DataGrid
+        {data.length>0 && <DataGrid
           columns={columns}
           rows={data}
           sx={{
@@ -216,20 +235,25 @@ const ScheduledMaintenance = () => {
               fontWeight: 600,
             },
           }}
+       rowCount={totalRecords}
+       paginationMode="server"
           rowHeight={40}
           autoHeight={true}
           pageSize={pageSize}
           rowsPerPageOptions={[5, 10, 15, 20, 50]}
+        onPageChange={val=>
+        setPageState(prev=>({...prev,offset:val*prev.limit}))}
           pagination
           getRowId={(row) => row.sch_inc_id}
           onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-        />
+        />}
         <CustomDeleteDialog
           open={openDeleteDialog.open}
           id={openDeleteDialog.id}
           type={openDeleteDialog.type}
           deleteComponent={deleteIncident}
           name={openDeleteDialog.name}
+          actionProgress={actionProgress}
         />
       </Box>
     </div>

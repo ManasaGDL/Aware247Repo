@@ -11,7 +11,7 @@ const IncidentPage=({bu})=>{
 
     const [tabValue, setTabValue] = React.useState(location?.state?.tabValue?location?.state?.tabValue:0 );
     //(location?.state?.tabValue) directing to specific tab :example::Directing to ScheduleMaintenance grid once SM instance is created
-    
+  
 
     const tabs= [
       { title: "View Incidents",

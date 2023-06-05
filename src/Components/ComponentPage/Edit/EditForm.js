@@ -9,6 +9,7 @@ import {
   Button,
   Backdrop,
 } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
 import { StyledButton } from "../../../CustomStyles/StyledComponents";
 import api from "../../../Api";
 import LoadingPanel from "../../common/TabPanel/LoadingPanel";
@@ -36,6 +37,7 @@ const EditForm = ({
   const [prevGroup, setPrevGroup] = useState();
   const [newGroup, setNewGroup] = useState("");
   const [enableUpdateButton, setEnableUpdateButton] = useState(false);
+  const [ actionProgress , setActionProgress ] = useState(false);
 
   useEffect(() => {
     setComponentName("");
@@ -70,23 +72,7 @@ const EditForm = ({
     }
   }, [groupData,componentObj]);
 
-  //   const getGroups = async()=>{
-  //     try{
-  //   const response = await api.getGroupComponents();
-  //  if(response?.data)
-  //  {
-  //    groupArr = response.data.map(item=>{
-  //         return {name:item.component_name,id:item.component_id,group:item.group_no}
-  //     })
-  //     groupArr.push({name:"Create new component group",id:-3,group:-3})
-  //     setGroupData(prev=>
-  //         {return [...prev,...groupArr]}  )
-  //    }
-  //     }catch(e)
-  //     {
 
-  //     }
-  //   }
   const handleSetGroup = (e) => {
     setEnableUpdateButton(true);
     let val = groupData?.filter((item) => {     
@@ -101,6 +87,7 @@ const EditForm = ({
   };
   const handleUpdate = () => {
     let data;
+    setActionProgress(true)
     if (action === "Edit")
       data =
         type === "Component"
@@ -240,6 +227,7 @@ const EditForm = ({
             onClick={handleUpdate}
             disabled={action !== "Create" && enableUpdateButton === false}
           >
+             { actionProgress && <CircularProgress size={20} sx={{color:"white"}}/>}
             {action === "Create" ? "Create Component" : "Update Component"}
           </StyledButton>
         </div>

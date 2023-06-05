@@ -5,7 +5,7 @@ import {baseURL, axiosInstance} from "./axios";
 const api = {
   getToken:()=>{
     delete axiosInstance.defaults.headers["Authorization"];
-return axiosInstance.post(`${baseURL}/jwt_refresh`,{token:localStorage.getItem("access_token")});
+return axiosInstance.post(`${baseURL}/auth/token/jwt_refresh`,{token:localStorage.getItem("access_token")});
   },
     login : (body) => {
       return  axiosInstance.post(`${baseURL}/auth/token/` , body);
@@ -29,8 +29,8 @@ return axiosInstance.post(`${baseURL}/jwt_refresh`,{token:localStorage.getItem("
       createIncident : (body) =>{
         return axiosInstance.post(`${baseURL}/api/common/incidents/`,body)
       },
-      viewIncidents : () =>{ // do we need to suuply BU
-        return axiosInstance.get(`${baseURL}/api/common/incidents/?limit=50`)
+      viewIncidents : (obj) =>{ // do we need to suuply BU
+        return axiosInstance.get(`${baseURL}/api/common/incidents/?limit=${obj.limit}&&offset=${obj.offset}`)
       },
       getSideBarData : () =>{
         axiosInstance.defaults.headers["businessunit"]=localStorage.getItem("BU");
@@ -52,8 +52,10 @@ return axiosInstance.post(`${baseURL}/jwt_refresh`,{token:localStorage.getItem("
      updateIncident : ( id ,body) =>{
       return axiosInstance.put(`${baseURL}/api/common/incidents/${id}/update_incident/`, body)
      },
-     getActivityLog : (body) =>{
-      return axiosInstance.put(`${baseURL}/api/common/incident_activity_log/incident_activity/`,body)
+     getActivityLog : (body,obj) =>{
+      return axiosInstance.put(`${baseURL}/api/common/incident_activity_log/incident_activity/
+     
+      `,body) // ?limit=${obj.limit}&&offset=${obj.offset}
      },
      getIncidentStatusDashBoard : () =>{
       axiosInstance.defaults.headers["businessunit"]=localStorage.getItem("BU");
@@ -78,8 +80,8 @@ return axiosInstance.post(`${baseURL}/jwt_refresh`,{token:localStorage.getItem("
      getSubscribersCount : () =>{
       return axiosInstance.get(`${baseURL}/api/common/subscribers/subsciberscount`)
      },
-     getSubscribersList : (payload) =>{
-      return axiosInstance.put(`${baseURL}/api/common/subscribers/subscriberslist/`,payload);
+     getSubscribersList : (payload,obj) =>{
+      return axiosInstance.put(`${baseURL}/api/common/subscribers/subscriberslist/?limit=${obj.limit}&&offset=${obj.offset}`,payload);
      },
      deleteSubscriber:(id)=>{
       return axiosInstance.delete(`${baseURL}/api/common/subscribers/${id}/unsubscribe/`)
@@ -87,11 +89,12 @@ return axiosInstance.post(`${baseURL}/jwt_refresh`,{token:localStorage.getItem("
      updateSubscriber:( id ,payload)=>{
       return axiosInstance.patch(`${baseURL}/api/common/subscribers/${id}/update_subscribers/`,payload)
      },
-     getTeamMembers:()=>{
-      return axiosInstance.get(`${baseURL}/api/account/profile/`)
+     getTeamMembers:(obj)=>{
+    
+      return axiosInstance.get(`${baseURL}/api/account/profile/?limit=${obj.limit}&&offset=${obj.offset}`)
      },
-     getScheduleMaintenanceIncidents:()=>{
-      return axiosInstance.get(`${baseURL}/api/common/scheduled_maintanence/`)
+     getScheduleMaintenanceIncidents:(obj)=>{
+      return axiosInstance.get(`${baseURL}/api/common/scheduled_maintanence/?limit=${obj.limit}&&offset=${obj.offset}`)
      },
      createScheduleMaintenance:(obj)=>{
       return axiosInstance.post(`${baseURL}/api/common/scheduled_maintanence/`,obj)
@@ -103,13 +106,13 @@ return axiosInstance.post(`${baseURL}/jwt_refresh`,{token:localStorage.getItem("
     return axiosInstance.put(`${baseURL}/api/common/scheduled_maintanence/${id}/`,payload)
      },
      viewScheduleMaintenance:(id)=>{
-return axiosInstance.get(`${baseURL}/api/common/scheduled_maintanence/activity_list?id=${id}`)
+    return axiosInstance.get(`${baseURL}/api/common/scheduled_maintanence/activity_list?id=${id}`)
      },
      deleteScheduledIncident:(id)=>{
       return axiosInstance.delete(`${baseURL}/api/common/scheduled_maintanence/${id}/sch_mnt_del/`)
      },
-     getIncidentTemplates:()=>{
-      return axiosInstance.get(`${baseURL}/api/common/incident_template/`)
+     getIncidentTemplates:(obj)=>{
+      return axiosInstance.get(`${baseURL}/api/common/incident_template/?limit=${obj.limit}&&offset=${obj.offset}`)
      },
      createIncidentTemplate:(payload)=>{
       // axiosInstance.defaults.headers["businessunit"]=localStorage.getItem("BU");
@@ -130,8 +133,8 @@ return axiosInstance.get(`${baseURL}/api/common/scheduled_maintanence/activity_l
       return axiosInstance.get(`${baseURL}/api/common/incidents/impact_list`)
      }
      ,
-     getBusinessUnit_Security:()=>{
-      return axiosInstance.get(`${baseURL}/api/common/businessunit/`)
+     getBusinessUnit_Security:(obj)=>{
+      return axiosInstance.get(`${baseURL}/api/common/businessunit/?limit=${obj.limit}&&offset=${obj.offset}`)
      },
      createNewBusinessUnit:(payload)=>{
       return axiosInstance.post(`${baseURL}/api/common/businessunit/`,payload);

@@ -183,6 +183,7 @@ const Component = () => {
       }
     } finally {
       setComponentObj({});
+    
     }
     setOpenDialog({ open: componentDetails.open });
   };

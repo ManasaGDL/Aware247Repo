@@ -10,14 +10,15 @@ import {
   Box,
 } from "@mui/material";
 import { StyledButton } from "../../../CustomStyles/StyledComponents";
-const CustomDeleteDialog = ({ open, id, type, deleteComponent,name }) => {
+import CircularProgress from "@mui/material/CircularProgress";
+const CustomDeleteDialog = ({ open, id, type, deleteComponent,name,actionProgress=false }) => {
    
   const [text, setText] = useState("");
   const checkText = (e) => {
     setText(e.target.value);
   };
   const handleClose = () => {
-   
+   setText('')
     deleteComponent({ open: false,type:type });
   };
   const handleDelete = () => {
@@ -57,6 +58,7 @@ const CustomDeleteDialog = ({ open, id, type, deleteComponent,name }) => {
             disabled={text !== "DELETE"}
             onClick={()=>handleDelete()}
           >
+            {actionProgress && <CircularProgress size={20} sx={{color:"white"}}/>}
             permanently delete {type}
           </StyledButton>
         </DialogActions>
