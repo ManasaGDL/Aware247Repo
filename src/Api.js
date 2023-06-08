@@ -111,6 +111,9 @@ return axiosInstance.post(`${baseURL}/auth/token/jwt_refresh`,{token:localStorag
      deleteScheduledIncident:(id)=>{
       return axiosInstance.delete(`${baseURL}/api/common/scheduled_maintanence/${id}/sch_mnt_del/`)
      },
+     getIncidentTemplateDropDown:()=>{
+      return axiosInstance.get(`${baseURL}/api/common/incident_template/inc_temp_businessunit`)
+     },
      getIncidentTemplates:(obj)=>{
       return axiosInstance.get(`${baseURL}/api/common/incident_template/?limit=${obj.limit}&&offset=${obj.offset}`)
      },

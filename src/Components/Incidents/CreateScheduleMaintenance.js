@@ -281,7 +281,7 @@ const CreateScheduleMaintenance = () => {
       setresponseError(e.response.data);
       if(e.response.status === 500)
      setOpenCustomDialog({
-      open:true,message:"Something went wrong. Please contact admin"
+      open:true,message:"Something went wrong. Please contact admin."
      })
       if (e.response?.data?.Error) {
         setOpenCustomDialog({

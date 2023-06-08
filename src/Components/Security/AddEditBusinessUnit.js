@@ -1,3 +1,5 @@
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -12,9 +14,8 @@ const AddEditBusinessUnit = ({
   businessunitvalue,
   setbusinessunitvalue,
   error,
-  setError
+  setError,
 }) => {
- 
   return (
     <Dialog open={open} onClose={() => setOpenDialog({ open: false })}>
       <DialogTitle>{openDialog.action} Business Unit</DialogTitle>
@@ -25,11 +26,12 @@ const AddEditBusinessUnit = ({
             fullWidth
             label="BussinessUnit"
             value={businessunitvalue}
-            onChange={(e) =>{
-              setError({businessunit_name:''})
-              setbusinessunitvalue(e.target.value)}}
+            onChange={(e) => {
+              setError({ businessunit_name: "" });
+              setbusinessunitvalue(e.target.value);
+            }}
           ></TextField>
-      { <div style={{ color:"red"}}>{error.businessunit_name}</div>}
+          {<div style={{ color: "red" }}>{error.businessunit_name}</div>}
         </Box>
       </DialogContent>
       <DialogActions>
@@ -41,7 +43,6 @@ const AddEditBusinessUnit = ({
             createBusinessUnit(businessunitvalue);
           }}
         >
-      
           {openDialog.action} BusinessUnit
         </Button>
       </DialogActions>

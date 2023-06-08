@@ -36,7 +36,10 @@ const makeApiCall = () =>{
     {
    clientApi.getComponentStatus(bu).then(res =>{ dispatch({ type :ACTIONS.FETCH_DATA, payload:res.data})}).catch((e)=>dispatch({ type:ACTIONS.ERROR,payload:e.response.data}))
     }
-  else  api.getComponents().then(res =>{ dispatch({ type :ACTIONS.FETCH_DATA, payload:res.data})}).catch((e)=>dispatch({ type:ACTIONS.ERROR,payload:e.response.data}))
+  else  api.getComponents().then(res =>{ dispatch({ type :ACTIONS.FETCH_DATA, payload:res.data})}).catch((e)=>
+  {alert(e)
+    dispatch({ type:ACTIONS.ERROR,payload:e.response.data})
+})
 }
     useEffect(()=>{
       makeApiCall();

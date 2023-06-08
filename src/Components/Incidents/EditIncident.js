@@ -93,6 +93,7 @@ const EditIncident = ({ bu }) => {
   let recipientList = [];
   const prevbusinessunit = useRef(bu);
   useEffect(() => {
+  
     setLoading(true);
     if (typeof id === "undefined") {
       setAction("create");
@@ -240,10 +241,10 @@ const EditIncident = ({ bu }) => {
   }, [selectedTemplateObject]);
   const getTemplatesList = async () => {
     try {
-      const res = await api.getIncidentTemplates();
-
+      const res = await api.getIncidentTemplateDropDown();
+ console.log(res?.data)
       setIncidentTemplates(
-        res?.data.results.map((template) => {
+        res?.data?.map((template) => {
           return { id: template.template_id, name: template.template_name };
         })
       );
@@ -471,6 +472,12 @@ const EditIncident = ({ bu }) => {
      
     } catch (e) {
       setCallCreate(false);
+      if(e.response.status===500)
+      {
+        setOpenCustomDialog({
+          open:true,message:"Something went wrong. Please contact admin or check format of recipients email"
+         })
+      }
       if (e?.response?.data) {
         setError(e.response.data);
         

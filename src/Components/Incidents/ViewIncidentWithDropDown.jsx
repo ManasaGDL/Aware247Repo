@@ -14,7 +14,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle'
 import { SnackbarContext } from "../../context/SnackbarContext";
 import Backdrop from "@mui/material/Backdrop";
-
+import CircularProgress from "@mui/material/CircularProgress";
 const initialObj={limit:10,offset:0}
 const ViewIncidentWithDropDown = ({bu}) => {
   const [data, setData] = useState([])
@@ -27,6 +27,7 @@ const ViewIncidentWithDropDown = ({bu}) => {
   const { setSnackBarConfig } = useContext(SnackbarContext);
   const [ totalRecords , setTotalRecords] = useState(0)
 const [ pageState, setPageState]= useState({...initialObj})
+const [ actionProgress , setActionProgress] = useState(false)
   const navigate = useNavigate();
 
   const columns = [
@@ -169,15 +170,16 @@ setPageState(prev=>({...prev,limit:pageSize}))
       const res = await api.addComments(openDialog.value, {
         "incident_postmortem": text
       })
-      let res2 = await api.viewIncidents();
-      setData(res2?.data?.results)
-      res2 && setLoading(false)
-      setSnackBarConfig({ open: "true", message: "Comments updated successfully", severity: "success" })
+       setSnackBarConfig({ open: "true", message: "Comments updated successfully", severity: "success" })
       setOpenDialog({ flag: false, value: '' })
       setText('')
+      getIncidents(pageState);
     }
     catch (e) {
       console.log(e)
+    }
+    finally{
+      setActionProgress(false)
     }
   }
 
@@ -223,7 +225,7 @@ setPageState(prev=>({...prev,limit:pageSize}))
       /> : ""}
     </Box>
     
-    <Dialog open={openDialog.flag} onBackdropClick={handleClose} >
+    <Dialog open={openDialog.flag} onClose={handleClose} >
       <form onSubmit={handleFormSubmit}>
         <DialogTitle >Write Postmortem</DialogTitle>
         <DialogContent style={{ height: '300px' }}>
@@ -241,11 +243,16 @@ setPageState(prev=>({...prev,limit:pageSize}))
           > </TextField>
         </DialogContent>
         <DialogActions sx={{ alignItems: "center" }}>
-          <Button variant="contained" type="submit" sx={{ color: "white",fontWeight:"600"}}  onClick={e => insertComments()}> Write Postmortem</Button>
+          <Button variant="contained" type="submit" sx={{ color: "white",fontWeight:"600"}}  onClick={e =>
+               {setActionProgress(true);   
+                insertComments()}}> 
+                 {actionProgress && <CircularProgress size={20} sx={{color:"white"}}/>}
+                Write Postmortem
+          </Button>
         </DialogActions>
       </form>
     </Dialog>
-    <Dialog open={openDeleteDialog.flag} onBackdropClick={handleClose} >
+    <Dialog open={openDeleteDialog.flag} onClose={handleClose} >
       <DialogTitle sx={{ fontWeight: "700" }}> Do want to Delete Incident with ID: {openDeleteDialog.value} ? </DialogTitle>
       <DialogContent>
         WARNING! Deleting a incident cannot be undone. All associated data will be deleted as well. Please be absolutely sure this is what you want.

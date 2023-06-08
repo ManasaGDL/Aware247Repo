@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { StyledButton } from "../../../CustomStyles/StyledComponents";
 import CircularProgress from "@mui/material/CircularProgress";
-const CustomDeleteDialog = ({ open, id, type, deleteComponent,name,actionProgress=false }) => {
+const CustomDeleteDialog = ({ open, id, type, deleteComponent,name,actionProgress=false ,action="Deleting"}) => {
    
   const [text, setText] = useState("");
   const checkText = (e) => {
@@ -29,16 +29,16 @@ const CustomDeleteDialog = ({ open, id, type, deleteComponent,name,actionProgres
     <Box textAlign={"center"}>
       <Dialog open={open} onClose={()=>handleClose()}>
         <DialogTitle>
-          <b>Delete {type}</b>
+          <b>{action} {type}</b>
         </DialogTitle>
         <DialogContent>
-          WARNING! <b>Deleting a {type} cannot be undone</b>. All associated
+          WARNING! <b>{action} a {type} cannot be undone</b>. All associated
           data will be deleted as well. Please be absolutely sure this is what
           you want.
           <br />
           <br />
           <div>
-            Type DELETE in the box below for final confirmation, then hit the
+            Type <b>DELETE</b> in the box below for final confirmation, then hit the
             delete button.
           </div>
           <br />
@@ -59,7 +59,7 @@ const CustomDeleteDialog = ({ open, id, type, deleteComponent,name,actionProgres
             onClick={()=>handleDelete()}
           >
             {actionProgress && <CircularProgress size={20} sx={{color:"white"}}/>}
-            permanently delete {type}
+            permanently {action} {type}
           </StyledButton>
         </DialogActions>
       </Dialog>

@@ -9,12 +9,14 @@ import UpdateIcon from '@mui/icons-material/Update';
 import businessUnitContext from "../../context/businessUnitContext";
 import CustomDeleteDialog from "../common/Dialogs/CustomDeleteDialog";
 import { SnackbarContext } from "../../context/SnackbarContext";
+import Backdrop from "@mui/material/Backdrop";
+import LoadingPanel from "../common/TabPanel/LoadingPanel";
 const initialPageState ={ limit :10, offset:0}
 const SubscribersList =({name,handleRefresh})=>{
     const [ data , setData ] = useState([])
     const [ pageSize , setPageSize ] = useState(15)
     const bu =  useContext(businessUnitContext) 
-    
+    const [ loading ,setLoading] = useState(false)
     const [ records , setRecords] = useState(0)
     const [ pageState , setPageState]= useState({...initialPageState})
     const [openDeleteDialog, setOpenDeleteDialog] = useState({
@@ -74,6 +76,7 @@ const SubscribersList =({name,handleRefresh})=>{
         }
     ]
     useEffect(() =>{
+      setLoading(true)
         if(name === "email")
       getSubscribersList({ "email_delivery":1 },pageState);
       if(name === "sms")
@@ -88,12 +91,14 @@ const SubscribersList =({name,handleRefresh})=>{
  const response = await api.getSubscribersList(payload,obj)
 setData(response?.data?.results)
 setRecords(response?.data?.count)
+setLoading(false)
   }catch(e)
   {
 
   }
     }
     const deleteSubscriber = async (data) => {
+      setLoading(true)
       try {
         if (data.id) {
           const res = await api.deleteSubscriber(data.id);
@@ -122,8 +127,14 @@ setRecords(response?.data?.count)
         handleRefresh();
       }
       setOpenDeleteDialog({ ...openDeleteDialog, open: data.open });
+      setLoading(false)
     };
     return <div className="pages">
+        <Backdrop 
+    sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+     open={loading}>
+    <LoadingPanel ></LoadingPanel>
+    </Backdrop>
     <Box sx={{ height:"auto" }}>
         <DataGrid autoHeight={true} columns={columns} rows={data} getRowId={(row)=>row.subscriber_id} 
         pageSize={pageSize}
@@ -149,6 +160,7 @@ setRecords(response?.data?.count)
                 backgroundColor:"white"
             }
           }}/>
+        
          <CustomDeleteDialog
           open={openDeleteDialog.open}
           id={openDeleteDialog.id}

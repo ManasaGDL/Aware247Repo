@@ -26,9 +26,8 @@ import api from "../../Api";
 import { SnackbarContext } from "../../context/SnackbarContext";
 import CustomDialogs from "../common/Dialogs/CustomDialogs";
 const Component = () => {
-  const bu = useContext(businessUnitContext);
+  const [bu,setBu] = useContext(businessUnitContext);
   const { setSnackBarConfig } = useContext(SnackbarContext);
-
   const [openDeleteDialog, setOpenDeleteDialog] = useState({
     open: false,
     type: "",
@@ -43,7 +42,7 @@ const Component = () => {
   const [loadingApi, setLoadingApi] = useState(false);
   const [state, makeApiCall] = useFetch(bu, callFetchApi); // make api for fetching component list for REUSABLITy
   const { data, loading, error } = state; 
- 
+
   const [openCustomDialogs, setOpenCustomDialogs] = useState({
     open: false,
     message: "",
@@ -194,6 +193,7 @@ const Component = () => {
         const message = `${data.name} ${data.type} succesfully deleted`;
         if (res.status === 200){ 
             makeApiCall();
+            getGroups();
          
         }
         setSnackBarConfig({
@@ -318,6 +318,7 @@ const Component = () => {
                                 id: listItem.component_id,
                                 type: "Group",
                                 name: listItem.component_name,
+                                action:"Dactivate"
                               })
                             }
                           >
@@ -472,6 +473,7 @@ const Component = () => {
           type={openDeleteDialog.type}
           deleteComponent={deleteComponent}
           name={openDeleteDialog.name}
+          action={openDeleteDialog.action}
         />
         <br />
         <br />
