@@ -22,7 +22,7 @@ jobs:
             pwd
             ls     
             aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 893347428853.dkr.ecr.us-east-2.amazonaws.com
-            docker build --platform linux/amd64 -t status-app-frontend-prod .                   
+            docker build -t status-app-frontend-prod .                   
             docker tag status-app-frontend-prod:latest 893347428853.dkr.ecr.us-east-2.amazonaws.com/status-app-frontend-prod:latest
             docker push 893347428853.dkr.ecr.us-east-2.amazonaws.com/status-app-frontend-prod:latest
 
