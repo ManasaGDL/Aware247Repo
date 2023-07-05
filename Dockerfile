@@ -4,7 +4,7 @@ WORKDIR /frontend
 
 COPY . .
 
-RUN yarn build
+RUN yarn install && yarn build
 
 
 FROM nginx:alpine
