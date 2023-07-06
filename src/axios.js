@@ -1,6 +1,6 @@
 import axios from "axios";
 // export const baseURL = "http://18.118.80.163:29170";
-export const baseURL = "http://status-api.data-axle.com";
+export const baseURL = "https://status-api.data-axle.com";
   //  export const baseURL = "";
 
 export const axiosInstance = axios.create({
