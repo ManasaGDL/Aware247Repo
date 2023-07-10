@@ -1,32 +1,32 @@
+import React, { useState , useEffect} from "react"
 import Select from "@mui/material/Select";
 import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
 import MenuItem from "@mui/material/MenuItem";
-import InputLabel from "@mui/material/InputLabel";
+const CustomDropDown=({value,label,disabled,dropDownChange,name,selectAllChecked=false})=>{
+ const [selectedValue,setSelectedValue]= useState(value)
+ const [dropDownCalled,setDropDownCalled] =useState(false)
+ 
+useEffect(()=>{
+if( !disabled && !dropDownCalled && !selectAllChecked)  //send defaultvalue from dropdown if dropdwon in unchanged
+{ 
+  dropDownChange({"component_id":label,"component_status":value,"name":name})
 
-
-const CustomDropDown=({value})=>{
-  
-
-  const colorCodingStatus =[{name:"Operational",color:"green"},{name:"Degraded Performance",color:"black"}]
-  const statusColor=colorCodingStatus.filter(item=>value===item.name)
- console.log("statusColor",statusColor,value)
-  const handleDropDownChange=()=>{
-    return <></>
+}
+},[disabled])
+  const handleDropDownChange=(e)=>{
+  setDropDownCalled(true)
+  setSelectedValue(e.target.value)
+  dropDownChange({"component_id":label,"component_status":e.target.value||value,"name":name})//name is added to identify component selected in Paraent component
   }
-    return  <FormControl
-    sx={{ m: 1, minWidth: 160 }}
+    return  <FormControl    disabled={disabled}
+    sx={{ m: 1, minWidth: 200 }}
     size="small"
   >
-    <InputLabel id="demo-select-small">
-      Status
-    </InputLabel>
+   
     <Select 
-  sx={{color:statusColor[0].color}}
 
-      label="status"
       labelId="demo-select-small"
-      value={value}
+      value={selectedValue}
       onChange={handleDropDownChange}
     >
       <MenuItem value="Operational">
@@ -35,13 +35,13 @@ const CustomDropDown=({value})=>{
       <MenuItem value="Degraded Performance">
         Degraded Performance
       </MenuItem>
-      <MenuItem value="Degraded Performance">
+      <MenuItem value="Partial Outage">
         Partial Outage
       </MenuItem>
-      <MenuItem value="Degraded Performance">
+      <MenuItem value="Major Outage">
         Major Outage
       </MenuItem>
-      <MenuItem value="Degraded Performance">
+      <MenuItem value="Under Maintenance">
         Under Maintenance
       </MenuItem>
     </Select>

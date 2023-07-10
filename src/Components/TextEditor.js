@@ -1,49 +1,53 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState ,useRef} from "react";
 import { Editor } from "react-draft-wysiwyg";
-import { EditorState,convertToRaw ,ContentState} from "draft-js";
+import { EditorState,convertToRaw ,ContentState,convertFromHTML,convertFromRaw} from "draft-js";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import draftToHtml from "draftjs-to-html"
-import htmlToDraft from "html-to-draftjs"
-import TextareaAutosize from '@mui/material/TextareaAutosize';
-import axios from "axios"
-import Box from '@mui/material/Box';
-import { FormControl, FormLabel, Grid } from "@mui/material";
-import Table from '@mui/material/Table';
-import TableContainer from '@mui/material/TableContainer';
-import TableRow from "@mui/material/TableRow";
-import TableCell from "@mui/material/TableCell";
-import TableBody from '@mui/material/TableBody';
-import List from '@mui/material/List';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-
-import Paper from '@mui/material/Paper';
-
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
-
-const TextEditor = () =>{
+import { FormControl, Grid } from "@mui/material";
+const TextEditor = ({message , messageObject}) =>{
     
-    const [convertedContent,setConvertedContent]=useState()
-    const [editorState,setEditorState] = useState(()=>{
-        EditorState.createEmpty()
-    })  
-  useEffect(()=>{
-     convertContentToHTML();
-  
-  },[editorState])
-const handleChange=(e)=>{
-setEditorState(e)
-
-}
-const convertContentToHTML=()=>{
-  if(editorState)
-  {const data=draftToHtml(convertToRaw(editorState.getCurrentContent()))
-  setConvertedContent(data)
+  const [convertedContent,setConvertedContent]=useState()
+  const [data,setData]=useState()
+  const [editorState,setEditorState] = useState(
+    ()=>{
+      EditorState.createEmpty()
+    //  const blocksFromHTML = convertFromHTML(messageObject);
+    //  const contentState = ContentState.createFromBlockArray(
+    //   blocksFromHTML.contentBlocks,
+    //   blocksFromHTML.entityMap
+    //  )
+    //  return EditorState.createWithContent(contentState)
   }
-}
+
+  ) 
+    useEffect(()=>{
+      convertContentToHTML();
+   
+   },[editorState])
+ const handleChange=(e)=>{
+  setEditorState(e)
+ 
+ }
+ useEffect(()=>{
+  if(convertedContent)
+message(convertedContent)
+ },[convertedContent])
+ const convertContentToHTML=()=>{
+   
+   if(editorState)
+   { 
+   //  var anchorKey = selectionState.getAnchorKey();
+ 
+     const data=draftToHtml(
+     convertToRaw(editorState.getCurrentContent())
+     )
+      message(data);
+      setConvertedContent(data)
+   }
+ }
+
+
+
     return <> <div style={{ padding: '2px',minheight:'300px'}}>
       <br/>
       <Grid container>
@@ -52,34 +56,26 @@ const convertContentToHTML=()=>{
       editorState={editorState}
       onEditorStateChange={handleChange}
       wrapperClassName="wrapper-class"
-  editorClassName="editor-class"
-  toolbarClassName="toolbar-class"
-  defaultEditorState={editorState}
-    />
+      editorClassName="editor-class"
+      toolbarClassName="toolbar-class"
+      defaultEditorState={editorState}
+    /> 
+    {/* <Editor
+        onInit={(evt, editor) => editorRef.current = editor}
+        init={{
+          height: 200,
+          menubar: true
+          //'file edit insert view format table tools help',
+          // branding:false
+        }}
+        onChange={handleChange}
+      /> */}
       </Grid>
       <Grid item md={12}>
-      <TextareaAutosize style={{width:'100%'}}disabled value={convertedContent} />
+      {/* <TextareaAutosize style={{width:'100%'}}disabled value={convertedContent} /> */}
       </Grid>
       </Grid>
-      <FormControl>
-         
-          {/* <TableContainer component={Paper}>
-          <Table sx={{ wisth:'100%'}}>
-       <TableBody>
-        {<ul><TableRow>
-          <TableCell><li>test <ul><li>helo2</li><li>helo2</li></ul></li></TableCell>
-         
-        </TableRow></ul>}
-        {<ul><TableRow>
-          <TableCell><li>test2 <ul><li>helo2</li><li>helo2</li></ul></li></TableCell>
-         
-        </TableRow></ul>}
-       </TableBody>
-          </Table>
-
-          </TableContainer> */}
-    
-      </FormControl>
+      <FormControl></FormControl>
   </div></>
 }
 export default TextEditor;
