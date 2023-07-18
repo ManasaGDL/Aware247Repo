@@ -1,7 +1,7 @@
 name: StatusApp-frontend-CICD
 on: 
     push:
-      branches: [ gha-prod ]
+      branches: [ main ]
       
 jobs:
     docker_build:
