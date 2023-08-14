@@ -1,20 +1,22 @@
 import { createTheme } from "@mui/material/styles";
-import { cyan } from "@mui/material/colors";
+import { cyan, lightBlue } from "@mui/material/colors";
+import { blue } from "@material-ui/core/colors";
 const theme = createTheme({
   typography: {
     fontSize: 12,
   },
-  palette: {
-    primary: cyan
-    // {main:'#80daeb'}
+   palette: {
+    primary: blue
+    //  {main:'#1976d'
+    // }
     ,
-    secondary: {
-      main:'#11cb5f',
-      //
-    },
+  //   secondary: {
+  //     main:'#11cb5f',
+  //     //
+  //   },
     action: {
-      selected: "#80daeb",
-       hover: "#80daeb",
+      selected: "#F0F0F0",
+      hover: "#F0F0F0",
       // disabled: '#9B9B9B'
   },
     components: {

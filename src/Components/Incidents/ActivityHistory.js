@@ -18,26 +18,9 @@ const ActivityHistory = ({ id, bu }) => {
     ,
     // pageState.limit,pageState.offset
   ]);
-  // useEffect(()=>{
-  //    setPageState(prev=>({...prev,limit:pageSize}))
-  // },[pageSize])
-//   useEffect(()=>{
-// console.log(pageState.offset)
-// console.log("r",records)
-//   },[pageState.limit,pageState.offset,records])
-  // useEffect(()=>{
-  //   if(data.length!=0)
-  //      setRecords(data?.length)
-  // },[data])
+  
   const columns = [
-    // {
-    //   field: 'incidents_activity_id',
-    //   headerName: 'Activity ID',
-    //   headerClassName: "header",
-    //   minWidth: 150,
-    //   flex:0.5,
-
-    // },
+   
     {
       field: "component_name",
       headerName: "Component Name",

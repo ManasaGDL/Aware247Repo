@@ -50,10 +50,10 @@ const Container = ({ user}) => {
         setCollapse(!collapse)
     }
   
-    if (localStorage.getItem("access_token")) {
-        axiosInstance.defaults.headers["businessunit"] = localStorage.getItem("BU");
-        axiosInstance.defaults.headers["Authorization"] = "Bearer " + localStorage.getItem("access_token")
-    }
+    // if (localStorage.getItem("access_token")) {
+    //     axiosInstance.defaults.headers["businessunit"] = localStorage.getItem("BU");
+    //     axiosInstance.defaults.headers["Authorization"] = "Bearer " + localStorage.getItem("access_token")
+    // }
 
     return <>   
      <ProSidebarProvider> 

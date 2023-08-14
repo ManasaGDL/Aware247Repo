@@ -33,7 +33,7 @@ function App(props) {
   const [ bu ,setBu]= useState(localStorage.getItem("BU"))
  
  useEffect(()=>{
-document.title = "Status App"
+document.title = "Aware247"
  },[])
 
   return (

@@ -17,15 +17,15 @@ import Paper from "@mui/material/Paper";
 import "../../App.css";
 import styled from "styled-components";
 const Menuitem = styled(MenuItem)`
-  background-color: ${(props) => (props.bg === "active" ? "#80daeb" : "")};
+  background-color: ${(props) => (props.bg === "active" ? "#1798ff" : "")};
 `;
-
+// #80daeb
 const SidebarComponent = ({ handleCollapse, dynamicSideBarData ,loading,collapse=false}) => {
   const [innerWidth, setInnerWidth] = useState({ width: window.innerWidth });
   const [position, setPosition] = useState("fixed");
   const { collapseSidebar, collapsed } = useProSidebar();
 
-
+const dummy=["test1","test2","test3","test4",]
   // const [toggled, setToggled] = useState(false)
 
   const location = useLocation();
@@ -83,8 +83,10 @@ const SidebarComponent = ({ handleCollapse, dynamicSideBarData ,loading,collapse
                     // color: disabled ? "#eee" : "#455A64",
                     // backgroundColor: active ? "#fff" : undefined,
                     "&:hover": {
-                      backgroundColor: "#C0EEF2",
-
+                      // backgroundColor: "#C0EEF2",
+                      color: '#1798ff',
+                      //'#0000ff', /* #0ab4ff */
+                      fontSize: '1.1rem',
                       fontWeight: "bold !important",
                     },
                   };
@@ -92,9 +94,7 @@ const SidebarComponent = ({ handleCollapse, dynamicSideBarData ,loading,collapse
               },
             }}
           >
-             {/* <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={loading}>
-    <LoadingPanel></LoadingPanel>
-</Backdrop> */}
+       
             <MenuItem
               style={{ textAlign: "center" }}
               icon={
