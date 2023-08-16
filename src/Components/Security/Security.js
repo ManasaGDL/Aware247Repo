@@ -92,7 +92,7 @@ const Security = () => {
       type: "actions",
       getActions: (params) => [
         <GridActionsCellItem
-          label="Update BusinessUnit"
+          label="Update Company"
           icon={<UpdateIcon />}
           onClick={() => {
             setbusinessunitvalue(params?.row?.businessunit_name);
@@ -107,8 +107,8 @@ const Security = () => {
         <GridActionsCellItem
           label={
             params.row.is_active === true
-              ? "Deactivate BusinessUnit"
-              : "Activate BusinessUnit"
+              ? "Deactivate Company"
+              : "Activate Company"
           }
           icon={
             params.row.is_active === true ? (
@@ -128,7 +128,7 @@ const Security = () => {
           showInMenu
         />,
         <GridActionsCellItem
-          label="Delete BusinessUnit"
+          label="Delete Company"
           icon={<RemoveCircleIcon></RemoveCircleIcon>}
           onClick={() => {
             setOpenDeleteDialog({
@@ -164,7 +164,7 @@ const Security = () => {
       setSnackBarConfig({
         open: true,
         message:
-          `BusinessUnit-${val} successfully created`,
+          `Company-${val} successfully created`,
         severity: "success",
       });
       getBusinessUnits();
@@ -214,7 +214,7 @@ const Security = () => {
           sx={{ height: 50, marginRight: 2 }}
         >
           <h5 style={{ paddingTop: 20, marginLeft: 20 }}>
-            View Business Units
+            View Companies
           </h5>
           <StyledButton
             variant="contained"
@@ -223,7 +223,7 @@ const Security = () => {
             }}
           >
             {" "}
-            + Add Business Unit
+            + Add Company
           </StyledButton>{" "}
         </Stack>
         <Backdrop
@@ -275,9 +275,9 @@ const Security = () => {
           open={openDeleteDialog.open}
           onClose={() => setOpenDeleteDialog({ open: false })}
         >
-          <DialogTitle>{openDeleteDialog.action} Business Unit</DialogTitle>
+          <DialogTitle>{openDeleteDialog.action} Company</DialogTitle>
           <DialogContent>
-            Do you really want to {openDeleteDialog.action} this BusinessUnit -{" "}
+            Do you really want to {openDeleteDialog.action} this Company -{" "}
             <b>{openDeleteDialog.name}</b>
           </DialogContent>
           <DialogActions>

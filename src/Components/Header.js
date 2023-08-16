@@ -1,7 +1,7 @@
 import React, { useState , useEffect,useRef , useContext} from "react";
 import { AppBar,Toolbar,Typography ,Grid, TextField,Avatar,List,ListItem, ListItemText,ListItemButton} from "@mui/material"
 import { makeStyles } from "@material-ui/core/styles";
-
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import Button from "@mui/material/Button";
 import FormLabel from "@mui/material/FormLabel";
 import { useNavigate, useSearchParams } from "react-router-dom"
@@ -154,12 +154,14 @@ setanchor2(e.currentTarget);
           <Grid item md={2} xs={2} sx={{ display: { xs:"none", md: "flex" }}} >
           <img src={awarelogo} align="left" alt="data axle" width="280px" style={{paddingTop:10}}/>
           </Grid>
-       <Grid item md={8} xs={2} justifyContent="center" >
+       <Grid item md={8} xs={2} justifyContent="center" container>
+        <Grid item >
         <FormLabel sx={{ color: "white",fontSize:30,marginLeft:25,color:"#1976d"}}>{localStorage.getItem("BU")}</FormLabel>
         </Grid>
-        <Grid item md={2} xs={2} justifyContent="right" sx={{ display:{md:"flex"}}}>
+      
+        <Grid item  xs={2} justifyContent="left" sx={{ display:{md:"flex"}}}>
         <IconButton onClick={ handleChange}>
-        <MenuOpenIcon sx={{color:"white"}} fontSize="large"/>
+        <ArrowDropDownIcon sx={{color:"#1798ff",paddingTop:1}} fontSize="large"/>
         </IconButton>
         <Menu open={open} anchorEl={anchor} onClose={handleClose} onChange={e=>{console.log(e,"Mnu")}}>
 
@@ -167,10 +169,12 @@ setanchor2(e.currentTarget);
             return <MenuItem key={bu} value={bu} onClick={handleClose}>{bu}</MenuItem>
           })}
         </Menu>
-        </Grid>
-        </Grid>
-        </Typography>
         
+        </Grid>
+        </Grid>
+       
+        </Grid>
+        </Typography>      
       
         
         <div><Button variant="contained" sx={{mr:3,fontWeight:"",fontSize:"12px"}}
@@ -179,7 +183,7 @@ setanchor2(e.currentTarget);
          {/* <Typography><FormLabel sx={{color:"grey",mr:2,fontWeight:600}} disableTypography='true'>{localStorage.getItem('user')}</FormLabel></Typography> */}
          <IconButton onClick={handleAvatarClick}>
          
-         <Avatar   src="/broken-image.jpg" sx={{ bgcolor:"grey" }}>{JSON.parse(localStorage.getItem("Profile"))?.first_name?.charAt(0)+JSON.parse(localStorage.getItem("Profile"))?.last_name?.charAt(0)}</Avatar>
+         <Avatar   src="/broken-image.jpg" sx={{ bgcolor:"grey" }}>{JSON.parse(localStorage.getItem("Profile"))?.first_name?.charAt(0).toUpperCase()+JSON.parse(localStorage.getItem("Profile"))?.last_name?.charAt(0).toUpperCase()}</Avatar>
          </IconButton>
        </Toolbar > 
        <Menu open={openAvatar} anchorEl={anchor2} sx={{ display:"flex"}}

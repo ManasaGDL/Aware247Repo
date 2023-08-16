@@ -17,14 +17,18 @@ const AddEditBusinessUnit = ({
   setError,
 }) => {
   return (
-    <Dialog open={open} onClose={() => setOpenDialog({ open: false })}>
-      <DialogTitle>{openDialog.action} Business Unit</DialogTitle>
+    <Dialog open={open} onClose={() =>{
+  
+    setOpenDialog({ open: false })
+   
+}}>
+      <DialogTitle>{openDialog.action} Company</DialogTitle>
       <DialogContent style={{ height: "120px", width: "350px" }}>
         <Box sx={{ textAlign: "center", margin: 2 }}>
           <TextField
             name="new_bussinessunit"
             fullWidth
-            label="BussinessUnit"
+            label="Company"
             value={businessunitvalue}
             onChange={(e) => {
               setError({ businessunit_name: "" });
@@ -43,7 +47,7 @@ const AddEditBusinessUnit = ({
             createBusinessUnit(businessunitvalue);
           }}
         >
-          {openDialog.action} BusinessUnit
+          {openDialog.action} Company
         </Button>
       </DialogActions>
     </Dialog>

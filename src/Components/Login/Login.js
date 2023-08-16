@@ -1,6 +1,6 @@
-import * as React  from 'react';
+import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
-import { useState, useEffect} from "react"
+import { useState, useEffect } from "react"
 import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -18,90 +18,96 @@ import awarelogo from "../../assets/aware/Aware247Logo.png"
 import awaresmall from "../../assets/aware/Aware247SmallIcon.png"
 import api from '../../Api';
 import { axiosInstance } from '../../axios';
-
+import CustomDialogs from '../common/Dialogs/CustomDialogs';
 // TODO remove, this demo shouldn't need to reset the theme.
 
 const defaultTheme = createTheme();
 const initialLoginData = Object.freeze({
-  username:"",
-  password:""
+  username: "",
+  password: ""
 })
 export default function Login() {
-  const [ loginData , setLoginData] =useState(initialLoginData)
-  const navigate= useNavigate();
+  const [loginData, setLoginData] = useState(initialLoginData)
+  const navigate = useNavigate();
 
-  const handleSubmit = async(event) => {
+  const [openCustomDialog, setOpenCustomDialog] = useState({ open: false });
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
       email: data.get('email'),
       password: data.get('password'),
     });
-    setLoginData({ username: data.get('email'),
-    password: data.get('password'),})
-    if(loginData)
-    {
-      try{
-     const res= await api.login({ username: data.get('email'),
-     password: data.get('password')});
-     if(res)
-     {
-      let{ access, refresh}= res?.data;
-      localStorage.setItem("access_token",access);
-      localStorage.setItem("refresh_token",refresh);
-      axiosInstance.defaults.headers["Authorization"]="Bearer "+localStorage.getItem("access_token");
-      const userResponse= await api.getUserProfile();
-      const businessUnit= userResponse?.data?.Profile?.last_businessiunit_name
-localStorage.setItem("Privileges",userResponse?.data?.Privileges)
-localStorage.setItem("Profile",JSON.stringify(userResponse?.data?.Profile))
-localStorage.setItem("BU",businessUnit) ;
-localStorage.setItem("user",data.get("email").trim())
-navigate("/admin/dashboard")  
-}
-      }catch(e)
-      {
-        alert(e.response.data.detail)
+    setLoginData({
+      username: data.get('email'),
+      password: data.get('password'),
+    })
+    if (loginData) {
+      try {
+        const res = await api.login({
+          username: data.get('email'),
+          password: data.get('password')
+        });
+        if (res) {
+          let { access, refresh } = res?.data;
+          localStorage.setItem("access_token", access);
+          localStorage.setItem("refresh_token", refresh);
+          axiosInstance.defaults.headers["Authorization"] = "Bearer " + localStorage.getItem("access_token");
+          const userResponse = await api.getUserProfile();
+          const businessUnit = userResponse?.data?.Profile?.last_businessiunit_name
+          localStorage.setItem("Privileges", userResponse?.data?.Privileges)
+          localStorage.setItem("Profile", JSON.stringify(userResponse?.data?.Profile))
+          localStorage.setItem("BU", businessUnit);
+          localStorage.setItem("user", data.get("email").trim())
+          navigate("/admin/dashboard")
+        }
+      } catch (e) {
+      let keys;
+        if(e.response?.data?.detail)
+        {setOpenCustomDialog({open:true,message:e.response.data.detail,title:"Error"})
+        
+        }
+      else{ keys= Object.keys(e.response.data);
+        setOpenCustomDialog({open:true,message:keys.join(' , ')+" is required",title:"Error"})
+      
+      }
       }
     }
   };
-
+  const stayOnSamePage = () => {
+    setOpenCustomDialog({ open: false, message: "" });
+    // window.location.reload(false)
+  };
   return (
     <ThemeProvider theme={defaultTheme}>
-      <Grid container component="main" sx={{ height: '100vh' ,display:"flex",alignItems:"center"}}>
+      <Grid container component="main" sx={{ height: '100vh', display: "flex", alignItems: "center" }}>
         <CssBaseline />
         <Grid
           item
           xs={false}
           sm={4}
           md={7}
-     
-          // sx={{
-          //   // backgroundImage: `url(${awarelogo})`,
-          //   // backgroundRepeat: 'no-repeat',
-          //   backgroundColor: (t) =>
-          //     t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
-          //   backgroundSize: 'cover',
-          //   backgroundPosition: 'center',
-          // }}
+
+
         >
-         
-          <img src={awarelogo} alt="awarelogo"/>
-         
+
+          <img src={awarelogo} alt="awarelogo" />
+
         </Grid>
-        <Grid item xs={12} sm={8} md={5} 
-        // component={Paper} elevation={6} 
-        square>
+        <Grid item xs={12} sm={8} md={5}
+          // component={Paper} elevation={6} 
+          square>
           <Box
             sx={{
-             width:"350px",
+              width: "350px",
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
             }}
           >
-            <Avatar sx={{  width: 90, height: 90, bgcolor: "white" }}>
-              <img src={awaresmall} alt="small"   height="90"
-                  width="135"/>
+            <Avatar sx={{ width: 90, height: 90, bgcolor: "white" }}>
+              <img src={awaresmall} alt="small" height="90"
+                width="135" />
             </Avatar>
             <Typography component="h1" variant="h5">
               Sign in
@@ -117,6 +123,7 @@ navigate("/admin/dashboard")
                 autoComplete="email"
                 autoFocus
               />
+           
               <TextField
                 margin="normal"
                 required
@@ -127,7 +134,7 @@ navigate("/admin/dashboard")
                 id="password"
                 autoComplete="current-password"
               />
-           
+
               <Button
                 type="submit"
                 fullWidth
@@ -137,15 +144,29 @@ navigate("/admin/dashboard")
                 Sign In
               </Button>
               <Grid container>
-                
-                <Grid item>
-                  
+                <Grid item xs>
+                  <Link href="#" variant="body2">
+                    Forgot password?
+                  </Link>
                 </Grid>
+                {/* <Grid item>
+                  <Link href="#" variant="body2">
+                    {"Don't have an account? Sign Up"}
+                  </Link>
+                </Grid> */}
               </Grid>
-            
+
             </Box>
           </Box>
         </Grid>
+        <CustomDialogs
+            open={openCustomDialog.open}
+            message={openCustomDialog.message}
+            title={openCustomDialog.title}
+            setOpenCustomDialog={setOpenCustomDialog}
+            hideButton={true}
+            handleConfirmation={stayOnSamePage}
+          />
       </Grid>
     </ThemeProvider>
   );

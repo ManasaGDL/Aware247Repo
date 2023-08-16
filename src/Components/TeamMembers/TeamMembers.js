@@ -7,6 +7,7 @@ import { Backdrop } from "@mui/material";
 import LoadingPanel from "../common/TabPanel/LoadingPanel";
 import { StyledButton } from "../../CustomStyles/StyledComponents";
 import businessUnitContext from "../../context/businessUnitContext";
+import AddEditTeamMember from "./AddEditTeamMember";
 const initialPageState={ limit:10 , offset:0}
 const TeamMembers = () => {
   const bu = useContext(businessUnitContext);
@@ -15,6 +16,9 @@ const TeamMembers = () => {
   const [loading, setLoading] = useState(false);
   const [ totalRecords, setTotalRecords] = useState(0);
   const [ pageState , setPageState ] = useState({...initialPageState});
+  const [ openDialog , setOpenDialog] = useState({open:false,action:""})
+  const [ userDetails , setUserDetails] = useState({first_name:'',last_name:'',"email":'',password:''})
+  const [ error ,setError]= useState({first_name:'',email:'',password:''})
   useEffect(() => {
     setLoading(true);
  
@@ -57,6 +61,9 @@ setPageState(prev=>({
       },
     },
   ];
+  const createUser=(data)=>{
+    console.log(data)
+  }
   return (
     <div style={{ textAlign: "left" }}>
       <Backdrop
@@ -75,7 +82,16 @@ setPageState(prev=>({
             spacing={12}
             sx={{ height: 50, marginRight: 2 }}
           >
-            <h5 style={{ paddingTop: 20, marginLeft: 20 }}>Team Members</h5>          
+            <h5 style={{ paddingTop: 20, marginLeft: 20 }}>Team Members</h5>    
+            <StyledButton
+            variant="contained"
+            onClick={() => {
+              setOpenDialog({ open: true, action: "Add" });
+            }}
+          >
+            {" "}
+            + Add Team Member
+          </StyledButton>{" "}      
           </Stack>
           <Container sx={{ paddingTop: 2, paddingBottom: 4 }}>
            {data.length>0 && <DataGrid
@@ -117,6 +133,7 @@ setPageState(prev=>({
               }}
             />}
           </Container>
+          <AddEditTeamMember open={openDialog?.open} setOpenDialog={setOpenDialog} openDialog={openDialog}  userDetails={userDetails} error={error} setUserDetails={setUserDetails} createUser={createUser} setError={setError}/>
         </Box>
       )}
     </div>

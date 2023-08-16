@@ -898,20 +898,21 @@ const EditIncident = ({ bu }) => {
               justifyContent="space-between"
               alignItems="flex-start"
               spacing={8}
+              sx={{mt:4}}
             >
-              <FormLabel sx={{ mt: 1, fontWeight: "bold" }}>
+              <FormLabel sx={{  fontWeight: "bold" }}>
                 Alert Users Subscribed To
               </FormLabel>
 
-              <FormControlLabel
+              <FormControlLabel 
                 control={
-                  <Checkbox
+                  <Checkbox 
                     //   checked={allChecked}
                     name="selectall"
                     onChange={handleSelectAll}
                   ></Checkbox>
                 }
-                label="Select All"
+                label="Select All" 
               ></FormControlLabel>
             </Stack>
             <br />

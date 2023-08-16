@@ -33,7 +33,6 @@ import LoadingPanel from "../common/TabPanel/LoadingPanel";
 import CustomDialogs from "../common/Dialogs/CustomDialogs";
 const useStyles = makeStyles((theme) => ({
   header: {
-    backgroundImage: `url(${bgLogo})`,
     height: "80px",
     //   backgroundRepeat:"repeat-x"
   },
