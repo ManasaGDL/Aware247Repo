@@ -11,7 +11,10 @@ import IconButton from "@mui/material/IconButton";
 import api from "../Api";
 import Box from "@mui/material/Box";
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
-
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
 import { axiosInstance } from "../axios";
 import businessUnitContext from "../context/businessUnitContext";
 import awarelogo from "../assets/aware/Aware247Logo.png"
@@ -50,6 +53,7 @@ const Header=({user,setDynamicSideBarData,businessunit,setLoading,loading})=>{
   const [anchor,setAnchor] =useState(null)
 const [ anchor2, setanchor2]= useState(null);
   const open = Boolean(anchor);
+  const [ counter , setCounter]=useState(0)
   const openAvatar= Boolean(anchor2)
   const [ searchParams , setSearchParams] = useSearchParams();
   const prevBU = useRef();
@@ -57,7 +61,14 @@ const [ anchor2, setanchor2]= useState(null);
   const [ openDialog , setOpenDialog]= useState(false);
   const [ newbusinessunit , setNewBusinessUnit] = useState('')
  const [ userData, setUserData]= useState([])
+ const [ resetPasswordError , setResetPasswordError]= useState({})
+ const [ resetPasswordDialog , setResetPasswordDialog]= useState({open:false})
+ const [ disableButton , setDisableButton]= useState(true)
+ const [ resetPasswordDetails , setResetPasswordDetails] = useState({current_password:'',new_password:'',confirm_password:''})
 useEffect(()=>{
+  setResetPasswordDetails({})
+  setResetPasswordError({})
+  setCounter(0)
   if(searchParams.get("token"))
   {
    
@@ -70,6 +81,7 @@ useEffect(()=>{
   }
   callBusinessUnits();
 },[])
+
 useEffect(()=>{
 const data=JSON.parse(localStorage.getItem('Profile'));
 
@@ -146,6 +158,13 @@ setanchor2(e.currentTarget);
   const handleCloseAvatar=()=>{
    setanchor2(null)
   }
+useEffect(()=>{
+
+if(Object.keys(resetPasswordError).length===0 && counter>=2)
+setDisableButton(false)
+else setDisableButton(true)
+
+},[resetPasswordError])
     return <>
     <AppBar   sx={{ backgroundColor:"#FBFCFC"}}> 
        <Toolbar  sx={{ }}>
@@ -191,33 +210,137 @@ setanchor2(e.currentTarget);
        onChange={e=>{console.log(e,"Mnu")}}>
 
 
- <MenuItem key={1}  value={localStorage.getItem("user")} sx={{ fontWeight:300,color:"grey",textAlign:"center",
+ 
+
+<MenuItem key={1}  value={localStorage.getItem("user")} sx={{ fontWeight:300,color:"grey",textAlign:"center",
  ":hover":{"color":"#1798ff"}}}
 //  value={bu}
   // onClick={handleClose}
   >
     {localStorage.getItem("user")}</MenuItem>
-<MenuItem key={2} sx={{ fontWeight:300,color:"grey", ":hover":{"color":"#1798ff"}}} onClick={()=>{
+    <MenuItem key={"reset"} sx={{ fontWeight:300,color:"grey", ":hover":{"color":"#1798ff"}}} onClick={e=>setResetPasswordDialog({open:true})}>
+ Change Password
+</MenuItem>
+<MenuItem key={"user"} sx={{ fontWeight:300,color:"grey", ":hover":{"color":"#1798ff"}}} onClick={()=>{
   localStorage.removeItem("access_token")
   localStorage.removeItem("refresh_token")
   localStorage.removeItem("user")
   navigate("/admin/login")
 }}>Log Out</MenuItem>
 </Menu>
-         </AppBar> 
- {/* <Box sx={styles.flex}>
-        <AppBar position='fixed' disablegutters='true'sx={{ height:"70px"}}>
-          <Toolbar>
-          
-            <img src={awarelogo} width="280px"/>
+
+
+<Dialog open={ resetPasswordDialog.open} onClose={() => {
+    
+  setResetPasswordDialog({ open: false })}}>
+  <DialogTitle>{"Change Password"}</DialogTitle>
+  <DialogContent style={{ width: "350px" }}>
+    <Box sx={{ textAlign: "center", margin: 2 }}>
+      <TextField
+        name="current_password"
+        fullWidth
+        label="Current Password"
+        onBlur={()=>setCounter(counter+1)}
+        value={resetPasswordDetails?.current_password}
+     onChange={(e)=>{
+      
+      setResetPasswordDetails(prev=>({...prev,current_password:e.target.value}))
+      if(e.target.value===resetPasswordDetails?.new_password)
+      {
+        setResetPasswordError(prev=>({...prev,new_password:"New password shouldn't be same as current Password"}))
+      }
+      else
+      {
+        const newitems={...resetPasswordError};
+        delete newitems?.new_password
+        setResetPasswordError(newitems)
+      }
+     
+     }}
+      ></TextField>
+      {/* {<div style={{ color: "red" }}>{error?.first_name}</div>} */}
+     
+      &nbsp;
+      <TextField
+        name="new_password"
+        fullWidth
+        label="New Password"
+      value={resetPasswordDetails.new_password}
+      onBlur={()=>setCounter(counter+1)}
+      onChange={e=>{
+        
+        setResetPasswordDetails(prev=>({...prev,new_password:e.target.value}))
+        if(resetPasswordDetails.current_password === e.target.value)
+        {
+          setResetPasswordError(prev=>({...prev,new_password:"New password shouldn't be same as current Password"}))
+        }
+        else{
        
-            <Typography variant='title' color='inherit' sx={styles.flex}>
-            <Typography><FormLabel sx={{color:"black",mr:2}} disableTypography='true'>{localStorage.getItem('user')}</FormLabel></Typography>
-            </Typography>
-           
-          </Toolbar>
-        </AppBar>
-      </Box> */}
+          const newitems={...resetPasswordError};
+        delete newitems?.new_password
+        setResetPasswordError(newitems)
+        }
+        if(resetPasswordDetails?.confirm_password!==e.target.value)
+        {
+          setResetPasswordError(prev=>({...prev,confirm_password_error:"Password didn't matched"}))
+         
+        }
+        else{
+          const newitems={...resetPasswordError};
+        delete newitems?.confirm_password_error
+        setResetPasswordError(newitems)
+          
+        }
+      }}
+      ></TextField>
+        {<div style={{ color: "red" ,fontSize:"13px"}}>{resetPasswordError?.new_password}</div>}
+         &nbsp;
+      <TextField
+        name="confirm_new_password"
+        fullWidth
+        label="Confirm New Password"
+        type="text"
+       value={resetPasswordDetails?.confirm_password}
+       onBlur={()=>setCounter(counter+1)}
+       onChange={e=>{
+        // setCounter(counter+1)
+        setResetPasswordDetails(prev=>({...prev,confirm_password:e.target.value}))
+        if(resetPasswordDetails?.new_password!==e.target.value)
+        setResetPasswordError(prev=>({...prev,confirm_password_error:"Password didn't matched"}))
+      else
+      {
+        const newitems={...resetPasswordError};
+        delete newitems?.confirm_password_error
+        setResetPasswordError(newitems)
+      }
+     
+       }}
+      ></TextField>
+       {<div style={{ color: "red",fontSize:"13px" }}>{resetPasswordError?.confirm_password_error}</div>}
+      &nbsp;
+      
+    </Box>
+  </DialogContent>
+  <DialogActions>
+    <Button
+      variant="contained"
+      type="submit"
+      sx={{ color: "white", fontWeight: "600" }}
+      disabled={disableButton}
+
+      onClick={()=>{
+        // setResetPasswordError({})
+        setResetPasswordDetails({confirm_password:'',
+      new_password:'',current_password:''})
+        // setCounter(0)
+      }}
+    >
+Change Password
+    </Button>
+  </DialogActions>
+</Dialog>
+         </AppBar> 
+ 
      
         </>
 }
