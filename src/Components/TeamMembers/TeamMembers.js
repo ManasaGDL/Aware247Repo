@@ -14,6 +14,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
+
 const initialPageState={ limit:10 , offset:0}
 const TeamMembers = () => {
   const bu = useContext(businessUnitContext);
@@ -92,8 +93,14 @@ setPageState(prev=>({
     ]
     }
   ];
-  const createUser=(data)=>{
-    console.log(data)
+  const createUser=async(data)=>{
+    try{
+      console.log(data)
+    const res = await api.addTeamMember(data)
+    }catch(e)
+    {
+
+    }
   }
   return (
     <div style={{ textAlign: "left" }}>

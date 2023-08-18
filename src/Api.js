@@ -148,6 +148,9 @@ return axiosInstance.post(`${baseURL}/auth/token/jwt_refresh`,{token:localStorag
      deleteBusinessUnit:(id)=>{
       return axiosInstance.delete(`${baseURL}/api/common/businessunit/${id}`)
      }
-     
+     ,
+     addTeamMember:(payload)=>{
+      return axiosInstance.post(`${baseURL}/api/account/profile/`,payload)
+     }
 }
 export default api;
