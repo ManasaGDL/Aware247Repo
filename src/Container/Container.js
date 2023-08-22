@@ -50,10 +50,6 @@ const Container = ({ user}) => {
         setCollapse(!collapse)
     }
   
-    // if (localStorage.getItem("access_token")) {
-    //     axiosInstance.defaults.headers["businessunit"] = localStorage.getItem("BU");
-    //     axiosInstance.defaults.headers["Authorization"] = "Bearer " + localStorage.getItem("access_token")
-    // }
 
     return <>   
      <ProSidebarProvider> 
@@ -84,30 +80,7 @@ const Container = ({ user}) => {
                 <Paper sx={{mr: 4,ml:2 ,mt:4,mb:4, height:'auto'}} elevation={3}>
      <Box sx={{width:"100%",height:"100%"}}>
         <Outlet />
-                    {/* <Routes>
-                      <Route path="/login/*" element={<Dashboard />}/>
-                       
-                         <Route path="admin" element={<Navigate to="dashboard"/>}/> 
-                      <Route path="admin">
-                       <Route path="security" element={<Security/>}/>
-                        <Route path="dashboard" element={<DashBoard bu={bu}/>} />
-                        <Route path="teammembers" element={<TeamMembers/>}/>
-                        <Route path="viewScheduleMaintenance/:id" element={<ViewScheduleMaintenance/>}/>
-                        <Route path="scheduled/:action" element={<CreateScheduleMaintenance/>}/>
-                        <Route path="scheduled/:action/:id" element={<CreateScheduleMaintenance/>}/>
-                        <Route path="create_incident" element={<MainActionPage bu={bu} />} />
-                        <Route path="create_incident/:action/:id" element={<MainActionPage bu={bu}/>}/>
-                        <Route path="incidents" element={<IncidentPage bu={bu} />} />
-                        <Route path="subscribers/manage/:id" element={<UpdateSubscriber/>}/>
-                        <Route path="subscribers/addSubscriber" element={<AddSubscriber/>}/>
-                        <Route path="subscribers" element={<Subscribers />} />
-                        <Route path="components" element ={<Component/>}/>
-                        </Route>
-                        <Route path="*" element={<Navigate to="/login"/>}/>
-                         <Route  element={<Navigate to="wrongurl"  />} />
-                        <Route path="wrongurl" element={<h3>URL does not exists.</h3>}/>  
-                        
-                    </Routes> */}
+                  
                     </Box>
                     </Paper>
                 </Grid>
@@ -117,7 +90,7 @@ const Container = ({ user}) => {
              
           
         </section>
-        {/* </businessUnitContext.Provider>   */}
+   
         </ProSidebarProvider>
     </>
 }

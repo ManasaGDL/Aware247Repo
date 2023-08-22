@@ -1,5 +1,5 @@
 import React, { useState , useEffect,useRef , useContext} from "react";
-import { AppBar,Toolbar,Typography ,Grid, TextField,Avatar,List,ListItem, ListItemText,ListItemButton} from "@mui/material"
+import { AppBar,Toolbar,Typography ,Grid, TextField,Avatar,List,ListItem, ListItemText,ListItemButton,CircularProgress} from "@mui/material"
 import { makeStyles } from "@material-ui/core/styles";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import Button from "@mui/material/Button";
@@ -12,13 +12,14 @@ import api from "../Api";
 import Box from "@mui/material/Box";
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import Dialog from "@mui/material/Dialog";
+import CustomDialogs from "./common/Dialogs/CustomDialogs";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { axiosInstance } from "../axios";
 import businessUnitContext from "../context/businessUnitContext";
 import awarelogo from "../assets/aware/Aware247Logo.png"
-
+import { SnackbarContext } from "../context/SnackbarContext";
 const useStyles = makeStyles( theme =>({
  
     abRoot: {
@@ -55,6 +56,8 @@ const [ anchor2, setanchor2]= useState(null);
   const open = Boolean(anchor);
   const [ counter , setCounter]=useState(0)
   const openAvatar= Boolean(anchor2)
+  const [ openCustomDialog ,setOpenCustomDialog]= useState({open:false})
+  const { setSnackBarConfig} = useContext(SnackbarContext);
   const [ searchParams , setSearchParams] = useSearchParams();
   const prevBU = useRef();
   const [ bu , setBu]= useContext(businessUnitContext);
@@ -64,8 +67,15 @@ const [ anchor2, setanchor2]= useState(null);
  const [ resetPasswordError , setResetPasswordError]= useState({})
  const [ resetPasswordDialog , setResetPasswordDialog]= useState({open:false})
  const [ disableButton , setDisableButton]= useState(true)
- const [ resetPasswordDetails , setResetPasswordDetails] = useState({current_password:'',new_password:'',confirm_password:''})
+ const [ profileUser, setProfileUser]= useState({})
+ const [ actionProgress ,setActionProgress] = useState(false)
+ const [ resetPasswordDetails , setResetPasswordDetails] = useState({
+  // current_password:''
+//  ,
+ new_password:'',confirm_password:''})
 useEffect(()=>{
+  const profile = localStorage.getItem("Profile");
+  setProfileUser(JSON.parse(profile))
   setResetPasswordDetails({})
   setResetPasswordError({})
   setCounter(0)
@@ -160,11 +170,44 @@ setanchor2(e.currentTarget);
   }
 useEffect(()=>{
 
-if(Object.keys(resetPasswordError).length===0 && counter>=2)
+if(Object.keys(resetPasswordError).length===0 && counter>=1)
 setDisableButton(false)
 else setDisableButton(true)
 
 },[resetPasswordError])
+const handleChangePassword=async(payload)=>{
+  try{
+  const res= await api.changePassword({"password":payload?.new_password,user:profileUser?.user_id})
+
+if(res?.status === 200)
+
+setSnackBarConfig({open:true,message:"Password changed successfully",severity:"success"})
+  setActionProgress(false)
+  setResetPasswordDialog({open:false})
+  setResetPasswordDetails({confirm_password:'',
+  new_password:'',current_password:''})
+  setOpenCustomDialog({open:false})
+  }catch(e)
+  {if (e.response?.data) {
+    const errordata = Object.values(e.response.data);
+    
+    setOpenCustomDialog({ open: true, message: errordata, title: "Error" });
+setResetPasswordDetails({})
+  }}finally{
+    setResetPasswordDialog({open:false}) 
+    setResetPasswordDetails({})
+    setActionProgress(false)
+  }
+  
+}
+const stayOnSamePage=()=>{
+  setOpenCustomDialog({open:false})
+  setResetPasswordDialog({open:false})
+}
+useEffect(()=>{
+console.log(openCustomDialog)
+},[openCustomDialog])
+
     return <>
     <AppBar   sx={{ backgroundColor:"#FBFCFC"}}> 
        <Toolbar  sx={{ }}>
@@ -215,28 +258,32 @@ else setDisableButton(true)
 <MenuItem key={1}  value={localStorage.getItem("user")} sx={{ fontWeight:300,color:"grey",textAlign:"center",
  ":hover":{"color":"#1798ff"}}}
 //  value={bu}
-  // onClick={handleClose}
+  onClick={handleCloseAvatar}
   >
     {localStorage.getItem("user")}</MenuItem>
-    <MenuItem key={"reset"} sx={{ fontWeight:300,color:"grey", ":hover":{"color":"#1798ff"}}} onClick={e=>setResetPasswordDialog({open:true})}>
+    <MenuItem key={"reset"} sx={{ fontWeight:300,color:"grey", ":hover":{"color":"#1798ff"}}} onClick={e=>{
+      setResetPasswordDialog({open:true})
+    handleCloseAvatar()}}>
  Change Password
 </MenuItem>
 <MenuItem key={"user"} sx={{ fontWeight:300,color:"grey", ":hover":{"color":"#1798ff"}}} onClick={()=>{
   localStorage.removeItem("access_token")
   localStorage.removeItem("refresh_token")
   localStorage.removeItem("user")
+ handleCloseAvatar()
   navigate("/admin/login")
 }}>Log Out</MenuItem>
 </Menu>
 
 
-<Dialog open={ resetPasswordDialog.open} onClose={() => {
-    
+<Dialog open={ resetPasswordDialog?.open} onClose={() => {
+    setResetPasswordDetails({})
+    setActionProgress(false)
   setResetPasswordDialog({ open: false })}}>
   <DialogTitle>{"Change Password"}</DialogTitle>
   <DialogContent style={{ width: "350px" }}>
     <Box sx={{ textAlign: "center", margin: 2 }}>
-      <TextField
+      {/* <TextField
         name="current_password"
         fullWidth
         label="Current Password"
@@ -257,7 +304,7 @@ else setDisableButton(true)
       }
      
      }}
-      ></TextField>
+      ></TextField> */}
       {/* {<div style={{ color: "red" }}>{error?.first_name}</div>} */}
      
       &nbsp;
@@ -270,16 +317,16 @@ else setDisableButton(true)
       onChange={e=>{
         
         setResetPasswordDetails(prev=>({...prev,new_password:e.target.value}))
-        if(resetPasswordDetails.current_password === e.target.value)
-        {
-          setResetPasswordError(prev=>({...prev,new_password:"New password shouldn't be same as current Password"}))
-        }
-        else{
+        // if(resetPasswordDetails.current_password === e.target.value)
+        // {
+        //   setResetPasswordError(prev=>({...prev,new_password:"New password shouldn't be same as current Password"}))
+        // }
+        // else{
        
           const newitems={...resetPasswordError};
         delete newitems?.new_password
         setResetPasswordError(newitems)
-        }
+        // }
         if(resetPasswordDetails?.confirm_password!==e.target.value)
         {
           setResetPasswordError(prev=>({...prev,confirm_password_error:"Password didn't matched"}))
@@ -329,16 +376,26 @@ else setDisableButton(true)
       disabled={disableButton}
 
       onClick={()=>{
-        // setResetPasswordError({})
-        setResetPasswordDetails({confirm_password:'',
-      new_password:'',current_password:''})
+        setActionProgress(true)
+        handleChangePassword(resetPasswordDetails);
+        
+       
         // setCounter(0)
       }}
     >
+      { actionProgress &&  <CircularProgress  sx={{marginLeft:0,color:"white",fontWeight:10}} size={20}/>}
 Change Password
     </Button>
   </DialogActions>
 </Dialog>
+<CustomDialogs
+            open={openCustomDialog?.open}
+            message={openCustomDialog.message}
+            title={openCustomDialog.title}
+            setOpenCustomDialog={setOpenCustomDialog}
+            hideButton={true}
+            handleConfirmation={stayOnSamePage}
+          />
          </AppBar> 
  
      

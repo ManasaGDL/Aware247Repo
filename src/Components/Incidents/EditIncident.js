@@ -86,6 +86,7 @@ const EditIncident = ({ bu }) => {
   const [dateError, setDateError] = useState();
   const [responseerror, setresponseError] = useState({});
   const [ actionProgress , setActionProgress] = useState(false)//spinner on button action
+  const [ templateActionProgress , setTemplateActionProgress]= useState(false)
   let statusArray = [];
   const { id } = useParams();
   const navigate = useNavigate();
@@ -241,14 +242,19 @@ const EditIncident = ({ bu }) => {
   }, [selectedTemplateObject]);
   const getTemplatesList = async () => {
     try {
+      setTemplateActionProgress(true)
       const res = await api.getIncidentTemplateDropDown();
- console.log(res?.data)
+
       setIncidentTemplates(
         res?.data?.map((template) => {
           return { id: template.template_id, name: template.template_name };
         })
+    
       );
-    } catch (e) {}
+      setTemplateActionProgress(false)
+    } catch (e) {
+      setTemplateActionProgress(false)
+    }
   };
   useEffect(() => {
     if (callCreate) {
@@ -557,7 +563,7 @@ const EditIncident = ({ bu }) => {
               id="demo-simple-select-label"
               sx={{ color: "#80daeb", fontWeight: "600" }}
             >
-              Prefill with Template
+             {templateActionProgress && <CircularProgress sx={{marginLeft:0,color:"blue",fontWeight:10}} size={20}/>} Prefill with Template
             </InputLabel>
             <Select
               sx={{ minWidth: "300px" }}

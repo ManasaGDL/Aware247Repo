@@ -12,7 +12,8 @@ const DisplayComponents = ({ data , bu , incidentCauseData }) => {
               <div
                 style={{
                   maxWidth:"1300px",
-                  backgroundColor: `#f7f8f9`,
+                  backgroundColor: "#f7f8f9",
+                  // 
                   // padding:`8px 10px`,
                   // padding: `8px 16px`,
                   // borderRadius: `3px`,

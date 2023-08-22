@@ -5,7 +5,7 @@ import api from "../../Api";
 import dayjs from "dayjs";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Backdrop,Button } from "@mui/material";
+import { Backdrop,Button,CircularProgress } from "@mui/material";
 import LoadingPanel from "../common/TabPanel/LoadingPanel";
 import { StyledButton } from "../../CustomStyles/StyledComponents";
 import businessUnitContext from "../../context/businessUnitContext";
@@ -14,11 +14,13 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-
+import { SnackbarContext } from "../../context/SnackbarContext";
+import CustomDialogs from "../common/Dialogs/CustomDialogs";
 const initialPageState={ limit:10 , offset:0}
 const TeamMembers = () => {
   const bu = useContext(businessUnitContext);
   const [data, setData] = useState([]);
+  const [actionProgress , setActionProgress] = useState(false)
   const [pageSize, setPageSize] = useState(50);
   const [loading, setLoading] = useState(false);
   const [ totalRecords, setTotalRecords] = useState(0);
@@ -26,7 +28,10 @@ const TeamMembers = () => {
   const [ openDialog , setOpenDialog] = useState({open:false,action:""})
   const [ userDetails , setUserDetails] = useState({first_name:'',last_name:'',"email":'',password:''})
   const [ error ,setError]= useState({first_name:'',email:'',password:''})
-const [ openDeleteDialog , setOpenDeleteDialog]= useState(false)
+  const { setSnackBarConfig} = useContext(SnackbarContext);
+  const [ openDeleteDialog , setOpenDeleteDialog]= useState(false)
+  const [ errorState, setErrorState]= useState({})
+  // const [ openCustomDialog , setOpenCustomDialog]= useState({open:false})
   useEffect(() => {
     setLoading(true);
  
@@ -37,6 +42,11 @@ setPageState(prev=>({
 ...prev,limit:pageSize
 }))
  },[pageSize])
+
+//  const stayOnSamePage=()=>{
+//   setOpenCustomDialog({open:false})
+//   setActionProgress(false)
+//  }
   const getTeamMembers = async (obj) => {
     try {
       const response = await api.getTeamMembers(obj);
@@ -78,7 +88,7 @@ setPageState(prev=>({
         label="Edit"
         showInMenu
        onClick={e=>{
-        setUserDetails({first_name:params.row.first_name,last_name:params.row.last_name,email:params.row.email})
+        setUserDetails({first_name:params.row.first_name,last_name:params.row.last_name,email:params.row.email,id:params.row.user_id,phone_number:params.row.phone_number})
         setOpenDialog({open:true ,id:params.row.user_id,action:"Edit"})}}
         icon ={<EditIcon/>}
         />,
@@ -94,9 +104,51 @@ setPageState(prev=>({
     }
   ];
   const createUser=async(data)=>{
+    setActionProgress(true)
+  let res;
     try{
-      console.log(data)
-    const res = await api.addTeamMember(data)
+     
+      if(openDialog.action === "Add")
+     {res = await api.addTeamMember(data);
+  
+         if(res?.status===201)
+{
+  setSnackBarConfig({open:true,message:"Team Member added successfully!",severity:"success"})
+}
+     }
+     else  {res = await api.editTeamMember(data,userDetails?.id)
+      if(res?.status===200)
+      {
+        setSnackBarConfig({open:true,message:"Team Member edited successfully!",severity:"success"})
+      }
+    }
+setOpenDialog({open:false})
+getTeamMembers(pageState);
+setUserDetails({first_name:"",last_name:'',phone_number:'',email:''})
+setActionProgress(false)
+    }catch(e)
+    {if (e.response?.data) {
+      setActionProgress(false)
+      Object.entries(e.response?.data).forEach(([key, value]) => {
+        setError(prevState => ({
+          ...prevState,
+          [key]: typeof value === "string" ? value : value.join('; ')
+        }));
+      })
+     
+     
+    }
+
+    }
+
+  }
+  const deleteTeamMember = async()=>{
+    try{
+      const res = await api.deleteTeamMember(openDeleteDialog?.id)
+      setSnackBarConfig({open:true,message:`${openDeleteDialog?.name} successfully deleted`, severity:"success"})
+    setOpenDeleteDialog({open:false})
+    setActionProgress(false)
+    getTeamMembers(pageState);
     }catch(e)
     {
 
@@ -127,7 +179,7 @@ setPageState(prev=>({
               setOpenDialog({ open: true, action: "Add" });
             }}
           >
-            {" "}
+           
             + Add Team Member
           </StyledButton>{" "}      
           </Stack>
@@ -171,7 +223,7 @@ setPageState(prev=>({
               }}
             />}
           </Container>
-          <AddEditTeamMember open={openDialog?.open} setOpenDialog={setOpenDialog} openDialog={openDialog}  userDetails={userDetails} error={error} setUserDetails={setUserDetails} createUser={createUser} setError={setError}/>
+          <AddEditTeamMember actionProgress={actionProgress} open={openDialog?.open} setOpenDialog={setOpenDialog} openDialog={openDialog}  userDetails={userDetails} error={error} setUserDetails={setUserDetails} createUser={createUser} setError={setError}/>
           <Dialog
           open={openDeleteDialog.open}
           onClose={() => setOpenDeleteDialog({ open: false })}
@@ -185,13 +237,23 @@ setPageState(prev=>({
             <Button
               variant="contained"
               color="error"
-              // onClick={(e) => {
-              //   setActionProgress(true);
-              //   deleteBusinessUnit();
-              // }}
-            >Delete</Button>
+              onClick={(e) => {
+                setActionProgress(true);
+                deleteTeamMember();
+              }}
+            >{actionProgress && <CircularProgress  sx={{marginLeft:0,color:"white",fontWeight:10}} size={20}/>}
+            &nbsp;  &nbsp;
+            Delete</Button>
               </DialogActions>
               </Dialog>
+              {/* <CustomDialogs
+            open={openCustomDialog.open}
+            message={openCustomDialog.message}
+            title={openCustomDialog.title}
+            setOpenCustomDialog={setOpenCustomDialog}
+            hideButton={true}
+            handleConfirmation={stayOnSamePage}
+          /> */}
         </Box>
       )}
     </div>

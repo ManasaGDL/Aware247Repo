@@ -34,10 +34,7 @@ const DashBoard = ({bu}) => {
 
 
    useEffect(()=>{
-//     localStorage.setItem("access_token",searchParams.get("token"));
-//  localStorage.setItem("refresh_token",searchParams.get("token"));
-//  axiosInstance.defaults.headers["Authorization"]="Bearer "+localStorage.getItem("access_token");
- 
+
       callProfileApis();
   },[])
   const callProfileApis=async()=>{

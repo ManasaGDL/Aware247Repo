@@ -151,6 +151,21 @@ return axiosInstance.post(`${baseURL}/auth/token/jwt_refresh`,{token:localStorag
      ,
      addTeamMember:(payload)=>{
       return axiosInstance.post(`${baseURL}/api/account/profile/`,payload)
+     },
+     editTeamMember:(payload,id)=>{
+      return axiosInstance.patch(`${baseURL}/api/account/profile/${id}/`,payload)
+     },
+     deleteTeamMember:(id)=>{
+      return axiosInstance.delete(`${baseURL}/api/account/profile/${id}`)
+     },
+     changePassword:(payload)=>{
+      return axiosInstance.put(`${baseURL}/api/account/password/change/`,payload)
+     },
+     forgotPassword:(payload)=>{
+      return axiosInstance.post(`${baseURL}/api/account/password/reset/`,payload)
+     },
+     resetPassword:(payload)=>{
+      return axiosInstance.put(`${baseURL}/api/account/password/reset/`,payload)
      }
 }
 export default api;

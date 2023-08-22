@@ -12,6 +12,7 @@ import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { CircularProgress } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import awarelogo from "../../assets/aware/Aware247Logo.png"
@@ -29,10 +30,12 @@ const initialLoginData = Object.freeze({
 export default function Login() {
   const [loginData, setLoginData] = useState(initialLoginData)
   const navigate = useNavigate();
-
+  const [ actionProgress ,setActionProgress] = useState(false)
   const [openCustomDialog, setOpenCustomDialog] = useState({ open: false });
+  const [ resetActionProgress, setResetActionProgress]= useState(false)
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setActionProgress(true)
     const data = new FormData(event.currentTarget);
     console.log({
       email: data.get('email'),
@@ -48,6 +51,7 @@ export default function Login() {
           username: data.get('email'),
           password: data.get('password')
         });
+       
         if (res) {
           let { access, refresh } = res?.data;
           localStorage.setItem("access_token", access);
@@ -59,10 +63,13 @@ export default function Login() {
           localStorage.setItem("Profile", JSON.stringify(userResponse?.data?.Profile))
           localStorage.setItem("BU", businessUnit);
           localStorage.setItem("user", data.get("email").trim())
+        setActionProgress(false)
           navigate("/admin/dashboard")
         }
       } catch (e) {
+        setActionProgress(false)
       let keys;
+     
         if(e.response?.data?.detail)
         {setOpenCustomDialog({open:true,message:e.response.data.detail,title:"Error"})
         
@@ -78,6 +85,24 @@ export default function Login() {
     setOpenCustomDialog({ open: false, message: "" });
     // window.location.reload(false)
   };
+  const callToForgotPassword=async()=>{
+   
+    
+ try{
+  if(loginData?.username?.length>0)
+{ setResetActionProgress(true)
+  const res = await api.forgotPassword({"username":loginData?.username})
+  setResetActionProgress(false)
+setOpenCustomDialog({open:true,message:"Reset link has been sent to your mail",title:"Check your email"})
+ }else{
+  setOpenCustomDialog({open:true, message:"Enter username"})
+ }
+ }catch(e)
+ {
+  setResetActionProgress(false)
+alert(e.response.data)
+ }
+  }
   return (
     <ThemeProvider theme={defaultTheme}>
       <Grid container component="main" sx={{ height: '100vh', display: "flex", alignItems: "center" }}>
@@ -87,10 +112,7 @@ export default function Login() {
           xs={false}
           sm={4}
           md={7}
-
-
         >
-
           <img src={awarelogo} alt="awarelogo" />
 
         </Grid>
@@ -122,6 +144,9 @@ export default function Login() {
                 name="email"
                 autoComplete="email"
                 autoFocus
+                onChange={(e)=>{
+                  setLoginData({...loginData,username:e.target.value})
+                }}
               />
            
               <TextField
@@ -133,6 +158,9 @@ export default function Login() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                onChange={(e)=>{
+                  setLoginData({...loginData,password:e.target.value})
+                }}
               />
 
               <Button
@@ -141,12 +169,15 @@ export default function Login() {
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
               >
+                {actionProgress && <CircularProgress  sx={{marginLeft:0,color:"white",fontWeight:10}} size={20}/>}
                 Sign In
               </Button>
               <Grid container>
+                
                 <Grid item xs>
-                  <Link href="#" variant="body2">
-                    Forgot password?
+                <label>{resetActionProgress && <CircularProgress  sx={{marginLeft:0,color:"blue",fontWeight:10}} size={20}/>} </label> 
+                  <Link href="#" variant="body2" onClick={callToForgotPassword}>
+                  Forgot password?
                   </Link>
                 </Grid>
                 {/* <Grid item>

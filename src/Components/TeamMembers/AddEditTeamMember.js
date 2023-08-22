@@ -4,7 +4,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import { TextField, Box, Button } from "@mui/material";
+import { TextField, Box, Button , CircularProgress} from "@mui/material";
 
 const AddEditTeamMember = ({
   open,
@@ -16,12 +16,13 @@ const AddEditTeamMember = ({
   userDetails,
   error,
   setError,
+  actionProgress
 }) => {
   const reg_ph= /^\d{10}$/;
 
   let regex_email = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i; 
   return (
-    <Dialog open={open} onClose={() => {
+    <Dialog open={openDialog.open} onClose={() => {
     
         setOpenDialog({ open: false })}}>
       <DialogTitle>{openDialog?.action} Team Member</DialogTitle>
@@ -71,7 +72,7 @@ const AddEditTeamMember = ({
            {<div style={{ color: "red" }}>{error?.email}</div>}
           &nbsp;
           <TextField
-            name="phonenumber"
+            name="phone_number"
             fullWidth
             label="phonenumber"
             type="number"
@@ -83,18 +84,18 @@ const AddEditTeamMember = ({
                MozAppearance: "textfield",
              },
              }}
-            value={userDetails?.phonenumber}
+            value={userDetails?.phone_number}
             onChange={(e) => {
-              setError(prev=>({...prev,"phonenumber":''}));
+              setError(prev=>({...prev,"phone_number":''}));
               if(!reg_ph.test(e.target.value))
               {
-                setError(prev=>({...prev,"phonenumber":"Enter valid phonenumber"}))
+                setError(prev=>({...prev,"phone_number":"Enter valid phonenumber"}))
               }
-            setUserDetails(prev=>({...prev,"phonenumber":e.target.value}));
+            setUserDetails(prev=>({...prev,"phone_number":e.target.value}));
           
             }}
           ></TextField>
-           {<div style={{ color: "red" }}>{error?.phonenumber}</div>}
+           {<div style={{ color: "red" }}>{error?.phone_number}</div>}
              &nbsp;
         </Box>
       </DialogContent>
@@ -118,7 +119,8 @@ const AddEditTeamMember = ({
             // }
             createUser(userDetails);
           }}
-        >
+        > {actionProgress && <CircularProgress  sx={{marginLeft:0,color:"white",fontWeight:10}} size={20}/>}
+        &nbsp;  &nbsp;
           {openDialog.action} TeamMember
         </Button>
       </DialogActions>

@@ -3,9 +3,11 @@ import styled from "styled-components";
 import Status from "./Status";
 import { Grid } from "@mui/material";
 const Component = styled.div`
-  background-color: #f7f8f9;
+  background-color:#f7f8f9;
+  // 
   padding: 8px 16px;
  padding-left:30px;
+ margin-left:-10px;
   border-radius: 3px;
   //   justify-content: space-between;
   align-items: left;

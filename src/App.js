@@ -26,6 +26,7 @@ import AddSubscriber from './Components/Subscribers/AddSubscriber';
 import Component from './Components/ComponentPage/Component';
 import Subscribers from './Components/Subscribers/Subscribers';
 import Security from './Components/Security/Security';
+import ForgotPassword from './Components/ForgotPassword/ForgotPassword';
 import api from './Api';
 function App(props) {
   const history=useNavigate();
@@ -44,6 +45,7 @@ document.title = "Aware247"
       <SnackbarContextProvider>
               <businessUnitContext.Provider value={[bu,setBu]}>   
       <Routes history={history}> 
+      <Route path="/setPassword/*" element={<ForgotPassword/>}/>
       <Route path ="Status" >
         <Route path=":businessunit/manage/*"element={<ManageSubscriber/>}/>
         <Route path = ":businessunit/unsubscribe/*" element={<UnsubscribeUser/>}/>

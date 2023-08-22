@@ -206,7 +206,7 @@ setPageState(prev=>({...prev,limit:pageSize}))
         rowCount={totalRecords}
        paginationMode="server"
         onPageChange={e=>{
-       console.log("in VDP",e)
+     
         setPageState(prev=>({...prev,offset:(e*prev.limit)}))
         }}
         onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
