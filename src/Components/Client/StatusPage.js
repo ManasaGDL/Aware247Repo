@@ -21,9 +21,10 @@ import LoadingPanel from "../common/TabPanel/LoadingPanel";
 import { useParams } from "react-router-dom";
 import clientApi from "../../api/clientApi";
 import { axiosInstance } from "../../axios";
+import awarelogo from "../../assets/aware/Aware247Logo.png"
 const useStyles = makeStyles((theme) => ({
   header: {
-    backgroundImage: `url(${bgLogo})`,
+    // backgroundImage: `url(${bgLogo})`,
     height: "80px",
     //   backgroundRepeat:"repeat-x"
   },
@@ -72,7 +73,7 @@ const StatusPage = () => {
   };
   return (
     <div className= "status">
-      <AppBar className={classes.header}>
+      <AppBar  sx={{ backgroundColor:"#FBFCFC"}}>
         <Toolbar sx={{ pl: 3 }}>
           <Typography
             variant="h2"
@@ -84,7 +85,7 @@ const StatusPage = () => {
             }}
           >
             <img
-              src={companylogo}
+              src={awarelogo}
               align="left"
               alt="data axle"
               height="60px"

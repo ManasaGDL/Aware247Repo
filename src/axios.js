@@ -2,7 +2,7 @@ import axios from "axios";
 import React from "react";
 
 //export const baseURL = "http://18.118.80.163:8080";
-export const baseURL = "http://127.0.0.1:8080";
+export const baseURL = "http://54.235.41.120:80";
 //export const baseURL = "";
 
 export const axiosInstance = axios.create({

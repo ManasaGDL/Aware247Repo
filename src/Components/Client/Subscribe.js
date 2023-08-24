@@ -23,7 +23,7 @@ import {
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { SnackbarContext } from "../../context/SnackbarContext";
-import companylogo from "../../assets/data_axle.PNG";
+import awarelogo from "../../assets/aware/Aware247Logo.png"
 import { makeStyles } from "@material-ui/core/styles";
 import bgLogo from "../../assets/body_bg.png";
 import Grid from "@mui/material/Grid";
@@ -275,7 +275,7 @@ const Subscribe = () => {
   
   return (
     <div className="status">
-      <AppBar className={classes.header}>
+      <AppBar sx={{ backgroundColor:"#FBFCFC"}}>
         <Toolbar sx={{ pl: 3 }}>        
           <Typography
             variant="h2"
@@ -287,7 +287,7 @@ const Subscribe = () => {
             }}
           >
             <img
-              src={companylogo}
+              src={awarelogo}
               align="left"
               alt="data axle"
               height="60px"

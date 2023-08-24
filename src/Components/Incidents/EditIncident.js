@@ -502,16 +502,16 @@ const EditIncident = ({ bu }) => {
       setActionProgress(false)
     }
   };
-  const handleConfirmation = () => {
-    // when status is "resolved " and want to go ahead with incident update handleConfirmation is used(passed to custom dialogs)
+  // const handleConfirmation = () => {
+  //   // when status is "resolved " and want to go ahead with incident update handleConfirmation is used(passed to custom dialogs)
 
-    setChangeStatus(true);
-    setInitialStatus(trackStatus);
-    // if user is Okay to change the status from reolved , then assign initialStatus with trackStatus
-    setOpenCustomDialog({ open: false });
-    finalConfirmationStatus && setCallUpdate(true); // finalConfrimationStatus is used to as a condition to make api call, if no finalConfirmationStatus variable is used
-    //api call straightly called on click of "Yes" of STATUS change as same Dialog component is reused for alert on change of sttaus and update incident on checkbox changes
-  };
+  //   setChangeStatus(true);
+  //   setInitialStatus(trackStatus);
+  //   // if user is Okay to change the status from reolved , then assign initialStatus with trackStatus
+  //   setOpenCustomDialog({ open: false });
+  //   finalConfirmationStatus && setCallUpdate(true); // finalConfrimationStatus is used to as a condition to make api call, if no finalConfirmationStatus variable is used
+  //   //api call straightly called on click of "Yes" of STATUS change as same Dialog component is reused for alert on change of sttaus and update incident on checkbox changes
+  // };
   const handleSelectAll = (e) => {
     setSelectAllChecked(e.target.checked);
   };

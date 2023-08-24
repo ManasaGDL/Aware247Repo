@@ -36,7 +36,7 @@ const IncidentTemplate = () => {
   useEffect(() => {
     listIncidentTemplates(pageState);
     setLoading(true);
-  }, [bu,pageState.limit,pageState.offset]);
+  }, [bu,pageState.limit,pageState.offset,pageState]);
   useEffect(()=>{
     setPageState(prev=>({...prev,limit:pageSize}))
       },[pageSize])
@@ -57,7 +57,7 @@ const IncidentTemplate = () => {
         description: openDialog?.description,
       });
     }
-  }, [openDialog.action]);
+  }, [openDialog.action,openDialog?.template_name,openDialog?.incident_title,openDialog?.description]);
   const columns = [
     {
       field: "template_id",
