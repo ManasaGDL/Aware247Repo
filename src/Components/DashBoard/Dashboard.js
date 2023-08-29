@@ -78,10 +78,10 @@ const DashBoard = ({bu}) => {
     <>
       <div style={{ textAlign: "left" }}>
         <h5 style={{ paddingTop: 20, marginLeft: 20 }}>{"Dashboard"}</h5>
-        <Container>
+        <Container sx={{ position:"relative"}}>
           <div>
             <Backdrop
-              sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+              sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 ,position:"absolute",opacity: 0.5}}
               open={componentsLoading}
             >
               <LoadingPanel></LoadingPanel>

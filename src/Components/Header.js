@@ -46,7 +46,7 @@ const useStyles = makeStyles( theme =>({
         flex: 1,
       },
     };
-const Header=({user,setDynamicSideBarData,businessunit,setLoading,loading})=>{
+const Header=({user,setDynamicSideBarData,businessunit,setLoading,loading,setLoggedInUser})=>{
   const classes = useStyles();
   const navigate= useNavigate();
   const [businessunitdata,setBusinessunitdata]= useState([])
@@ -204,9 +204,7 @@ const stayOnSamePage=()=>{
   setOpenCustomDialog({open:false})
   setResetPasswordDialog({open:false})
 }
-useEffect(()=>{
-console.log(openCustomDialog)
-},[openCustomDialog])
+
 
     return <>
     <AppBar   sx={{ backgroundColor:"#FBFCFC"}}> 
@@ -271,7 +269,10 @@ console.log(openCustomDialog)
   localStorage.removeItem("refresh_token")
   localStorage.removeItem("user")
  handleCloseAvatar()
+
+  
   navigate("/admin/login")
+  setLoggedInUser(false)
 }}>Log Out</MenuItem>
 </Menu>
 

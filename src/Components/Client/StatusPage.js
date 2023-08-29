@@ -22,6 +22,7 @@ import { useParams } from "react-router-dom";
 import clientApi from "../../api/clientApi";
 import { axiosInstance } from "../../axios";
 import awarelogo from "../../assets/aware/Aware247Logo.png"
+import CustomDialogs from "../common/Dialogs/CustomDialogs";
 const useStyles = makeStyles((theme) => ({
   header: {
     // backgroundImage: `url(${bgLogo})`,
@@ -42,6 +43,7 @@ const useStyles = makeStyles((theme) => ({
 const tabs = [ {title:"Incidents",content:<ViewAllIncidents/>},{title:"Scheduled Maintenance",content:<ScheduledMaintanence_client></ScheduledMaintanence_client>}]
 const StatusPage = () => {
   const classes = useStyles();
+  const [ openDialog , setOpenDialog]= useState({open:false})
   const [tabValue , setTabValue] = useState(-1)
   const [ loading ,setLoading ] = useState(false)
   const [componentList, setComponentList] = useState([]);
@@ -66,11 +68,18 @@ const StatusPage = () => {
         alert("check whether Businessunit is valid or not!")
       }
     } catch (e) {
-      console.log("error",e)
+      if(e?.response?.data.Error)
+      {
+        setOpenDialog({open:true,message:e?.response?.data.Error,title:'Error'})
+      }
+     
     } finally{
         setLoading(false)
     }
   };
+  const stayOnSamePage=()=>{
+    setOpenDialog({open:false})
+  }
   return (
     <div className= "status">
       <AppBar  sx={{ backgroundColor:"#FBFCFC"}}>
@@ -174,6 +183,14 @@ const StatusPage = () => {
         </List>
         <HeaderTabs tabs={tabs} tabValue={tabValue} setTabValue={setTabValue}/>
       </Box>}
+      <CustomDialogs
+            open={openDialog?.open}
+            message={openDialog.message}
+            title={openDialog.title}
+            setOpenCustomDialog={setOpenDialog}
+            hideButton={true}
+            handleConfirmation={stayOnSamePage}
+          />
     </div>
   );
 };

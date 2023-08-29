@@ -392,6 +392,11 @@ const CreateScheduleMaintenance = () => {
               <FormLabel>Maintenance Start Time (CST)</FormLabel>
             </div>
             <DateTimePicker
+              viewRenderers={{
+                hours: null,
+                minutes: null,
+                seconds: null,
+              }}
               name="schstartdate"
               slotProps={{
                 textField: {
@@ -425,6 +430,11 @@ const CreateScheduleMaintenance = () => {
             </div>
             <DateTimePicker
               disablePast
+              viewRenderers={{
+                hours: null,
+                minutes: null,
+                seconds: null,
+              }}
               slotProps={{
                 textField: {
                   helperText: errorMessage,

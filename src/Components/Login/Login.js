@@ -63,7 +63,7 @@ export default function Login() {
           localStorage.setItem("Profile", JSON.stringify(userResponse?.data?.Profile))
           localStorage.setItem("BU", businessUnit);
           localStorage.setItem("user", data.get("email").trim())
-        setActionProgress(false)
+          setActionProgress(false)
           navigate("/admin/dashboard")
         }
       } catch (e) {

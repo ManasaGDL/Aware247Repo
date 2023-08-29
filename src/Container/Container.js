@@ -27,7 +27,7 @@ import Security from "../Components/Security/Security";
 import { Outlet } from "react-router-dom";
 
 // import "./containerStyles
-const Container = ({ user}) => {
+const Container = ({ user, setLoggedInUser}) => {
     const [collapse, setCollapse] = useState(false)
     const [dynamicSideBarData, setDynamicSideBarData] = useState([])
     const [loading,setLoading] = useState(false)
@@ -58,7 +58,7 @@ const Container = ({ user}) => {
         
             <div style={{ height: "60px" }}>
                 {/* pass sidebar data from Header to container to SidebarComponent  */}
-                <Header user={user} setDynamicSideBarData={setDynamicSideBarData} setLoading={setLoading} loading={loading}businessunit={setBu} ></Header>
+                <Header user={user} setLoggedInUser={setLoggedInUser} setDynamicSideBarData={setDynamicSideBarData} setLoading={setLoading} loading={loading}businessunit={setBu} ></Header>
               
             </div>
         </section>

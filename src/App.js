@@ -1,7 +1,7 @@
 
 import './App.css';
 import React,{useState,useEffect , useContext} from "react"
-import { BrowserRouter as Router, Routes, Route ,Navigate} from "react-router-dom"
+import { BrowserRouter as Router, Routes, Route ,Navigate, useLocation} from "react-router-dom"
 import Login from './Components/Login/Login';
 import Container from './Container/Container';
 import {useNavigate} from "react-router-dom"
@@ -29,14 +29,41 @@ import Security from './Components/Security/Security';
 import ForgotPassword from './Components/ForgotPassword/ForgotPassword';
 import api from './Api';
 function App(props) {
-  const history=useNavigate();
+  const navigate=useNavigate();
   const [user,setUser] = useState({email:""})
+  const location = useLocation()
   const [ bu ,setBu]= useState(localStorage.getItem("BU"))
- 
+ const [ loggedInUser , setLoggedInUser]= useState(localStorage.getItem("access_token")?true:false)
  useEffect(()=>{
 document.title = "Aware247"
+if(localStorage.getItem('access_token'))
+{
+  setLoggedInUser(true)
+}
+else
+setLoggedInUser(false)
+getLoggedIn();
  },[])
 
+const getLoggedIn= async()=>{
+  try{
+  const access_token= localStorage.getItem("access_token");
+  if(access_token)
+  {
+    const userResponse = await api.getUserProfile();
+    const businessUnit = userResponse?.data?.Profile?.last_businessiunit_name
+    localStorage.setItem("Privileges", userResponse?.data?.Privileges)
+    localStorage.setItem("Profile", JSON.stringify(userResponse?.data?.Profile))
+    localStorage.setItem("BU", businessUnit);
+    setUser({"first_name":userResponse?.data?.Profile?.first_name,"last_name":userResponse?.data?.Profile?.last_name,"email":userResponse?.data?.Profile?.email})
+  if(!location.pathname.includes("Status"))
+    navigate("/admin/dashboard")
+  }
+  }catch(e)
+  {
+
+  }
+}
   return (
     <div className="App">
       <ThemeProvider theme = {theme}>
@@ -44,7 +71,7 @@ document.title = "Aware247"
 
       <SnackbarContextProvider>
               <businessUnitContext.Provider value={[bu,setBu]}>   
-      <Routes history={history}> 
+      <Routes history={navigate}> 
       <Route path="/setPassword/*" element={<ForgotPassword/>}/>
       <Route path ="Status" >
         <Route path=":businessunit/manage/*"element={<ManageSubscriber/>}/>
@@ -55,7 +82,7 @@ document.title = "Aware247"
       </Route> 
       <Route 
       // path="admin"  
-      element={<Container user={user}/>}> 
+      element={<Container user={user} setLoggedInUser={setLoggedInUser}/>}> 
                                               
                         <Route path="admin/security" element={<Security />}/>
                         <Route path="admin/dashboard" element={<DashBoard bu={bu}/>} />
@@ -73,12 +100,15 @@ document.title = "Aware247"
                         {/* <Route path="*" element={<div></div>}></Route>                */}
 
          </Route> 
-      <Route path="/login" element={<Login/>}/>    
-      <Route path="/admin" element={<Login/>}/>
-      <Route path ="admin/login" element={<Login setUser={setUser} />}/>
-      <Route path="/" element={<Navigate to="admin/login"/>}/>
-      <Route path="*" element={<h3>URL does not exists.</h3>} />
-      <Route path="*" element={<Container user={user}/>}/>
+         {/* {loggedInUser && <Route path="*" element={<h3>URL does not exists.</h3>} />} */}
+      {!loggedInUser ?<Route path="/login" element={<Login setUser={setUser} />}/>:<Route path="/login" element={<Container setUser={setUser} setLoggedInUser={setLoggedInUser} />}/>}   
+      {!loggedInUser ?<Route path="/admin" element={<Login setUser={setUser} />}/>:<Route path="/admin" element={<Container setUser={setUser} setLoggedInUser={setLoggedInUser}/>}/>}
+      {!loggedInUser?<Route path ="admin/login" element={<Login setUser={setUser} />}/>:<Route path="admin/login" element={<Container setUser={setUser} setLoggedInUser={setLoggedInUser} />}/>}
+     
+      {!loggedInUser && <Route path="/" element={<Navigate to="admin/login"/>}/>}
+      {/* // :<Route path="/login" element={<Container setUser={setUser} />}/>} */}
+     
+      {/* <Route path="*" element={<Container user={user}/>}/> */}
       </Routes> 
       </businessUnitContext.Provider>
       </SnackbarContextProvider>

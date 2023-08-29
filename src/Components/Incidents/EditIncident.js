@@ -736,6 +736,11 @@ const EditIncident = ({ bu }) => {
               </div>
               <DateTimePicker
                 name="start_time"
+                viewRenderers={{
+                  hours: null,
+                  minutes: null,
+                  seconds: null,
+                }}
                 slotProps={{
                   textField: {
                    
@@ -772,7 +777,11 @@ const EditIncident = ({ bu }) => {
                 <FormLabel> End Time (CST)</FormLabel>
               </div>
               <DateTimePicker
-            
+             viewRenderers={{
+              hours: null,
+              minutes: null,
+              seconds: null,
+            }}
                 slotProps={{
                   textField: {
                     helperText: errorMessage,
