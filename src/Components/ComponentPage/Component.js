@@ -81,7 +81,9 @@ const Component = () => {
       setGroupDataResult((() => {
         return [...groupArr];
       }));
-    } catch (e) {}
+    } catch (e) {
+ console.log(e)
+    }
   };
   useEffect(() => {
     if (selectedId) getComponentDetails(selectedId);

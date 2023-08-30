@@ -100,7 +100,7 @@ setOpenCustomDialog({open:true,message:"Reset link has been sent to your mail",t
  }catch(e)
  {
   setResetActionProgress(false)
-alert(e.response.data)
+alert("login",e.response.data)
  }
   }
   return (

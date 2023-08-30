@@ -194,7 +194,7 @@ const ViewAllIncidents = () => {
                         <span style={labelClass}>{`\u00A0${list.name}`}</span>
                       </label>
                       <label style={labelStyle}>
-                        ACER Number:
+                       Incident Number:
                         <span
                           style={labelClass}
                         >{`\u00A0${list.acer_number}`}</span>

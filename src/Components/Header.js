@@ -249,10 +249,6 @@ const stayOnSamePage=()=>{
        <Menu open={openAvatar} anchorEl={anchor2} sx={{ display:"flex"}}
      onClose={handleCloseAvatar} 
        onChange={e=>{console.log(e,"Mnu")}}>
-
-
- 
-
 <MenuItem key={1}  value={localStorage.getItem("user")} sx={{ fontWeight:300,color:"grey",textAlign:"center",
  ":hover":{"color":"#1798ff"}}}
 //  value={bu}
@@ -265,12 +261,14 @@ const stayOnSamePage=()=>{
  Change Password
 </MenuItem>
 <MenuItem key={"user"} sx={{ fontWeight:300,color:"grey", ":hover":{"color":"#1798ff"}}} onClick={()=>{
+   axiosInstance.defaults.headers["Authorization"] = null;
   localStorage.removeItem("access_token")
   localStorage.removeItem("refresh_token")
   localStorage.removeItem("user")
+ 
+
  handleCloseAvatar()
 
-  
   navigate("/admin/login")
   setLoggedInUser(false)
 }}>Log Out</MenuItem>

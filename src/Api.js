@@ -3,7 +3,9 @@ import axios from "axios";
 import {baseURL, axiosInstance} from "./axios";
 
 const api = {
+
   getToken:()=>{
+   
     delete axiosInstance.defaults.headers["Authorization"];
 return axiosInstance.post(`${baseURL}/auth/token/jwt_refresh`,{token:localStorage.getItem("access_token")});
   },
@@ -14,6 +16,7 @@ return axiosInstance.post(`${baseURL}/auth/token/jwt_refresh`,{token:localStorag
         return axiosInstance.post(`${baseURL}/auth/refresh_token`, body);
       },
       getComponents : () => {
+       
         axiosInstance.defaults.headers["businessunit"]=localStorage.getItem("BU");
         axiosInstance.defaults.headers["Authorization"]="Bearer "+ localStorage.getItem("access_token")
         return axiosInstance.get(`${baseURL}/api/common/components/components_list`)
@@ -30,6 +33,7 @@ return axiosInstance.post(`${baseURL}/auth/token/jwt_refresh`,{token:localStorag
         return axiosInstance.post(`${baseURL}/api/common/incidents/`,body)
       },
       viewIncidents : (obj) =>{ // do we need to suuply BU
+        axiosInstance.defaults.headers["Authorization"]="Bearer "+ localStorage.getItem("access_token")
         return axiosInstance.get(`${baseURL}/api/common/incidents/?limit=${obj.limit}&&offset=${obj.offset}`)
       },
       getSideBarData : () =>{
@@ -44,15 +48,19 @@ return axiosInstance.post(`${baseURL}/auth/token/jwt_refresh`,{token:localStorag
       return axiosInstance.get(`${baseURL}/api/common/incidents/${id}/`)
      },
      addComments : (id, body) => {
+      axiosInstance.defaults.headers["Authorization"]="Bearer "+ localStorage.getItem("access_token")
       return axiosInstance.patch(`${baseURL}/api/common/incidents/${id}/postmorterm/`, body)
      },
      deleteIncident : ( id ) =>{
+      axiosInstance.defaults.headers["Authorization"]="Bearer "+ localStorage.getItem("access_token")
       return axiosInstance.delete(`${baseURL}/api/common/incidents/${id}/delete_incident`)
      },
      updateIncident : ( id ,body) =>{
+      axiosInstance.defaults.headers["Authorization"]="Bearer "+ localStorage.getItem("access_token")
       return axiosInstance.put(`${baseURL}/api/common/incidents/${id}/update_incident/`, body)
      },
      getActivityLog : (body,obj) =>{
+      axiosInstance.defaults.headers["Authorization"]="Bearer "+ localStorage.getItem("access_token")
       return axiosInstance.put(`${baseURL}/api/common/incident_activity_log/incident_activity/
      
       `,body) // ?limit=${obj.limit}&&offset=${obj.offset}
@@ -69,43 +77,53 @@ return axiosInstance.post(`${baseURL}/auth/token/jwt_refresh`,{token:localStorag
       return axiosInstance.post(`${baseURL}/api/common/components/create_component/`,payload)
      },
      getGroupComponents : () =>{
+      axiosInstance.defaults.headers["Authorization"]="Bearer "+ localStorage.getItem("access_token")
       return axiosInstance.get(`${baseURL}/api/common/components/group_components/`)
      },
      getComponent : (id) =>{
+      axiosInstance.defaults.headers["Authorization"]="Bearer "+ localStorage.getItem("access_token")
       return axiosInstance.get(`${baseURL}/api/common/components/${id}`)
      },
      editComponent : (id , payload) =>{
+      axiosInstance.defaults.headers["Authorization"]="Bearer "+ localStorage.getItem("access_token")
       return axiosInstance.patch(`${baseURL}/api/common/components/${id}/update_component/`,payload)
      },
      getSubscribersCount : () =>{
+      axiosInstance.defaults.headers["Authorization"]="Bearer "+ localStorage.getItem("access_token")
       return axiosInstance.get(`${baseURL}/api/common/subscribers/subsciberscount`)
      },
      getSubscribersList : (payload,obj) =>{
+      axiosInstance.defaults.headers["Authorization"]="Bearer "+ localStorage.getItem("access_token")
       return axiosInstance.put(`${baseURL}/api/common/subscribers/subscriberslist/?limit=${obj.limit}&&offset=${obj.offset}`,payload);
      },
      deleteSubscriber:(id)=>{
+      axiosInstance.defaults.headers["Authorization"]="Bearer "+ localStorage.getItem("access_token")
       return axiosInstance.delete(`${baseURL}/api/common/subscribers/${id}/unsubscribe/`)
      },
      updateSubscriber:( id ,payload)=>{
+      axiosInstance.defaults.headers["Authorization"]="Bearer "+ localStorage.getItem("access_token")
       return axiosInstance.patch(`${baseURL}/api/common/subscribers/${id}/update_subscribers/`,payload)
      },
      getTeamMembers:(obj)=>{
-    
+      axiosInstance.defaults.headers["Authorization"]="Bearer "+ localStorage.getItem("access_token")
       return axiosInstance.get(`${baseURL}/api/account/profile/?limit=${obj.limit}&&offset=${obj.offset}`)
      },
      getScheduleMaintenanceIncidents:(obj)=>{
+      axiosInstance.defaults.headers["Authorization"]="Bearer "+ localStorage.getItem("access_token")
       return axiosInstance.get(`${baseURL}/api/common/scheduled_maintanence/?limit=${obj.limit}&&offset=${obj.offset}`)
      },
      createScheduleMaintenance:(obj)=>{
       return axiosInstance.post(`${baseURL}/api/common/scheduled_maintanence/`,obj)
      },
      getScheduledIncident:(id)=>{
+      axiosInstance.defaults.headers["Authorization"]="Bearer "+ localStorage.getItem("access_token")
       return axiosInstance.get(`${baseURL}/api/common/scheduled_maintanence/components_list?id=${id}`)
      },
      updateScheduledIncident:(id,payload)=>{
     return axiosInstance.put(`${baseURL}/api/common/scheduled_maintanence/${id}/`,payload)
      },
      viewScheduleMaintenance:(id)=>{
+      axiosInstance.defaults.headers["Authorization"]="Bearer "+ localStorage.getItem("access_token")
     return axiosInstance.get(`${baseURL}/api/common/scheduled_maintanence/activity_list?id=${id}`)
      },
      deleteScheduledIncident:(id)=>{
@@ -115,6 +133,7 @@ return axiosInstance.post(`${baseURL}/auth/token/jwt_refresh`,{token:localStorag
       return axiosInstance.get(`${baseURL}/api/common/incident_template/inc_temp_businessunit`)
      },
      getIncidentTemplates:(obj)=>{
+      axiosInstance.defaults.headers["Authorization"]="Bearer "+ localStorage.getItem("access_token")
       return axiosInstance.get(`${baseURL}/api/common/incident_template/?limit=${obj.limit}&&offset=${obj.offset}`)
      },
      createIncidentTemplate:(payload)=>{
@@ -130,13 +149,16 @@ return axiosInstance.post(`${baseURL}/auth/token/jwt_refresh`,{token:localStorag
       return axiosInstance.put(`${baseURL}/api/common/incident_template/${id}/`,payload);
      },
      getTemplateDetails:(id)=>{
+      axiosInstance.defaults.headers["Authorization"]="Bearer "+ localStorage.getItem("access_token")
       return axiosInstance.get(`${baseURL}/api/common/incident_template/${id}/`)
      },
      getSeverityList:()=>{
+      axiosInstance.defaults.headers["Authorization"]="Bearer "+ localStorage.getItem("access_token")
       return axiosInstance.get(`${baseURL}/api/common/incidents/impact_list`)
      }
      ,
      getBusinessUnit_Security:(obj)=>{
+      axiosInstance.defaults.headers["Authorization"]="Bearer "+ localStorage.getItem("access_token")
       return axiosInstance.get(`${baseURL}/api/common/businessunit/`)
      },
      createNewBusinessUnit:(payload)=>{

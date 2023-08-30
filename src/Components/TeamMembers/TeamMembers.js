@@ -16,6 +16,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { SnackbarContext } from "../../context/SnackbarContext";
 import CustomDialogs from "../common/Dialogs/CustomDialogs";
+import { axiosInstance } from "../../axios";
 const initialPageState={ limit:10 , offset:0}
 const TeamMembers = () => {
   const bu = useContext(businessUnitContext);
@@ -33,6 +34,7 @@ const TeamMembers = () => {
   const [ errorState, setErrorState]= useState({})
   // const [ openCustomDialog , setOpenCustomDialog]= useState({open:false})
   useEffect(() => {
+    console.log(axiosInstance.defaults.headers["Authorization"],localStorage.getItem("access_token"))
     setLoading(true);
  
     getTeamMembers(pageState); 

@@ -58,10 +58,11 @@ axiosInstance.interceptors.response.use(
             })
             .catch((err) => {
               console.log(err);
+             
               throw err;
             });
         } else {
-          console.log("Refresh token is expired", tokenParts.exp, now);
+         alert("Refresh token is expired", tokenParts.exp, now);
           localStorage.removeItem("access_token");
           localStorage.removeItem("refresh_token");
           window.location.href = "/login";

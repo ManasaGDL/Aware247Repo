@@ -617,7 +617,7 @@ const EditIncident = ({ bu }) => {
                   inputProps: { min: 0 }
                 }}
                 id="outlined"
-                label="ACER Number"
+                label="Incident Number"
                 name="acer_number"
                 type="number"
                 value={incidentObject.acer_number || ""}
