@@ -37,10 +37,10 @@ export default function Login() {
     event.preventDefault();
     setActionProgress(true)
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    // console.log({
+    //   email: data.get('email'),
+    //   password: data.get('password'),
+    // });
     setLoginData({
       username: data.get('email'),
       password: data.get('password'),
