@@ -179,12 +179,19 @@ const TeamMembers = () => {
             title: "Error",
             message: "Something went wrong!",
           });
+         
         }
       }
     }
   };
   const stayOnSamePage = () => {
     setOpenCustomDialog({ open: false });
+    setUserDetails({
+      first_name: "",
+      last_name: "",
+      phone_number: "",
+      email: "",
+    });
   };
   const deleteTeamMember = async () => {
     try {
