@@ -56,8 +56,10 @@ const getLoggedIn= async()=>{
     localStorage.setItem("Profile", JSON.stringify(userResponse?.data?.Profile))
     localStorage.setItem("BU", businessUnit);
     setUser({"first_name":userResponse?.data?.Profile?.first_name,"last_name":userResponse?.data?.Profile?.last_name,"email":userResponse?.data?.Profile?.email})
-  if(!location.pathname.includes("Status"))
-    navigate("/admin/dashboard")
+   if(!location.pathname.includes("Status") && !location.pathname.includes("admin"))
+     navigate("/admin/dashboard")
+     else
+     navigate(location.pathname)
   }
   }catch(e)
   {

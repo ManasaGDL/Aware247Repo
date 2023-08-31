@@ -43,6 +43,16 @@ const ActivityHistory = ({ id, bu }) => {
         return dayjs(val.value).format("YYYY/MM/DD hh:mm:ss A");
       },
     },
+    // {
+    //   field: "modifieduser",
+    //   headerName: "Modified User",
+    //   minWidth: 150,
+    //   flex: 1,
+    //   renderCell: (val) => {
+    //     console.log(val.value)
+    //     return val.value;
+    //   },
+    // },
   ];
 
   const getActivityLog = async (id) => {
