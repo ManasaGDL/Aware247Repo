@@ -32,10 +32,13 @@ const AddEditBusinessUnit = ({
             value={businessunitvalue}
             onChange={(e) => {
               setError({ businessunit_name: "" });
+              if(/^[A-Za-z0-9()_]*$/.test(e.target.value))
               setbusinessunitvalue(e.target.value);
+              else setError({businessunit_name:"Naming constraint not matched!"})
             }}
           ></TextField>
-          {<div style={{ color: "red" }}>{error.businessunit_name}</div>}
+          <label style={{ color:"grey",fontSize:"12px"}}>Only alphanumeric, () and underscore allowed</label>
+          {<div style={{ color: "red" ,fontSize:"14px"}}>{error.businessunit_name}</div>}
         </Box>
       </DialogContent>
       <DialogActions>
