@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { AppBar, Toolbar, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
-import companylogo from "../../assets/data_axle.PNG";
+import  from "../../assets/data_axle.PNG";
 import { makeStyles } from "@material-ui/core/styles";
 import bgLogo from "../../assets/body_bg.png";
 import List from "@mui/material/List";
