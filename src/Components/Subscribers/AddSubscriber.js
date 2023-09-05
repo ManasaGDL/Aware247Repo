@@ -24,9 +24,7 @@ import {
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { SnackbarContext } from "../../context/SnackbarContext";
-import companylogo from "../../assets/data_axle.PNG";
-import { makeStyles } from "@material-ui/core/styles";
-import bgLogo from "../../assets/body_bg.png";
+
 import Grid from "@mui/material/Grid";
 import clientApi from "../../api/clientApi";
 import Backdrop from "@mui/material/Backdrop";
